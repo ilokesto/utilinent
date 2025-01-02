@@ -1,3 +1,5 @@
 import type { ShowProps } from "./types";
 
-export const Show = ({ when, children, fallback = null }: ShowProps) => when ? children : fallback;
+export function Show({ when, children, fallback = null }: ShowProps) {
+  return when ? children : fallback;
+};

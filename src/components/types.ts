@@ -27,3 +27,8 @@ export type MatchProps = {
   children?: never,
   element: ReactNode
 }
+
+export type MountProps = {
+  children: ReactNode;
+  fallback?: ReactNode 
+}
