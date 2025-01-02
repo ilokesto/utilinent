@@ -1,6 +1,6 @@
 import type { MatchProps, SwitchProps, Key } from "./types";
 
-export const Match = ({ children }: MatchProps) => children;
+export const Match = ({ children, element }: MatchProps) => children ?? element;
 
 export function Switch({ children, when, fallback = null }: SwitchProps) {
   children.reduce((acc, value) => {
