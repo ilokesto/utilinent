@@ -1,5 +1,5 @@
 {
-  "name": "genomic",
+  "name": "catalan",
   "version": "0.0.1",
   "scripts": {
     "build": "vite build && tsc --emitDeclarationOnly"
