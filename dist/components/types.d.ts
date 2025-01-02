@@ -1,14 +1,14 @@
 import { Key, ReactElement, ReactNode } from "react";
-export { Key };
+export type { Key };
 export type ShowProps = {
     when: boolean;
     children: ReactNode;
     fallback?: ReactNode;
 };
 export type MapProps<T> = {
-    each: T[];
+    each: T[] | null | undefined;
     fallback?: ReactNode;
-    children: (item: T, index: number) => ReactNode;
+    children: (item: NonNullable<T>, index: number) => ReactNode;
 };
 export type SwitchProps = {
     children: Array<ReactElement>;
@@ -17,4 +17,8 @@ export type SwitchProps = {
 };
 export type MatchProps = {
     children: ReactNode;
+    element?: never;
+} | {
+    children?: never;
+    element: ReactNode;
 };

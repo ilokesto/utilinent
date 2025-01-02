@@ -1,26 +1,26 @@
 function u({
   each: t,
-  children: n,
-  fallback: r = null
+  children: r,
+  fallback: e = null
 }) {
-  return (t == null ? void 0 : t.length) !== 0 ? t.map(n) : r;
+  return t && t.length > 0 ? t.filter((n) => n != null).map(r) : e;
 }
-const y = ({ when: t, children: n, fallback: r = null }) => t ? n : r, i = ({ children: t }) => t;
-function f({ children: t, when: n, fallback: r = null }) {
-  return t.reduce((e, o) => {
+const l = ({ when: t, children: r, fallback: e = null }) => t ? r : e, i = ({ children: t }) => t;
+function f({ children: t, when: r, fallback: e = null }) {
+  return t.reduce((n, o) => {
     if (o.type !== i)
       throw new Error("Match 컴포넌트만 사용할 수 있습니다.");
     if (o.key) {
-      if (e.includes(o.key))
+      if (n.includes(o.key))
         throw new Error(`Duplicate Match key: ${o.key}`);
-      e.push(o.key);
+      n.push(o.key);
     }
-    return e;
-  }, []), t.find((e) => e.key === n) ?? r;
+    return n;
+  }, []), t.find((n) => n.key === r) ?? e;
 }
 export {
   u as Map,
   i as Match,
-  y as Show,
+  l as Show,
   f as Switch
 };

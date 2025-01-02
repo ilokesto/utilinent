@@ -1,4 +1,4 @@
-import { MatchProps, SwitchProps, Key } from "./types";
+import type { MatchProps, SwitchProps, Key } from "./types";
 
 export const Match = ({ children }: MatchProps) => children;
 

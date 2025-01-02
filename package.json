@@ -6,7 +6,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ayden94/utilify.git"
+    "url": "git+https://github.com/ayden94/utilient.git"
   },
   "sideEffects": false,
   "types": "dist/index.d.ts",
@@ -19,7 +19,8 @@
     "react",
     "component",
     "util",
-    "utility"
+    "utility",
+    "utilinent"
   ],
   "author": "Jeong Jinho <wpfekdml@me.com>",
   "license": "MIT",
