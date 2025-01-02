@@ -1,0 +1,42 @@
+{
+  "name": "utilify",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "vite build && tsc --emitDeclarationOnly"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayden94/utilify.git"
+  },
+  "sideEffects": false,
+  "types": "dist/index.d.ts",
+  "module": "dist/utilify.es.js",
+  "main": "dist/utilify.umd.js",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "component",
+    "util",
+    "utility"
+  ],
+  "author": "Jeong Jinho <wpfekdml@me.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "rollup-plugin-visualizer": "^5.12.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vite-plugin-compression": "^0.5.1"
+  }
+}
