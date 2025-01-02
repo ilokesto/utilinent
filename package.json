@@ -1,5 +1,5 @@
 {
-  "name": "catalan",
+  "name": "utilinent",
   "version": "0.0.1",
   "scripts": {
     "build": "vite build && tsc --emitDeclarationOnly"
@@ -10,8 +10,8 @@
   },
   "sideEffects": false,
   "types": "dist/index.d.ts",
-  "module": "dist/utilify.es.js",
-  "main": "dist/utilify.umd.js",
+  "module": "dist/utilinent.es.js",
+  "main": "dist/utilinent.umd.js",
   "files": [
     "dist"
   ],

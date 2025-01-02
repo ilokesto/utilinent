@@ -9,8 +9,8 @@ export default defineConfig({
     minify: true,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'utilify',
-      fileName: (format) => `utilify.${format}.js`,
+      name: 'utilinent',
+      fileName: (format) => `utilinent.${format}.js`,
       formats: ['es', 'umd'], // ES 모듈과 UMD 번들 생성
     },
     rollupOptions: {
