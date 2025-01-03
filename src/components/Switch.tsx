@@ -1,20 +1,20 @@
-import type { MatchProps, SwitchProps, Key } from "./types";
+import type { MatchProps, SwitchProps, Case } from "./types";
 
 export function Match({ children, element }: MatchProps) {
   return children ?? element;
 };
 
 export function Switch({ children, when, fallback = null }: SwitchProps) {
-  children.reduce((acc, value) => {
-    if (value.type !== Match) throw new Error("Match 컴포넌트만 사용할 수 있습니다.");
+  children.reduce((acc, { type, props }) => {
+    if (type !== Match) throw new Error("Match 컴포넌트만 사용할 수 있습니다.");
 
-    if (value.key) {
-      if (acc.includes(value.key)) throw new Error(`Duplicate Match key: ${value.key}`);
-      else acc.push(value.key)
+    if (props.case) {
+      if (acc.includes(props.case)) throw new Error(`Duplicate Match key: ${props.case}`);
+      else acc.push(props.case)
     }
 
     return acc
-  }, [] as Array<Key>)
+  }, [] as Array<Case>)
 
-  return children.find(value => value.key === when) ?? fallback
+  return children.find(({ props }) => props.case === when) ?? fallback
 }
