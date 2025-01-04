@@ -1,3 +1,7 @@
+[![Build Size](https://img.shields.io/bundlephobia/minzip/utilinent?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=zustand)
+[![Version](https://img.shields.io/npm/v/utilinent?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/zustand)
+[![Downloads](https://img.shields.io/npm/dt/utilin.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/zustand)
+
 # Utilinent
 
 utilinent[ˈjuːtɪlɪnənt]는 SolidJS에서 제공하는 간결하고 직관적인 API 디자인 철학을 React 환경에 도입하여, 개발자들이 더욱 생산적이고 효율적으로 작업할 수 있도록 돕는 것을 목표로 합니다.
