@@ -1,18 +1,18 @@
-import { Key, ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
-export type ShowProps = {
-  when: boolean;
-  children: ReactNode;
+export type ShowProps<T> = {
+  when: T;
+  children: ReactNode | ((item: T) => ReactNode);
   fallback?: ReactNode;
 }
 
-export type MapProps<T extends Array<unknown>> = {
+export type ForProps<T extends Array<unknown>> = {
   each: T | null | undefined; 
   fallback?: ReactNode;
   children: (item: T[number], index: number) => ReactNode;
 };
 
-export type Case = Key | boolean | null;
+export type Case = string | number | boolean | null | undefined;
 
 export type SwitchProps = {
   children: Array<ReactElement>,
@@ -34,8 +34,3 @@ export type MountProps = {
   children: ReactNode;
   fallback?: ReactNode 
 }
-
-
-const a: Array<string> = []
-
-let b: Array<string>[number]

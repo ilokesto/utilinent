@@ -1,3 +1,3 @@
 /// <reference types="react" />
 import type { ShowProps } from "./types";
-export declare function Show({ when, children, fallback }: ShowProps): import("react").ReactNode;
+export declare function Show<T>({ when, children, fallback }: ShowProps<T>): import("react").ReactNode;

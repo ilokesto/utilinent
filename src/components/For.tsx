@@ -1,9 +1,9 @@
-import type { MapProps } from "./types";
+import type { ForProps } from "./types";
 
-export function Map<T extends Array<unknown>>({
+export function For<T extends Array<unknown>>({
   each,
   children,
   fallback = null,
-}: MapProps<T>) {
+}: ForProps<T>) {
   return (each && each.length > 0) ? each.map(children) : fallback;
 }

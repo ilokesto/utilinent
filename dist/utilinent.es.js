@@ -1,40 +1,40 @@
-import { jsx as o } from "react/jsx-runtime";
-import { useState as f, useEffect as i } from "react";
-function h({
+import { jsx as f } from "react/jsx-runtime";
+import { useState as s, useEffect as i } from "react";
+function M({
   each: t,
   children: e,
-  fallback: r = null
+  fallback: u = null
 }) {
-  return t && t.length > 0 ? t.filter((n) => n != null).map(e) : r;
+  return t && t.length > 0 ? t.map(e) : u;
 }
-function l({ when: t, children: e, fallback: r = null }) {
-  return t ? e : r;
+function c({ when: t, children: e, fallback: u = null }) {
+  return t ? typeof e == "function" ? e(t) : e : u;
 }
-function s({ children: t, element: e }) {
+function l({ children: t, element: e }) {
   return t ?? e;
 }
-function w({ children: t, when: e, fallback: r = null }) {
-  return t.reduce((n, u) => {
-    if (u.type !== s)
+function m({ children: t, when: e, fallback: u = null }) {
+  return t.reduce((n, { type: o, props: r }) => {
+    if (o !== l)
       throw new Error("Match 컴포넌트만 사용할 수 있습니다.");
-    if (u.key) {
-      if (n.includes(u.key))
-        throw new Error(`Duplicate Match key: ${u.key}`);
-      n.push(u.key);
+    if (r.case) {
+      if (n.includes(r.case))
+        throw new Error(`Duplicate Match key: ${r.case}`);
+      n.push(r.case);
     }
     return n;
-  }, []), t.find((n) => n.key === e) ?? r;
+  }, []), t.find(({ props: n }) => n.case === e) ?? u;
 }
-function y({ children: t, fallback: e = null }) {
-  const [r, n] = f(!1);
+function h({ children: t, fallback: e = null }) {
+  const [u, n] = s(!1);
   return i(() => (n(!0), () => {
     n(!1);
-  }), []), /* @__PURE__ */ o(l, { when: r, fallback: e, children: t });
+  }), []), /* @__PURE__ */ f(c, { when: u, fallback: e, children: t });
 }
 export {
-  h as Map,
-  s as Match,
-  y as Mount,
-  l as Show,
-  w as Switch
+  M as For,
+  l as Match,
+  h as Mount,
+  c as Show,
+  m as Switch
 };
