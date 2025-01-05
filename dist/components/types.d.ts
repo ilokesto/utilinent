@@ -1,4 +1,5 @@
-import { ReactElement, ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
+export { ReactNode };
 export type ShowProps<T> = {
     when: T;
     children: ReactNode | ((item: T) => ReactNode);
@@ -25,6 +26,6 @@ export type MatchProps = {
     element: ReactNode;
 };
 export type MountProps = {
-    children: ReactNode;
+    children: (() => ReactNode | Promise<ReactNode>) | ReactNode;
     fallback?: ReactNode;
 };

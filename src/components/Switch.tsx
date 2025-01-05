@@ -1,3 +1,4 @@
+import { Show } from "./Show";
 import type { MatchProps, SwitchProps, Case } from "./types";
 
 export function Match({ children, element }: MatchProps) {
@@ -16,5 +17,9 @@ export function Switch({ children, when, fallback = null }: SwitchProps) {
     return acc
   }, [] as Array<Case>)
 
-  return children.find(({ props }) => props.case === when) ?? fallback
+  return (
+    <Show when={children.find(({ props }) => props.case === when)} fallback={fallback}>
+      {item => item}
+    </Show>
+  )
 }
