@@ -26,8 +26,8 @@ React에서 조건부 랜더링을 처리하는 방식은 삼항 연산자, 널 
 ```tsx
 function Show<T>({
   when: T;
-  children: ReactNode | ((item: T) => ReactNode);
   fallback?: ReactNode;
+  children: ReactNode | ((item: T) => ReactNode);
 }): ReactNode;
 ```
 ```tsx
@@ -81,9 +81,9 @@ const { data: userList } = useQuery({ ... })
 type Case = string | number | boolean | null | undefined;
  
 function Switch({
-  children: Array<ReactElement>,
   when: Case,
   fallback?: ReactNode
+  children: Array<ReactElement>,
 }): ReactNode
  
 function Match({
@@ -135,8 +135,8 @@ Next.js 프로젝트에서는 DOM이 마운트된 이후에만 특정 코드를 
 
 ```tsx
 function Mount({
-  children: ReactNode | (() => ReactNode | Promise<ReactNode>);
   fallback?: ReactNode;
+  children: ReactNode | (() => ReactNode | Promise<ReactNode>);
 }): ReactNode;
 ```
 
