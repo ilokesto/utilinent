@@ -1,46 +1,45 @@
-import { jsx as s } from "react/jsx-runtime";
-import { useState as l, useEffect as c } from "react";
-function f({ when: t, children: n, fallback: u = null }) {
-  return t ? typeof n == "function" ? n(t) : n : u;
-}
-function M({
+import { useState as s, useEffect as l } from "react";
+function c({
   each: t,
   children: n,
   fallback: u = null
 }) {
-  return /* @__PURE__ */ s(f, { when: t && t.length > 0, fallback: u, children: t == null ? void 0 : t.map(n) });
+  return t && t.length > 0 ? t == null ? void 0 : t.map(n) : u;
 }
-function w({ children: t, element: n }) {
+function w({ when: t, children: n, fallback: u = null }) {
+  return t ? typeof n == "function" ? n(t) : n : u;
+}
+function i({ children: t, element: n }) {
   return t ?? n;
 }
-function m({ children: t, when: n, fallback: u = null }) {
-  return t.reduce((e, { type: o, props: r }) => {
-    if (o !== w)
+function M({ children: t, when: n, fallback: u = null }) {
+  return t.reduce((e, { type: r, props: o }) => {
+    if (r !== i)
       throw new Error("Match 컴포넌트만 사용할 수 있습니다.");
-    if (r.case) {
-      if (e.includes(r.case))
-        throw new Error(`Duplicate Match key: ${r.case}`);
-      e.push(r.case);
+    if (o.case) {
+      if (e.includes(o.case))
+        throw new Error(`Duplicate Match key: ${o.case}`);
+      e.push(o.case);
     }
     return e;
-  }, []), /* @__PURE__ */ s(f, { when: t.find(({ props: e }) => e.case === n), fallback: u, children: (e) => e });
+  }, []), t.find(({ props: e }) => e.case === n) ?? u;
 }
-function h({ children: t, fallback: n = null }) {
-  const [u, e] = l(!1), [o, r] = l(null);
-  return c(() => (e(!0), (async () => {
+function y({ children: t, fallback: n = null }) {
+  const [u, e] = s(!1), [r, o] = s(null);
+  return l(() => (e(!0), (async () => {
     if (typeof t == "function") {
-      const i = await t();
-      r(i);
+      const f = await t();
+      o(f);
     } else
-      r(t);
+      o(t);
   })(), () => {
     e(!1);
-  }), [t]), /* @__PURE__ */ s(f, { when: u, fallback: n, children: o });
+  }), [t]), u ? r : n;
 }
 export {
-  M as For,
-  w as Match,
-  h as Mount,
-  f as Show,
-  m as Switch
+  c as For,
+  i as Match,
+  y as Mount,
+  w as Show,
+  M as Switch
 };

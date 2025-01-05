@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Show } from "./Show";
 import type { MountProps, ReactNode } from "./types";
 
 export function Mount({ children, fallback = null }: MountProps) {
@@ -24,9 +23,5 @@ export function Mount({ children, fallback = null }: MountProps) {
     };
   }, [children]);
 
-  return (
-    <Show when={isMounted} fallback={fallback}>
-      {resolvedChildren}
-    </Show>
-  );
+  return isMounted ? resolvedChildren : fallback;
 }

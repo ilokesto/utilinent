@@ -1,2 +1,3 @@
-import type { MountProps } from "./types";
-export declare function Mount({ children, fallback }: MountProps): import("react/jsx-runtime").JSX.Element;
+/// <reference types="react" />
+import type { MountProps, ReactNode } from "./types";
+export declare function Mount({ children, fallback }: MountProps): ReactNode;
