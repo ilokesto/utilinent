@@ -1,4 +1,4 @@
-import type { ExtractExact, ExtractKeyValues, LiteralKeys, MatchProps, SwitchProps } from "./types";
+import type { ExtractByKeyValue, ExtractValues, LiteralKeys, SwitchProps } from "./types";
 
 export function createSwitchMatch<T, K extends LiteralKeys<T>>(data: T) {
   function Switch({ children, when, fallback = null }: SwitchProps<T, K>) {
@@ -16,8 +16,13 @@ export function createSwitchMatch<T, K extends LiteralKeys<T>>(data: T) {
     return children.find(({ props }) => props.case === when) ?? fallback;
   }
 
-  function Match<C extends ExtractKeyValues<T, K>>({ children }: MatchProps<T, K, C>) {
-    return children(data as ExtractExact<T, K, C>);
+  function Match<V extends ExtractValues<T, K>>({ 
+    children 
+  }: { 
+    case: V, 
+    children: (props: ExtractByKeyValue<T, K, V>) => React.ReactNode 
+  })  {
+    return children(data as ExtractByKeyValue<T, K, V>);
   };
 
   return { Switch, Match };

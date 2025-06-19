@@ -14,8 +14,13 @@ export type ForProps<T extends Array<unknown>> = {
   children: (item: T[number], index: number) => ReactNode;
 };
 
-export type ExtractKeyValues<T, K extends keyof T> = T extends any ? T[K] : never; 
-export type ExtractExact<T, K extends keyof T, V extends T[K]> = T extends Record<K, V> ? T : never;
+export type ExtractValues<T, K extends keyof T> = T extends any ? T[K] : never;
+export type ExtractByKeyValue<T, K extends keyof T, V> = T extends any 
+  ? T[K] extends V 
+    ? T 
+    : never 
+  : never;
+
 export type LiteralKeys<T> = {
   [K in keyof T]: T[K] extends string 
     ? string extends T[K] 
@@ -28,11 +33,6 @@ export type SwitchProps<T, K extends LiteralKeys<T>> = {
   children: Array<ReactElement>,
   when: K,
 } & Fallback;
-
-export type MatchProps<T, K extends keyof T, C extends ExtractKeyValues<T, K>> = {
-  case: C;
-  children: (props: ExtractExact<T, K, C>) => ReactNode;
-}
 
 export type MountProps = {
   children: ReactNode | (() => ReactNode | Promise<ReactNode>);
