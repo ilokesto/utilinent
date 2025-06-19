@@ -26,6 +26,22 @@ export type LiteralKeys<T> = {
     ? string extends T[K] 
       ? never 
       : K
+    : T[K] extends number
+    ? number extends T[K]
+      ? never
+      : K
+    : T[K] extends boolean
+    ? boolean extends T[K]
+      ? never
+      : K
+    : T[K] extends bigint
+    ? bigint extends T[K]
+      ? never
+      : K
+    : T[K] extends symbol
+    ? symbol extends T[K]
+      ? never
+      : K
     : never;
 }[keyof T];
 

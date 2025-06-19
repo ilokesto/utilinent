@@ -75,57 +75,128 @@ const { data: userList } = useQuery({ ... })
 
 # Switch & Match
 
-랜더링 조건이 여럿이라면 보통은 if문이나 switch문을 사용하게 됩니다. 하지만 조건이 복잡해질 수록 코드가 쉽게 복잡해지며, 가독성은 떨어지고 유지보수하기 어려워집니다. Switch와 Match 컴포넌트는 이러한 문제를 해결하고, 조건부 렌더링을 더 간결하고 선언적으로 처리할 수 있는 방법을 제공합니다.
+복잡한 조건부 렌더링에서 타입 안전성을 보장하면서도 간결한 코드를 작성하는 것은 어려운 과제입니다. 특히 유니온 타입의 특정 필드 값에 따라 다른 컴포넌트를 렌더링해야 할 때, 기존의 switch문이나 조건문은 타입 추론의 한계와 코드 복잡성 문제를 야기할 수 있습니다. `createSwitchMatch`는 이러한 문제를 해결하여 타입 안전하고 선언적인 조건부 렌더링을 제공합니다.
 
 ```tsx
-type Case = string | number | boolean | null | undefined;
- 
-function Switch({
-  when: Case,
-  fallback?: ReactNode
-  children: Array<ReactElement>,
-}): ReactNode
- 
-function Match({
-  case: Case,
-  children: ReactNode,
-  element?: never
-} | {
-  case: Case,
-  children?: never,
-  element: ReactNode
-}): ReactNode
+function createSwitchMatch<T, K extends LiteralKeys<T>>(data: T): {
+  Switch: ({ 
+    when: K, 
+    children: Array<ReactElement>, 
+    fallback?: ReactNode 
+  }) => ReactNode;
+  Match: <V extends ExtractValues<T, K>>({
+    case: V,
+    children: (props: ExtractByKeyValue<T, K, V>) => ReactNode
+  }) => ReactNode;
+}
 ```
 
-Switch는 주어진 when 값에 맞는 첫 번째 Match 컴포넌트를 찾아 렌더링합니다. Match 컴포넌트는 case prop으로 각 조건을 정의하며, 조건에 맞는 콘텐츠를 children이나 element 중 원하는 방식으로 제공할 수 있습니다. 아래는 switch문을 사용하여 조건부 랜더링을 처리하는 코드와, 동일한 로직을 Switch와 Match 컴포넌트로 다시 작성한 것입니다.
+`createSwitchMatch`는 데이터 객체를 받아 해당 객체의 구조에 맞는 Switch와 Match 컴포넌트를 생성합니다. 이렇게 생성된 컴포넌트들은 TypeScript의 타입 시스템을 활용하여 완전한 타입 안전성을 제공하며, 선택한 필드의 값에 따라 정확한 타입 추론을 수행합니다.
+
+`createSwitchMatch`는 객체의 유니온 타입 `T`에서 리터럴 값을 가지고 있는 키를 `K`로 추출합니다. 리터럴 키가 하나만 있는 경우 자동으로 추론되지만, 여러 개가 있는 경우에는 명시적으로 타입을 지정해야 합니다.
+
+## 케이스 1: 서로 다른 필드를 가진 유니온 타입 (K = "status")
 
 ```tsx
-export function SearchTitle(props: { searchType: SearchType, keyword: string }) {
-  switch (props.searchType) {
-    case "report":
-      return <SearchReport />
- 
-    case "book":
-      return <SearchBook />;
- 
-    case "tag":
-      return <SearchTag />;
-  }
-};
-```
-```tsx
-export function SearchTitle(props: { searchType: SearchType, keyword: string }) {
+type ApiResponse =
+  | { status: "fetching" }
+  | { status: "success", message: string }
+  | { status: "failed", reason: string };
+
+function ApiStatus({ response }: { response: ApiResponse }) {
+  // K는 자동으로 "status"로 추론됨
+  const { Switch, Match } = createSwitchMatch(response);
+  
   return (
-    <Switch when={props.searchType}>
-      <Match case="report" element={<SearchReport />} />
-      <Match case="book" element={<SearchBook />} />
-      <Match case="tag" element={<SearchTag />} />
+    <Switch when="status" fallback={<div>알 수 없는 상태</div>}>
+      <Match case="fetching">
+        {(props) => <Spinner />} {/* props: { status: "fetching" } */}
+      </Match>
+      
+      <Match case="success">
+        {(props) => <Alert type="success">{props.message}</Alert>}
+        {/* props: { status: "success", message: string } */}
+      </Match>
+      
+      <Match case="failed">
+        {(props) => <Alert type="error">{props.reason}</Alert>}
+        {/* props: { status: "failed", reason: string } */}
+      </Match>
     </Switch>
-  )
-};
+  );
+}
 ```
 
-Switch와 Match 컴포넌트를 사용할 때는 몇 가지 주의할 점이 있습니다. Switch에는 둘 이상의 Match 컴포넌트를 제공해야 하며, Match 컴포넌트 외의 ReactElement는 사용할 수 없습니다. 또한, 개발자는 각 Match 컴포넌트의 case 값을 명확하고 고유하게 정의하여 예측 가능한 동작을 유지해야 합니다. 이를 위반하면 코드의 가독성과 안정성이 저하될 수 있으므로 각별한 주의가 필요합니다.
+## 케이스 2: 동일한 필드를 가진 유니온 타입 (K = "status")
+
+```tsx
+type ApiResponse =
+  | { status: "fetching", message: string }
+  | { status: "success", message: string }
+  | { status: "failed", message: string };
+
+function ApiNotification({ response }: { response: ApiResponse }) {
+  // K는 자동으로 "status"로 추론됨 (message는 string 타입이므로 제외)
+  const { Switch, Match } = createSwitchMatch(response);
+  
+  return (
+    <Switch when="status" fallback={<div>알 수 없는 상태</div>}>
+      <Match case="fetching">
+        {(props) => (
+          <div className="loading">
+            <Spinner />
+            <span>{props.message}</span>
+          </div>
+        )}
+      </Match>
+      
+      <Match case="success">
+        {(props) => <Toast variant="success">{props.message}</Toast>}
+      </Match>
+      
+      <Match case="failed">
+        {(props) => <Toast variant="error">{props.message}</Toast>}
+      </Match>
+    </Switch>
+  );
+}
+```
+
+## 케이스 3: 여러 리터럴 필드를 가진 유니온 타입 (K = "status" | "message")
+
+```tsx
+type ApiResponse =
+  | { status: "fetching", message: "C" }
+  | { status: "success", message: "B" }
+  | { status: "failed", message: "C" };
+
+function ApiNotification({ response }: { response: ApiResponse }) {
+  // K는 "status" | "message"로 추론됨
+  // 따라서 명시적으로 지정해주어야 함
+  const { Switch, Match } = createSwitchMatch<ApiResponse, "status">(response);
+  
+  return (
+    <Switch when="status" fallback={<div>알 수 없는 상태</div>}>
+      <Match case="fetching">
+        {(props) => (
+          <div className="loading">
+            <Spinner />
+            <span>{props.message}</span>
+          </div>
+        )}
+      </Match>
+      
+      <Match case="success">
+        {(props) => <Toast variant="success">{props.message}</Toast>}
+      </Match>
+      
+      <Match case="failed">
+        {(props) => <Toast variant="error">{props.message}</Toast>}
+      </Match>
+    </Switch>
+  );
+}
+```
 
 &nbsp;
 
