@@ -11,7 +11,7 @@ export function createSwitchMatch<T, K extends LiteralKeys<T>>(data: T) {
       }
 
       return acc
-    }, [] as any)
+    }, [] as Array<K>);
 
     return children.find(({ props }) => props.case === data[when]) ?? fallback;
   }
