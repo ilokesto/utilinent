@@ -12,19 +12,18 @@ export type ForProps<T extends Array<unknown>> = {
     fallback?: ReactNode;
     children: (item: T[number], index: number) => ReactNode;
 };
-export type Case = string | number | boolean | null | undefined;
-export type SwitchProps = {
+export type ExtractKeyValues<T, K extends keyof T> = T extends any ? T[K] : never;
+export type ExtractExact<T, K extends keyof T, V extends T[K]> = T extends Record<K, V> ? T : never;
+export type LiteralKeys<T> = {
+    [K in keyof T]: T[K] extends string ? string extends T[K] ? never : K : never;
+}[keyof T];
+export type SwitchProps<T, K extends LiteralKeys<T>> = {
     children: Array<ReactElement>;
-    when: Case;
+    when: K;
 } & Fallback;
-export type MatchProps = {
-    case: Case;
-    children: ReactNode;
-    element?: never;
-} | {
-    case: Case;
-    children?: never;
-    element: ReactNode;
+export type MatchProps<T, K extends keyof T, C extends ExtractKeyValues<T, K>> = {
+    case: C;
+    children: (props: ExtractExact<T, K, C>) => ReactNode;
 };
 export type MountProps = {
     children: ReactNode | (() => ReactNode | Promise<ReactNode>);
