@@ -13,7 +13,7 @@ export function createSwitchMatch<T, K extends LiteralKeys<T>>(data: T) {
       return acc
     }, [] as any)
 
-    return children.find(({ props }) => props.case === when) ?? fallback;
+    return children.find(({ props }) => props.case === data[when]) ?? fallback;
   }
 
   function Match<V extends ExtractValues<T, K>>({ 

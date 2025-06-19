@@ -11,7 +11,7 @@ export function createSwitchMatch(data) {
             }
             return acc;
         }, []);
-        return children.find(({ props }) => props.case === when) ?? fallback;
+        return children.find(({ props }) => props.case === data[when]) ?? fallback;
     }
     function Match({ children }) {
         return children(data);
