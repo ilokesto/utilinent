@@ -65,3 +65,8 @@ export type SwitchProps<T, K extends LiteralKeys<T>> = {
 export type MountProps = {
   children: ReactNode | (() => ReactNode | Promise<ReactNode>);
 } & Fallback;
+
+export type RepeatProps = {
+  times: number;
+  children: (index: number) => ReactNode;
+} & Fallback;

@@ -23,7 +23,7 @@ npm install utilinent
 ```
 
 ```typescript
-import { Show, For, createSwitcher, OptionalWrapper, Mount } from "utilinent"
+import { Show, For, createSwitcher, OptionalWrapper, Mount, Repeat } from "utilinent"
 ```
 
 ## 📋 목차
@@ -33,6 +33,7 @@ import { Show, For, createSwitcher, OptionalWrapper, Mount } from "utilinent"
 - [createSwitcher - 타입 안전한 분기 처리](#createswitcher---타입-안전한-분기-처리)
 - [OptionalWrapper - 조건부 래퍼](#optionalwrapper---조건부-래퍼)
 - [Mount - 클라이언트 사이드 렌더링](#mount---클라이언트-사이드-렌더링)
+- [Repeat - 횟수 기반 반복 렌더링](#repeat---횟수-기반-반복-렌더링)
 
 ---
 
@@ -561,6 +562,172 @@ function NewWay() {
 </Mount>
 ```
 
+---
+
+# Repeat - 횟수 기반 반복 렌더링
+
+**기존 방식의 문제점**
+
+특정 횟수만큼 컴포넌트를 반복 렌더링할 때, 기존 방식은 불필요한 배열을 생성하거나 복잡한 로직을 작성해야 합니다.
+
+```tsx
+// ❌ 불필요한 배열 생성
+{Array(5).fill(null).map((_, index) => (
+  <SkeletonCard key={index} />
+))}
+
+// ❌ 복잡한 반복 로직
+{(() => {
+  const items = [];
+  for (let i = 0; i < starCount; i++) {
+    items.push(<Star key={i} filled={i < rating} />);
+  }
+  return items;
+})()}
+```
+
+**Repeat 컴포넌트의 해결책**
+
+`Repeat` 컴포넌트는 횟수 기반 반복 렌더링을 간단하고 직관적으로 처리할 수 있게 해줍니다.
+
+```tsx
+interface RepeatProps {
+  times: number;                                    // 반복 횟수
+  fallback?: ReactNode;                             // times가 0 이하일 때의 대체 내용
+  children: (index: number) => ReactNode;           // 각 반복에서 렌더링할 함수
+}
+```
+
+**✅ Repeat을 사용한 개선된 방식**
+
+**기본 반복 렌더링**
+```tsx
+// 스켈레톤 UI 생성
+<Repeat times={5} fallback={<div>로딩할 항목이 없습니다</div>}>
+  {(index) => <SkeletonCard key={index} delay={index * 200} />}
+</Repeat>
+
+// 평점 시스템
+<Repeat times={5}>
+  {(index) => (
+    <Star 
+      key={index}
+      filled={index < rating}
+      onClick={() => setRating(index + 1)}
+    />
+  )}
+</Repeat>
+
+// 페이지네이션 번호
+<Repeat times={totalPages}>
+  {(index) => {
+    const pageNumber = index + 1;
+    return (
+      <PageButton 
+        key={pageNumber}
+        page={pageNumber}
+        active={currentPage === pageNumber}
+        onClick={() => setCurrentPage(pageNumber)}
+      />
+    );
+  }}
+</Repeat>
+```
+
+**🎯 실제 사용 사례**
+
+```tsx
+// 로딩 스켈레톤
+function ProductListSkeleton() {
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <Repeat times={9}>
+        {(index) => (
+          <div key={index} className="animate-pulse">
+            <div className="bg-gray-300 h-48 rounded-lg mb-4"></div>
+            <div className="bg-gray-300 h-4 rounded mb-2"></div>
+            <div className="bg-gray-300 h-4 rounded w-2/3"></div>
+          </div>
+        )}
+      </Repeat>
+    </div>
+  );
+}
+
+// 진행률 표시기
+function ProgressDots({ total, current }: { total: number, current: number }) {
+  return (
+    <div className="flex space-x-2">
+      <Repeat times={total}>
+        {(index) => (
+          <div
+            key={index}
+            className={`w-3 h-3 rounded-full ${
+              index < current ? 'bg-blue-500' : 'bg-gray-300'
+            }`}
+          />
+        )}
+      </Repeat>
+    </div>
+  );
+}
+
+// 메뉴 아이템 생성
+function NavigationMenu({ menuCount }: { menuCount: number }) {
+  return (
+    <nav className="flex space-x-4">
+      <Repeat times={menuCount} fallback={<div>메뉴가 없습니다</div>}>
+        {(index) => {
+          const menuItem = menuItems[index];
+          return (
+            <a 
+              key={index}
+              href={menuItem?.href}
+              className="px-4 py-2 text-gray-700 hover:text-blue-600"
+            >
+              {menuItem?.label || `메뉴 ${index + 1}`}
+            </a>
+          );
+        }}
+      </Repeat>
+    </nav>
+  );
+}
+```
+
+**🔧 유용한 패턴들**
+
+```tsx
+// 조건부 반복 (0일 때 fallback 표시)
+<Repeat times={itemCount} fallback={<EmptyState />}>
+  {(index) => <Item key={index} data={items[index]} />}
+</Repeat>
+
+// 지연 애니메이션
+<Repeat times={6}>
+  {(index) => (
+    <div 
+      key={index}
+      className="fade-in"
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
+      <Card />
+    </div>
+  )}
+</Repeat>
+
+// 인덱스 기반 스타일링
+<Repeat times={4}>
+  {(index) => (
+    <div 
+      key={index}
+      className={`col-span-${index % 2 === 0 ? '2' : '1'}`}
+    >
+      <GridItem />
+    </div>
+  )}
+</Repeat>
+```
 ---
 
 ## 🤝 기여하기
