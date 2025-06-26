@@ -39,6 +39,7 @@ import { Show, For, createSwitcher, OptionalWrapper, Mount } from "utilinent"
 # Show - 조건부 렌더링
 
 **기존 방식의 문제점**
+
 React에서 조건부 렌더링을 할 때 삼항 연산자(`? :`), AND 연산자(`&&`), OR 연산자(`||`) 등을 혼용하면 코드 스타일이 일관되지 않습니다. 특히 중첩된 조건이나 복잡한 로직에서는 가독성이 크게 떨어집니다.
 
 ```tsx
@@ -49,6 +50,7 @@ React에서 조건부 렌더링을 할 때 삼항 연산자(`? :`), AND 연산�
 ```
 
 **Show 컴포넌트의 해결책**
+
 `Show` 컴포넌트는 모든 조건부 렌더링을 일관된 방식으로 처리하며, TypeScript의 타입 가드 기능을 활용해 안전한 타입 추론을 제공합니다.
 
 ```tsx
@@ -60,6 +62,7 @@ interface ShowProps<T> {
 ```
 
 **✅ Show를 사용한 개선된 방식**
+
 ```tsx
 // 간단한 조건부 렌더링
 <Show when={isLoading}>
@@ -78,6 +81,7 @@ interface ShowProps<T> {
 ```
 
 **🎯 타입 안전성의 장점**
+
 ```tsx
 interface User {
   id: number;
@@ -102,6 +106,7 @@ const user: User | null = getUser();
 # For - 배열 렌더링
 
 **기존 방식의 문제점**
+
 React에서 배열을 렌더링할 때 `Array.map()`을 사용하는 것은 일반적이지만, 빈 배열이나 `null`/`undefined` 처리를 위해 추가적인 조건문이 필요하여 코드가 복잡해집니다.
 
 ```tsx
@@ -113,6 +118,8 @@ React에서 배열을 렌더링할 때 `Array.map()`을 사용하는 것은 일�
 ```
 
 **For 컴포넌트의 해결책**
+
+
 `For` 컴포넌트는 배열 렌더링과 예외 상황 처리를 하나의 컴포넌트에서 깔끔하게 해결합니다.
 
 ```tsx
@@ -124,6 +131,7 @@ interface ForProps<T extends Array<unknown>> {
 ```
 
 **✅ For를 사용한 개선된 방식**
+
 ```tsx
 // 기본 배열 렌더링
 <For each={users} fallback={<EmptyUserList />}>
@@ -146,6 +154,7 @@ const { data: userList } = useQuery({ ... }); // userList는 User[] | undefined
 ```
 
 **🎯 타입 안전성의 장점**
+
 ```tsx
 interface Product {
   id: string;
@@ -171,18 +180,38 @@ const products: Product[] | null = getProducts();
 # createSwitcher - 타입 안전한 분기 처리
 
 **기존 방식의 문제점**
-복잡한 유니온 타입에서 특정 필드 값에 따라 다른 컴포넌트를 렌더링할 때, 기존의 `switch`문이나 연속된 `if`문은 타입 추론의 한계와 코드 복잡성 문제를 야기합니다.
+복잡한 유니온 타입에서 특정 필드 값에 따라 다른 컴포넌트를 렌더링할 때, 기존의 `switch`문이나 연속된 `if`문은 코드 복잡성과 실수 가능성 문제를 야기합니다.
 
 ```tsx
-// ❌ 타입 안전하지 않은 기존 방식
+type ApiResponse =
+  | { status: "loading" }
+  | { status: "success", data: User[], count: number }
+  | { status: "error", message: string, code: number };
+
+// ❌ 복잡하고 실수하기 쉬운 기존 방식
 function renderApiResponse(response: ApiResponse) {
   switch (response.status) {
     case 'loading':
       return <Spinner />;
     case 'success':
-      return <div>{response.message}</div>; // ❌ TypeScript가 message 존재를 보장하지 않음
+      // 복잡한 JSX가 switch 문 안에 섞여있음
+      return (
+        <div>
+          <h2>성공! ({response.count}개 항목)</h2>
+          {response.data.map(user => <UserCard key={user.id} user={user} />)}
+        </div>
+      );
     case 'error':
-      return <Error message={response.error} />; // ❌ error vs reason 필드명 실수 가능
+      // 또 다른 복잡한 JSX
+      return (
+        <div className="error">
+          <h3>오류 발생 (코드: {response.code})</h3>
+          <p>{response.message}</p>
+          <button onClick={retry}>다시 시도</button>
+        </div>
+      );
+    default:
+      return null; // ❌ fallback 처리를 까먹기 쉬움
   }
 }
 ```
@@ -532,131 +561,7 @@ function NewWay() {
 </Mount>
 ```
 
-> **⚠️ 주의사항**: `Mount` 컴포넌트는 내부적으로 state를 사용하므로 Next.js App Router에서는 클라이언트 컴포넌트로 동작합니다. 페이지 상단에 `"use client"` 지시어를 추가해야 할 수 있습니다.
-
 ---
-
-## 🚀 시작하기
-
-### 기본 사용법
-
-```tsx
-import { Show, For, createSwitcher, OptionalWrapper, Mount } from 'utilinent';
-
-function App() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  
-  return (
-    <div>
-      <Show when={loading} fallback={
-        <For each={users} fallback={<div>사용자가 없습니다</div>}>
-          {(user) => <UserCard key={user.id} user={user} />}
-        </For>
-      }>
-        <div>로딩 중...</div>
-      </Show>
-    </div>
-  );
-}
-```
-
-### 고급 사용법
-
-```tsx
-type PageState = 
-  | { status: 'loading' }
-  | { status: 'error', message: string }
-  | { status: 'success', data: User[], totalCount: number };
-
-function UserManagementPage({ pageState }: { pageState: PageState }) {
-  const { Switch, Match } = createSwitcher(pageState);
-  
-  return (
-    <div className="page-container">
-      <Switch when="status" fallback={<div>알 수 없는 상태</div>}>
-        <Match case="loading">
-          {() => (
-            <div className="loading-container">
-              <Spinner />
-              <p>사용자 데이터를 불러오는 중...</p>
-            </div>
-          )}
-        </Match>
-        
-        <Match case="error">
-          {(state) => (
-            <div className="error-container">
-              <ErrorIcon />
-              <p>오류가 발생했습니다: {state.message}</p>
-              <button onClick={retry}>다시 시도</button>
-            </div>
-          )}
-        </Match>
-        
-        <Match case="success">
-          {(state) => (
-            <div className="success-container">
-              <h2>사용자 목록 ({state.totalCount}명)</h2>
-              <For each={state.data} fallback={<EmptyUserList />}>
-                {(user) => (
-                  <OptionalWrapper
-                    when={user.isActive}
-                    wrapper={(children) => (
-                      <div className="active-user-highlight">
-                        {children}
-                      </div>
-                    )}
-                  >
-                    <UserCard user={user} />
-                  </OptionalWrapper>
-                )}
-              </For>
-            </div>
-          )}
-        </Match>
-      </Switch>
-    </div>
-  );
-}
-```
-
-## 📚 타입 정의
-
-```typescript
-// Show 컴포넌트
-interface ShowProps<T> {
-  when: T;
-  fallback?: ReactNode;
-  children: ReactNode | ((item: NonNullable<T>) => ReactNode);
-}
-
-// For 컴포넌트
-interface ForProps<T extends Array<unknown>> {
-  each: T | null | undefined;
-  fallback?: ReactNode;
-  children: (item: T[number], index: number) => ReactNode;
-}
-
-// OptionalWrapper 컴포넌트
-interface OptionalWrapperProps {
-  when: boolean;
-  children: ReactNode;
-  wrapper: (children: ReactNode) => ReactNode;
-}
-
-// Mount 컴포넌트
-interface MountProps {
-  fallback?: ReactNode;
-  children: ReactNode | (() => ReactNode | Promise<ReactNode>);
-}
-
-// createSwitcher 함수
-function createSwitcher<T, K extends LiteralKeys<T>>(data: T): {
-  Switch: (props: SwitchProps<K>) => ReactNode;
-  Match: <V extends ExtractValues<T, K>>(props: MatchProps<T, K, V>) => ReactNode;
-}
-```
 
 ## 🤝 기여하기
 
@@ -672,10 +577,8 @@ MIT License
 
 ## 🔗 관련 링크
 
-- [GitHub Repository](https://github.com/your-username/utilinent)
-- [NPM Package](https://www.npmjs.com/package/utilinent)
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [React Documentation](https://react.dev/)
+- [GitHub Repository](https://github.com/ilokesto/utilinent)
+- [NPM Package](https://www.npmjs.com/ayden94/utilinent)
 
 ---
 
