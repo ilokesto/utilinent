@@ -1,6 +1,6 @@
 import type { ExtractByKeyValue, ExtractValues, LiteralKeys, SwitchProps } from "./types";
 
-export function createSwitchMatch<T, K extends LiteralKeys<T>>(data: T) {
+export function createSwitcher<T, K extends LiteralKeys<T>>(data: T) {
   function Switch({ children, when, fallback = null }: SwitchProps<T, K>) {
     children.reduce((acc, { type, props }) => {
       if (type !== Match) throw new Error("Match 컴포넌트만 사용할 수 있습니다.");

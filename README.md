@@ -4,217 +4,484 @@
 
 # Utilinent
 
-utilinent는 SolidJS의 간결하고 직관적인 Control Flow API를 React에 도입하고 발전시켜, 개발자들이 더욱 생산적이고 효율적으로 작업할 수 있도록 돕는 것을 목표로 합니다. React에서 자주 사용되는 패턴과 조건부 렌더링 로직을 컴포넌트로 감싸는 방식으로 재사용성을 높이며, 이를 통해 대규모 프로젝트에서도 코드 스타일을 일관되게 유지할 수 있습니다. 또한, 가독성이 뛰어난 코드를 작성하고 복잡한 로직을 단순화하여 유지보수를 더욱 편리하게 만듭니다.
+**React를 위한 타입 안전하고 선언적인 Control Flow 라이브러리**
 
-&nbsp;
+React에서 조건부 렌더링과 반복 렌더링은 필수적이지만, 복잡해질수록 코드가 읽기 어려워지고 타입 안전성을 보장하기 어려워집니다. Utilinent는 SolidJS의 우아한 Control Flow API에서 영감을 받아, React 개발자들에게 더 나은 개발 경험을 제공합니다.
 
-# install 및 import 
+## ✨ 주요 특징
 
-```ts
-npm i utilinent
+- **🎯 타입 안전성**: TypeScript와 완벽하게 통합되어 컴파일 타임에 오류를 잡아냅니다
+- **📖 가독성**: 복잡한 조건문을 선언적인 컴포넌트로 변환하여 코드를 이해하기 쉽게 만듭니다
+- **🔄 일관성**: 팀 전체가 동일한 패턴을 사용하여 코드 스타일을 통일합니다
+- **🚀 성능**: 불필요한 리렌더링을 방지하고 최적화된 렌더링을 제공합니다
+- **📦 경량**: 최소한의 번들 크기로 프로젝트에 부담을 주지 않습니다
+
+## 🚀 설치 및 사용법
+
+```bash
+npm install utilinent
 ```
-```ts
-import { Show, For, Switch, Match, Mount } from "utilinent"
+
+```typescript
+import { Show, For, createSwitcher, OptionalWrapper, Mount } from "utilinent"
 ```
 
-&nbsp;
+## 📋 목차
 
-# Show
+- [Show - 조건부 렌더링](#show---조건부-렌더링)
+- [For - 배열 렌더링](#for---배열-렌더링)  
+- [createSwitcher - 타입 안전한 분기 처리](#createswitcher---타입-안전한-분기-처리)
+- [OptionalWrapper - 조건부 래퍼](#optionalwrapper---조건부-래퍼)
+- [Mount - 클라이언트 사이드 렌더링](#mount---클라이언트-사이드-렌더링)
 
-React에서 조건부 랜더링을 처리하는 방식은 삼항 연산자, 널 병합 연산자 또는 AND 연산자 등 무궁무진합니다. 이러한 다양성은 코드 스타일을 일관적으로 유지하는 것을 어렵게 만듭니다. 특히 복잡한 조건부 로직이 추가되면 코드는 중첩되고 가독성이 떨어지며, 유지보수가 어려워질 수 있습니다. Show 컴포넌트는 이러한 문제를 해결하며 대규모 프로젝트에서도 코드의 명확성과 재사용성을 동시에 고려한 일관된 접근법을 제공합니다.
+---
+
+# Show - 조건부 렌더링
+
+**기존 방식의 문제점**
+React에서 조건부 렌더링을 할 때 삼항 연산자(`? :`), AND 연산자(`&&`), OR 연산자(`||`) 등을 혼용하면 코드 스타일이 일관되지 않습니다. 특히 중첩된 조건이나 복잡한 로직에서는 가독성이 크게 떨어집니다.
 
 ```tsx
-function Show<T>({
-  when: T;
-  fallback?: ReactNode;
-  children: ReactNode | ((item: T) => ReactNode);
-}): ReactNode;
+// ❌ 일관성 없는 기존 방식
+{isLoading && <Spinner />}
+{user ? <UserProfile user={user} /> : <LoginButton />}
+{data || <EmptyState />}
 ```
+
+**Show 컴포넌트의 해결책**
+`Show` 컴포넌트는 모든 조건부 렌더링을 일관된 방식으로 처리하며, TypeScript의 타입 가드 기능을 활용해 안전한 타입 추론을 제공합니다.
+
 ```tsx
-// 삼항 연산자 대체
-<Show when={isLoggedIn} fallback={<LoginButton />}>
-  <UserProfile />
-</Show>
- 
-// AND 연산자 대체
+interface ShowProps<T> {
+  when: T;                                           // 조건값 (truthy/falsy 체크)
+  fallback?: ReactNode;                             // 조건이 false일 때 렌더링할 내용
+  children: ReactNode | ((item: NonNullable<T>) => ReactNode); // 조건이 true일 때의 내용
+}
+```
+
+**✅ Show를 사용한 개선된 방식**
+```tsx
+// 간단한 조건부 렌더링
 <Show when={isLoading}>
   <Spinner />
 </Show>
- 
-// OR 연산자 대체
-<Show when={value} fallback={<DefaultValue />}>
-  {(item) => item}
+
+// fallback과 함께
+<Show when={user} fallback={<LoginButton />}>
+  {(user) => <UserProfile user={user} />}  {/* user는 자동으로 NonNullable 타입으로 추론 */}
+</Show>
+
+// 기본값 표시
+<Show when={data} fallback={<EmptyState />}>
+  {(data) => <DataView data={data} />}
 </Show>
 ```
 
-&nbsp;
-
-# For 
-React에서 배열을 렌더링할 때 흔히 사용하는 방식은 Array.prototype.map 메서드입니다. 이 방식은 배열의 각 요소를 순회하며 렌더링할 수 있는 강력한 도구지만, 몇 가지 단점도 존재합니다. JSX 코드와 배열 순회 로직이 밀접하게 얽혀 있어 코드가 복잡해지고, 특히 빈 배열을 처리해야 할 경우 추가적인 조건문이 필요해 가독성과 유지보수성이 떨어질 수 있습니다. For 컴포넌트는 이러한 문제를 해결하고, 배열 랜더링과 빈 배열 처리를 간소화하며, 선언적인 코드 작성 방식을 지원합니다.
-
+**🎯 타입 안전성의 장점**
 ```tsx
-function For<T extends Array<unknown>>({
-  each: T | null | undefined; 
-  fallback?: ReactNode;
-  children: (item: T[number], index: number) => ReactNode;
-}): ReactNode;
+interface User {
+  id: number;
+  name: string;
+}
+
+const user: User | null = getUser();
+
+<Show when={user}>
+  {(user) => (
+    <div>
+      {/* TypeScript가 user가 User 타입임을 보장 */}
+      <h1>{user.name}</h1>      {/* ✅ 안전함 */}
+      <p>ID: {user.id}</p>      {/* ✅ 안전함 */}
+    </div>
+  )}
+</Show>
 ```
 
-each에 제공된 값이 undefined 혹은 null일 경우, For 컴포넌트는 지정된 fallback 콘텐츠를 렌더링하여 오류를 방지합니다.
+---
+
+# For - 배열 렌더링
+
+**기존 방식의 문제점**
+React에서 배열을 렌더링할 때 `Array.map()`을 사용하는 것은 일반적이지만, 빈 배열이나 `null`/`undefined` 처리를 위해 추가적인 조건문이 필요하여 코드가 복잡해집니다.
 
 ```tsx
-// type of users is Array<{ id: number, name: string }> | undefined
-const { data: userList } = useQuery({ ... })
- 
-<Map each={userList} fallback={<p>No users available.</p>}>
-  {({ id, name }) => <p key={id}>User: {name}</p>}
-</Map>
+// ❌ 복잡한 기존 방식
+{users && users.length > 0 
+  ? users.map(user => <UserCard key={user.id} user={user} />)
+  : <EmptyUserList />
+}
 ```
 
-&nbsp;
-
-# Switch & Match
-
-복잡한 조건부 렌더링에서 타입 안전성을 보장하면서도 간결한 코드를 작성하는 것은 어려운 과제입니다. 특히 유니온 타입의 특정 필드 값에 따라 다른 컴포넌트를 렌더링해야 할 때, 기존의 switch문이나 조건문은 타입 추론의 한계와 코드 복잡성 문제를 야기할 수 있습니다. `createSwitchMatch`는 이러한 문제를 해결하여 타입 안전하고 선언적인 조건부 렌더링을 제공합니다.
+**For 컴포넌트의 해결책**
+`For` 컴포넌트는 배열 렌더링과 예외 상황 처리를 하나의 컴포넌트에서 깔끔하게 해결합니다.
 
 ```tsx
-function createSwitchMatch<T, K extends LiteralKeys<T>>(data: T): {
+interface ForProps<T extends Array<unknown>> {
+  each: T | null | undefined;                       // 렌더링할 배열
+  fallback?: ReactNode;                             // 배열이 비어있거나 null일 때의 대체 내용
+  children: (item: T[number], index: number) => ReactNode; // 각 아이템을 렌더링하는 함수
+}
+```
+
+**✅ For를 사용한 개선된 방식**
+```tsx
+// 기본 배열 렌더링
+<For each={users} fallback={<EmptyUserList />}>
+  {(user, index) => (
+    <UserCard key={user.id} user={user} index={index} />
+  )}
+</For>
+
+// API 데이터와 함께 (null/undefined 안전 처리)
+const { data: userList } = useQuery({ ... }); // userList는 User[] | undefined
+
+<For each={userList} fallback={<LoadingSpinner />}>
+  {(user) => (
+    <div key={user.id}>
+      <h3>{user.name}</h3>
+      <p>{user.email}</p>
+    </div>
+  )}
+</For>
+```
+
+**🎯 타입 안전성의 장점**
+```tsx
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+}
+
+const products: Product[] | null = getProducts();
+
+<For each={products} fallback={<div>상품이 없습니다</div>}>
+  {(product, index) => (
+    <div key={product.id}>
+      {/* TypeScript가 product가 Product 타입임을 보장 */}
+      <h4>{product.name}</h4>        {/* ✅ 자동완성 지원 */}
+      <span>${product.price}</span>   {/* ✅ 타입 체크 */}
+    </div>
+  )}
+</For>
+```
+
+---
+
+# createSwitcher - 타입 안전한 분기 처리
+
+**기존 방식의 문제점**
+복잡한 유니온 타입에서 특정 필드 값에 따라 다른 컴포넌트를 렌더링할 때, 기존의 `switch`문이나 연속된 `if`문은 타입 추론의 한계와 코드 복잡성 문제를 야기합니다.
+
+```tsx
+// ❌ 타입 안전하지 않은 기존 방식
+function renderApiResponse(response: ApiResponse) {
+  switch (response.status) {
+    case 'loading':
+      return <Spinner />;
+    case 'success':
+      return <div>{response.message}</div>; // ❌ TypeScript가 message 존재를 보장하지 않음
+    case 'error':
+      return <Error message={response.error} />; // ❌ error vs reason 필드명 실수 가능
+  }
+}
+```
+
+**createSwitcher의 해결책**
+`createSwitcher`는 데이터 객체의 구조를 분석하여 타입 안전한 Switch/Match 컴포넌트를 생성합니다. 각 case에서 정확한 타입 추론을 제공하여 런타임 오류를 컴파일 타임에 방지합니다.
+
+```tsx
+function createSwitcher<T, K extends LiteralKeys<T>>(data: T): {
   Switch: ({ 
-    when: K, 
-    children: Array<ReactElement>, 
-    fallback?: ReactNode 
+    when: K,                                        // 분기할 필드명
+    children: Array<ReactElement>,                  // Match 컴포넌트들
+    fallback?: ReactNode                           // 매칭되는 case가 없을 때의 대체 내용
   }) => ReactNode;
+  
   Match: <V extends ExtractValues<T, K>>({
-    case: V,
-    children: (props: ExtractByKeyValue<T, K, V>) => ReactNode
+    case: V,                                       // 매칭할 값
+    children: (props: ExtractByKeyValue<T, K, V>) => ReactNode // 해당 case의 정확한 타입 제공
   }) => ReactNode;
 }
 ```
 
-`createSwitchMatch`는 데이터 객체를 받아 해당 객체의 구조에 맞는 Switch와 Match 컴포넌트를 생성합니다. 이렇게 생성된 컴포넌트들은 TypeScript의 타입 시스템을 활용하여 완전한 타입 안전성을 제공하며, 선택한 필드의 값에 따라 정확한 타입 추론을 수행합니다.
+**🧠 작동 원리**
+- `createSwitcher`는 유니온 타입 `T`에서 리터럴 값을 가진 키들을 `K`로 추출합니다
+- 리터럴 키가 하나만 있으면 자동 추론, 여러 개면 명시적 타입 지정이 필요합니다
+- 각 `Match` 컴포넌트는 해당 case에 정확히 매칭되는 타입을 children 함수에 제공합니다
 
-`createSwitchMatch`는 객체의 유니온 타입 `T`에서 리터럴 값을 가지고 있는 키를 `K`로 추출합니다. 리터럴 키가 하나만 있는 경우 자동으로 추론되지만, 여러 개가 있는 경우에는 명시적으로 타입을 지정해야 합니다.
+## 🔍 사용 사례들
 
-## 케이스 1: 서로 다른 필드를 가진 유니온 타입 (K = "status")
+### 케이스 1: 서로 다른 필드를 가진 유니온 타입
 
 ```tsx
 type ApiResponse =
-  | { status: "fetching" }
-  | { status: "success", message: string }
-  | { status: "failed", reason: string };
+  | { status: "loading" }
+  | { status: "success", data: User[] }
+  | { status: "error", message: string };
 
 function ApiStatus({ response }: { response: ApiResponse }) {
-  // K는 자동으로 "status"로 추론됨
-  const { Switch, Match } = createSwitchMatch(response);
+  const { Switch, Match } = createSwitcher(response); // K는 자동으로 "status"로 추론
   
   return (
     <Switch when="status" fallback={<div>알 수 없는 상태</div>}>
-      <Match case="fetching">
-        {(props) => <Spinner />} {/* props: { status: "fetching" } */}
+      <Match case="loading">
+        {(props) => <Spinner />} 
+        {/* props: { status: "loading" } */}
       </Match>
       
       <Match case="success">
-        {(props) => <Alert type="success">{props.message}</Alert>}
-        {/* props: { status: "success", message: string } */}
+        {(props) => <UserList users={props.data} />}
+        {/* props: { status: "success", data: User[] } - data 필드 사용 가능! */}
       </Match>
       
-      <Match case="failed">
-        {(props) => <Alert type="error">{props.reason}</Alert>}
-        {/* props: { status: "failed", reason: string } */}
+      <Match case="error">
+        {(props) => <ErrorAlert message={props.message} />}
+        {/* props: { status: "error", message: string } - message 필드 사용 가능! */}
       </Match>
     </Switch>
   );
 }
 ```
 
-## 케이스 2: 동일한 필드를 가진 유니온 타입 (K = "status")
+### 케이스 2: 동일한 필드를 가진 유니온 타입
 
 ```tsx
-type ApiResponse =
-  | { status: "fetching", message: string }
-  | { status: "success", message: string }
+type NotificationState =
+  | { status: "pending", message: string }
+  | { status: "sent", message: string }
   | { status: "failed", message: string };
 
-function ApiNotification({ response }: { response: ApiResponse }) {
-  // K는 자동으로 "status"로 추론됨 (message는 string 타입이므로 제외)
-  const { Switch, Match } = createSwitchMatch(response);
+function NotificationStatus({ notification }: { notification: NotificationState }) {
+  const { Switch, Match } = createSwitcher(notification); // K는 자동으로 "status"로 추론
   
   return (
-    <Switch when="status" fallback={<div>알 수 없는 상태</div>}>
-      <Match case="fetching">
+    <Switch when="status">
+      <Match case="pending">
         {(props) => (
-          <div className="loading">
-            <Spinner />
+          <div className="notification-pending">
+            <ClockIcon />
             <span>{props.message}</span>
           </div>
         )}
       </Match>
       
-      <Match case="success">
-        {(props) => <Toast variant="success">{props.message}</Toast>}
+      <Match case="sent">
+        {(props) => (
+          <div className="notification-success">
+            <CheckIcon />
+            <span>{props.message}</span>
+          </div>
+        )}
       </Match>
       
       <Match case="failed">
-        {(props) => <Toast variant="error">{props.message}</Toast>}
+        {(props) => (
+          <div className="notification-error">
+            <XIcon />
+            <span>{props.message}</span>
+          </div>
+        )}
       </Match>
     </Switch>
   );
 }
 ```
 
-## 케이스 3: 여러 리터럴 필드를 가진 유니온 타입 (K = "status" | "message")
+### 케이스 3: 여러 리터럴 필드가 있는 경우 (명시적 타입 지정 필요)
 
 ```tsx
-type ApiResponse =
-  | { status: "fetching", message: "C" }
-  | { status: "success", message: "B" }
-  | { status: "failed", message: "C" };
+type ComplexState =
+  | { status: "loading", priority: "high" }
+  | { status: "success", priority: "low" }
+  | { status: "error", priority: "medium" };
 
-function ApiNotification({ response }: { response: ApiResponse }) {
-  // K는 "status" | "message"로 추론됨
-  // 따라서 명시적으로 지정해주어야 함
-  const { Switch, Match } = createSwitchMatch<ApiResponse, "status">(response);
+function ComplexStatus({ state }: { state: ComplexState }) {
+  // status와 priority 모두 리터럴 타입이므로 명시적으로 지정
+  const { Switch, Match } = createSwitcher<ComplexState, "status">(state);
   
   return (
     <Switch when="status" fallback={<div>알 수 없는 상태</div>}>
-      <Match case="fetching">
+      <Match case="loading">
         {(props) => (
-          <div className="loading">
+          <div className={`loading priority-${props.priority}`}>
             <Spinner />
-            <span>{props.message}</span>
+            <span>로딩 중... (우선순위: {props.priority})</span>
           </div>
         )}
       </Match>
       
       <Match case="success">
-        {(props) => <Toast variant="success">{props.message}</Toast>}
+        {(props) => (
+          <div className={`success priority-${props.priority}`}>
+            <CheckIcon />
+            <span>완료! (우선순위: {props.priority})</span>
+          </div>
+        )}
       </Match>
       
-      <Match case="failed">
-        {(props) => <Toast variant="error">{props.message}</Toast>}
+      <Match case="error">
+        {(props) => (
+          <div className={`error priority-${props.priority}`}>
+            <ErrorIcon />
+            <span>오류 발생 (우선순위: {props.priority})</span>
+          </div>
+        )}
       </Match>
     </Switch>
   );
 }
 ```
 
-&nbsp;
+---
 
-# Mount
+# OptionalWrapper - 조건부 래퍼
 
-Next.js 프로젝트에서는 DOM이 마운트된 이후에만 특정 코드를 실행하거나 UI를 렌더링해야 하는 경우가 있습니다. 이를 위해 보통 useEffect와 useState를 사용하여 컴포넌트가 마운트되었는지 확인합니다. 그러나 이 패턴을 여러 컴포넌트에서 반복적으로 구현하면 코드의 가독성과 유지보수성이 저하될 수 있습니다. Mount 컴포넌트는 이러한 과정을 추상화하여, 간결하고 재사용 가능한 방식으로 관리할 수 있도록 돕습니다.
+**기존 방식의 문제점**
+특정 조건에 따라 요소를 다른 컴포넌트로 감싸야 할 때, 기존 방식은 중복 코드를 유발하거나 가독성을 해칩니다.
 
 ```tsx
-function Mount({
-  fallback?: ReactNode;
-  children: ReactNode | (() => ReactNode | Promise<ReactNode>);
-}): ReactNode;
+// ❌ 중복 코드가 발생하는 기존 방식
+{isClickable ? (
+  <button onClick={handleClick}>
+    <img src={image} alt="thumbnail" />
+  </button>
+) : (
+  <img src={image} alt="thumbnail" />  // 중복!
+)}
 ```
 
-Mount 컴포넌트는 ReactNode를 리턴하는 비동기 함수를 children으로 받을 수 있습니다. 이 경우, 비동기 함수가 반환하는 ReactNode가 렌더링되기 전까지는 fallback으로 전달된 컴포넌트를 화면에 표시합니다. 이는 데이터 로딩이나 비동기 작업이 필요한 UI를 처리할 때 유용하며, 비동기 작업이 완료된 후에만 UI가 렌더링되도록 제어할 수 있습니다. 아래는 useState와 useEffect를 사용하여 마운트 상태와 비동기 작업 결과를 관리하는 코드와, 동일한 로직을 Mount 컴포넌트로 다시 작성한 것입니다.
+**OptionalWrapper의 해결책**
+`OptionalWrapper`는 조건에 따라 래퍼를 적용하거나 생략하는 패턴을 간단하고 재사용 가능하게 만듭니다.
 
 ```tsx
-export default function Comp() {
+interface OptionalWrapperProps {
+  when: boolean;                                    // 래퍼를 적용할 조건
+  children: ReactNode;                              // 감싸질 내용
+  wrapper: (children: ReactNode) => ReactNode;      // 조건이 true일 때 적용할 래퍼 함수
+}
+```
+
+**✅ OptionalWrapper를 사용한 개선된 방식**
+```tsx
+// 조건부 링크 래핑
+<OptionalWrapper
+  when={hasUrl}
+  wrapper={(children) => <a href={url} target="_blank">{children}</a>}
+>
+  <img src={image} alt="thumbnail" />
+</OptionalWrapper>
+
+// 조건부 버튼 래핑
+<OptionalWrapper
+  when={isClickable}
+  wrapper={(children) => (
+    <button onClick={handleClick} className="clickable-wrapper">
+      {children}
+    </button>
+  )}
+>
+  <ProductCard product={product} />
+</OptionalWrapper>
+
+// 조건부 스타일 컨테이너
+<OptionalWrapper
+  when={isHighlighted}
+  wrapper={(children) => (
+    <div className="highlight-border p-4 bg-yellow-100">
+      {children}
+    </div>
+  )}
+>
+  <ContentBlock content={content} />
+</OptionalWrapper>
+```
+
+**🎯 실제 사용 사례**
+```tsx
+function MediaCard({ media, isInteractive }: { media: Media, isInteractive: boolean }) {
+  return (
+    <OptionalWrapper
+      when={isInteractive}
+      wrapper={(children) => (
+        <button
+          className="media-button"
+          onClick={() => openModal(media)}
+          aria-label={`${media.title} 상세보기`}
+        >
+          {children}
+        </button>
+      )}
+    >
+      <div className="media-content">
+        <img src={media.thumbnail} alt={media.title} />
+        <h3>{media.title}</h3>
+        <p>{media.description}</p>
+      </div>
+    </OptionalWrapper>
+  );
+}
+```
+
+---
+
+# Mount - 클라이언트 사이드 렌더링
+
+**기존 방식의 문제점**
+Next.js나 SSR 환경에서 DOM이 마운트된 후에만 실행되어야 하는 코드를 처리할 때, `useEffect`와 `useState`를 반복적으로 사용하게 되어 보일러플레이트 코드가 많아집니다.
+
+```tsx
+// ❌ 반복되는 보일러플레이트 코드
+function ClientOnlyComponent() {
+  const [isMounted, setIsMounted] = useState(false);
+  const [content, setContent] = useState<ReactNode>("Loading...");
+  
+  useEffect(() => {
+    setIsMounted(true);
+    const loadContent = async () => {
+      await someAsyncOperation();
+      setContent(<ActualContent />);
+    };
+    loadContent();
+  }, []);
+  
+  if (!isMounted) {
+    return <div>Loading...</div>;
+  }
+  
+  return <>{content}</>;
+}
+```
+
+**Mount 컴포넌트의 해결책**
+`Mount` 컴포넌트는 클라이언트 사이드 렌더링과 비동기 작업을 간단하고 선언적으로 처리할 수 있게 해줍니다.
+
+```tsx
+interface MountProps {
+  fallback?: ReactNode;                             // 마운트 전 또는 로딩 중 표시할 내용
+  children: ReactNode | (() => ReactNode | Promise<ReactNode>); // 마운트 후 렌더링할 내용
+}
+```
+
+**✅ Mount를 사용한 개선된 방식**
+
+**기본 클라이언트 사이드 렌더링**
+```tsx
+// 간단한 클라이언트 전용 컴포넌트
+<Mount fallback={<div>Loading...</div>}>
+  <ClientOnlyWidget />
+</Mount>
+
+// 브라우저 전용 API 사용
+<Mount fallback={<div>Initializing...</div>}>
+  <GeolocationComponent />
+</Mount>
+```
+
+**비동기 작업과 함께**
+```tsx
+// 기존 방식 (복잡함)
+function OldWay() {
   const [content, setContent] = useState("Loading...");
    
   useEffect(() => {
@@ -227,20 +494,189 @@ export default function Comp() {
    
   return <div>{content}</div>;
 }
-```
 
-```tsx
-export default function Comp() {
+// ✅ Mount 사용 (간단함)
+function NewWay() {
   return (
     <Mount fallback={<div>Loading...</div>}>
       {async () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
-      
-        return <div>Loaded!</div>
+        return <div>Loaded!</div>;
       }}
     </Mount>
-  )
+  );
 }
 ```
 
-앞서 언급된 다른 유틸리티 컴포넌트들과 달리 Mount 컴포넌트는 내부적으로 state를 사용하기에 Next.js의 app router에서는 클라이언트 컴포넌트로 취급됩니다.
+**🎯 실제 사용 사례**
+```tsx
+// 차트 라이브러리 (클라이언트 전용)
+<Mount fallback={<ChartSkeleton />}>
+  {async () => {
+    const chartData = await fetchChartData();
+    return <Chart data={chartData} />;
+  }}
+</Mount>
+
+// 지도 컴포넌트
+<Mount fallback={<MapPlaceholder />}>
+  <MapComponent coordinates={coordinates} />
+</Mount>
+
+// 테마 의존적 컴포넌트
+<Mount fallback={<div>테마 로딩 중...</div>}>
+  {() => {
+    const theme = getClientTheme();
+    return <ThemedComponent theme={theme} />;
+  }}
+</Mount>
+```
+
+> **⚠️ 주의사항**: `Mount` 컴포넌트는 내부적으로 state를 사용하므로 Next.js App Router에서는 클라이언트 컴포넌트로 동작합니다. 페이지 상단에 `"use client"` 지시어를 추가해야 할 수 있습니다.
+
+---
+
+## 🚀 시작하기
+
+### 기본 사용법
+
+```tsx
+import { Show, For, createSwitcher, OptionalWrapper, Mount } from 'utilinent';
+
+function App() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  return (
+    <div>
+      <Show when={loading} fallback={
+        <For each={users} fallback={<div>사용자가 없습니다</div>}>
+          {(user) => <UserCard key={user.id} user={user} />}
+        </For>
+      }>
+        <div>로딩 중...</div>
+      </Show>
+    </div>
+  );
+}
+```
+
+### 고급 사용법
+
+```tsx
+type PageState = 
+  | { status: 'loading' }
+  | { status: 'error', message: string }
+  | { status: 'success', data: User[], totalCount: number };
+
+function UserManagementPage({ pageState }: { pageState: PageState }) {
+  const { Switch, Match } = createSwitcher(pageState);
+  
+  return (
+    <div className="page-container">
+      <Switch when="status" fallback={<div>알 수 없는 상태</div>}>
+        <Match case="loading">
+          {() => (
+            <div className="loading-container">
+              <Spinner />
+              <p>사용자 데이터를 불러오는 중...</p>
+            </div>
+          )}
+        </Match>
+        
+        <Match case="error">
+          {(state) => (
+            <div className="error-container">
+              <ErrorIcon />
+              <p>오류가 발생했습니다: {state.message}</p>
+              <button onClick={retry}>다시 시도</button>
+            </div>
+          )}
+        </Match>
+        
+        <Match case="success">
+          {(state) => (
+            <div className="success-container">
+              <h2>사용자 목록 ({state.totalCount}명)</h2>
+              <For each={state.data} fallback={<EmptyUserList />}>
+                {(user) => (
+                  <OptionalWrapper
+                    when={user.isActive}
+                    wrapper={(children) => (
+                      <div className="active-user-highlight">
+                        {children}
+                      </div>
+                    )}
+                  >
+                    <UserCard user={user} />
+                  </OptionalWrapper>
+                )}
+              </For>
+            </div>
+          )}
+        </Match>
+      </Switch>
+    </div>
+  );
+}
+```
+
+## 📚 타입 정의
+
+```typescript
+// Show 컴포넌트
+interface ShowProps<T> {
+  when: T;
+  fallback?: ReactNode;
+  children: ReactNode | ((item: NonNullable<T>) => ReactNode);
+}
+
+// For 컴포넌트
+interface ForProps<T extends Array<unknown>> {
+  each: T | null | undefined;
+  fallback?: ReactNode;
+  children: (item: T[number], index: number) => ReactNode;
+}
+
+// OptionalWrapper 컴포넌트
+interface OptionalWrapperProps {
+  when: boolean;
+  children: ReactNode;
+  wrapper: (children: ReactNode) => ReactNode;
+}
+
+// Mount 컴포넌트
+interface MountProps {
+  fallback?: ReactNode;
+  children: ReactNode | (() => ReactNode | Promise<ReactNode>);
+}
+
+// createSwitcher 함수
+function createSwitcher<T, K extends LiteralKeys<T>>(data: T): {
+  Switch: (props: SwitchProps<K>) => ReactNode;
+  Match: <V extends ExtractValues<T, K>>(props: MatchProps<T, K, V>) => ReactNode;
+}
+```
+
+## 🤝 기여하기
+
+Utilinent는 오픈소스 프로젝트입니다. 버그 리포트, 기능 제안, 풀 리퀘스트를 환영합니다!
+
+1. 이슈를 먼저 확인해주세요
+2. 새로운 기능을 제안하거나 버그를 발견하면 이슈를 생성해주세요
+3. 풀 리퀘스트를 보내기 전에 테스트를 실행해주세요
+
+## 📄 라이선스
+
+MIT License
+
+## 🔗 관련 링크
+
+- [GitHub Repository](https://github.com/your-username/utilinent)
+- [NPM Package](https://www.npmjs.com/package/utilinent)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [React Documentation](https://react.dev/)
+
+---
+
+**Utilinent와 함께 더 나은 React 개발 경험을 만들어보세요! 🚀**

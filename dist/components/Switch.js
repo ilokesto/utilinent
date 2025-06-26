@@ -1,4 +1,4 @@
-export function createSwitchMatch(data) {
+export function createSwitcher(data) {
     function Switch({ children, when, fallback = null }) {
         children.reduce((acc, { type, props }) => {
             if (type !== Match)

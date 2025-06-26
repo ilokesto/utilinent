@@ -5,7 +5,7 @@ type Fallback = { fallback?: ReactNode };
 
 export type ShowProps<T> = {
   when: T;
-  children: ReactNode | ((item: T) => ReactNode);
+  children: ReactNode | ((item: NonNullable<T>) => ReactNode);
 } & Fallback;
 
 export type ForProps<T extends Array<unknown>> = {
