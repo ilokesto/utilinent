@@ -6,9 +6,7 @@ export function IntersectionObserver({
   threshold = 0,
   rootMargin = "0px",
   triggerOnce = false,
-  disabled = false,
   onIntersect,
-  fallback,
 }: IntersectionObserverProps) {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
@@ -18,8 +16,8 @@ export function IntersectionObserver({
   useEffect(() => {
     const element = elementRef.current;
     
-    // disabled이거나 요소가 없으면 관찰하지 않음
-    if (disabled || !element) {
+    // 요소가 없으면 관찰하지 않음
+    if (!element) {
       return;
     }
 
@@ -65,12 +63,7 @@ export function IntersectionObserver({
     return () => {
       observer.unobserve(element);
     };
-  }, [threshold, rootMargin, triggerOnce, disabled, hasTriggered, onIntersect]);
-
-  // disabled일 때 fallback 렌더링
-  if (disabled) {
-    return fallback || null;
-  }
+  }, [threshold, rootMargin, triggerOnce, hasTriggered, onIntersect]);
 
   const content = typeof children === 'function' 
     ? children(isIntersecting, entry) 

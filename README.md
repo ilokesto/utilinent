@@ -784,8 +784,6 @@ interface IntersectionObserverProps {
   threshold?: number | number[];                    // 교차 임계값 (0.0 ~ 1.0)
   rootMargin?: string;                              // 루트 마진
   triggerOnce?: boolean;                           // 한 번만 트리거할지 여부
-  disabled?: boolean;                              // 관찰 비활성화
-  fallback?: ReactNode;                            // disabled일 때 표시할 내용
   onIntersect?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void; // 교차 이벤트 콜백
 }
 ```
@@ -794,40 +792,33 @@ interface IntersectionObserverProps {
 
 **지연 로딩 (Lazy Loading)**
 
-두 가지 방식으로 지연 로딩을 구현할 수 있습니다:
-
 ```tsx
-// 방식 1: fallback prop 사용 (비활성화/에러 상황 처리)
+// 기본적인 지연 로딩 패턴
 <IntersectionObserver 
   threshold={0.1} 
   triggerOnce={true}
-  disabled={!shouldLoad}
-  fallback={<ImagePlaceholder />}  // disabled일 때 표시
 >
   {(isIntersecting) => 
     isIntersecting ? (
       <img src={imageUrl} alt="지연 로딩 이미지" loading="lazy" />
     ) : (
-      <div className="w-full h-64 bg-gray-200 animate-pulse" />  // 아직 안 보일 때
+      <div className="w-full h-64 bg-gray-200 animate-pulse" />
     )
   }
 </IntersectionObserver>
 
-// 방식 2: fallback을 활용한 지연 로딩
-<IntersectionObserver 
-  threshold={0.2} 
-  triggerOnce={true}
-  fallback={<ComponentSkeleton />}
->
-  {(isIntersecting) => 
-    isIntersecting && <HeavyComponent data={data} />
-  }
-</IntersectionObserver>
+// Show 컴포넌트와 함께 사용하여 조건부 활성화
+<Show when={shouldLoad}>
+  <IntersectionObserver 
+    threshold={0.2} 
+    triggerOnce={true}
+  >
+    {(isIntersecting) => 
+      isIntersecting && <HeavyComponent data={data} />
+    }
+  </IntersectionObserver>
+</Show>
 ```
-
-> **💡 fallback vs 조건부 렌더링**
-> - **fallback**: 컴포넌트 비활성화나 브라우저 미지원 시의 대체 UI
-> - **조건부 렌더링**: 실제 뷰포트 교차 상태에 따른 동적 UI
 
 **무한 스크롤**
 ```tsx
@@ -983,21 +974,21 @@ function ScrollProgressIndicator() {
   );
 }
 
-// 조건부 로딩
+// 조건부 로딩 - Show 컴포넌트와 함께 사용
 function ConditionalContent({ shouldLoad, children }: {
   shouldLoad: boolean,
   children: ReactNode
 }) {
   return (
-    <IntersectionObserver 
-      disabled={!shouldLoad}
-      threshold={0.1}
-      fallback={<div>로딩이 비활성화되었습니다</div>}
-    >
-      {(isIntersecting) => 
-        isIntersecting ? children : <ContentPlaceholder />
-      }
-    </IntersectionObserver>
+    <Show when={shouldLoad} fallback={<div>로딩이 비활성화되었습니다</div>}>
+      <IntersectionObserver 
+        threshold={0.1}
+      >
+        {(isIntersecting) => 
+          isIntersecting ? children : <ContentPlaceholder />
+        }
+      </IntersectionObserver>
+    </Show>
   );
 }
 ```
@@ -1049,3 +1040,12 @@ function ConditionalContent({ shouldLoad, children }: {
 ```
 
 > **⚠️ 브라우저 호환성**: `IntersectionObserver`는 현대 브라우저에서 잘 지원되지만, 구형 브라우저에서는 폴리필이 필요할 수 있습니다. 컴포넌트는 API가 지원되지 않는 환경에서 graceful fallback을 제공합니다.
+
+
+# 🤝 기여하기
+
+Utilinent는 오픈소스 프로젝트입니다. 버그 리포트, 기능 제안, 풀 리퀘스트를 환영합니다!
+
+## 🔗 관련 링크
+- [GitHub Repository](https://github.com/ilokesto/utilinent)
+- [NPM Package](https://www.npmjs.com/ayden94/utilinent)

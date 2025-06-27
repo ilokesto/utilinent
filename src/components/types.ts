@@ -76,6 +76,5 @@ export type IntersectionObserverProps = {
   threshold?: number | number[];
   rootMargin?: string;
   triggerOnce?: boolean;
-  disabled?: boolean;
   onIntersect?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void;
-} & Fallback;
+};
