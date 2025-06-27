@@ -780,7 +780,8 @@ function LazyImage({ src, alt }: { src: string, alt: string }) {
 
 ```tsx
 interface IntersectionObserverProps {
-  children: ReactNode | ((isIntersecting: boolean, entry?: IntersectionObserverEntry) => ReactNode);
+  children: ReactNode | ((isIntersecting: boolean) => ReactNode);
+  fallback?: ReactNode;                            // 뷰포트에 보이지 않을 때 표시할 내용
   threshold?: number | number[];                    // 교차 임계값 (0.0 ~ 1.0)
   rootMargin?: string;                              // 루트 마진
   triggerOnce?: boolean;                           // 한 번만 트리거할지 여부
@@ -793,17 +794,25 @@ interface IntersectionObserverProps {
 **지연 로딩 (Lazy Loading)**
 
 ```tsx
-// 기본적인 지연 로딩 패턴
+// fallback을 활용한 깔끔한 지연 로딩
 <IntersectionObserver 
   threshold={0.1} 
   triggerOnce={true}
+  fallback={<div className="w-full h-64 bg-gray-200 animate-pulse" />}
+>
+  <img src={imageUrl} alt="지연 로딩 이미지" loading="lazy" />
+</IntersectionObserver>
+
+// 함수형 children으로 더 세밀한 제어
+<IntersectionObserver 
+  threshold={0.1} 
+  triggerOnce={true}
+  fallback={<ImageSkeleton />}
 >
   {(isIntersecting) => 
     isIntersecting ? (
       <img src={imageUrl} alt="지연 로딩 이미지" loading="lazy" />
-    ) : (
-      <div className="w-full h-64 bg-gray-200 animate-pulse" />
-    )
+    ) : null
   }
 </IntersectionObserver>
 
@@ -812,10 +821,9 @@ interface IntersectionObserverProps {
   <IntersectionObserver 
     threshold={0.2} 
     triggerOnce={true}
+    fallback={<ComponentSkeleton />}
   >
-    {(isIntersecting) => 
-      isIntersecting && <HeavyComponent data={data} />
-    }
+    <HeavyComponent data={data} />
   </IntersectionObserver>
 </Show>
 ```
@@ -857,6 +865,21 @@ interface IntersectionObserverProps {
 **애니메이션 트리거**
 ```tsx
 // 뷰포트 진입 시 애니메이션
+<IntersectionObserver 
+  threshold={0.3} 
+  triggerOnce={true}
+  fallback={
+    <div className="opacity-0 translate-y-10 transition-all duration-1000">
+      <FeatureCard />
+    </div>
+  }
+>
+  <div className="opacity-100 translate-y-0 transition-all duration-1000">
+    <FeatureCard />
+  </div>
+</IntersectionObserver>
+
+// 함수형 children으로 더 세밀한 애니메이션 제어
 <IntersectionObserver threshold={0.3} triggerOnce={true}>
   {(isIntersecting) => (
     <div className={`transition-all duration-1000 ${
@@ -876,19 +899,18 @@ interface IntersectionObserverProps {
       key={index}
       threshold={0.5} 
       triggerOnce={true}
-    >
-      {(isIntersecting) => (
-        <div 
-          className={`transition-all duration-700 ${
-            isIntersecting ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-          }`}
-          style={{ 
-            transitionDelay: isIntersecting ? `${index * 100}ms` : '0ms' 
-          }}
-        >
+      fallback={
+        <div className="opacity-0 scale-95 transition-all duration-700">
           <FeatureItem feature={features[index]} />
         </div>
-      )}
+      }
+    >
+      <div 
+        className="opacity-100 scale-100 transition-all duration-700"
+        style={{ transitionDelay: `${index * 100}ms` }}
+      >
+        <FeatureItem feature={features[index]} />
+      </div>
     </IntersectionObserver>
   )}
 </Repeat>
@@ -907,21 +929,20 @@ function ImageGallery({ images }: { images: ImageData[] }) {
             key={image.id}
             threshold={0.1}
             triggerOnce={true}
-          >
-            {(isIntersecting) => (
+            fallback={
               <div className="aspect-square overflow-hidden rounded-lg">
-                {isIntersecting ? (
-                  <img 
-                    src={image.url} 
-                    alt={image.alt}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-300 animate-pulse" />
-                )}
+                <div className="w-full h-full bg-gray-300 animate-pulse" />
               </div>
-            )}
+            }
+          >
+            <div className="aspect-square overflow-hidden rounded-lg">
+              <img 
+                src={image.url} 
+                alt={image.alt}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
           </IntersectionObserver>
         )}
       </For>
@@ -953,23 +974,24 @@ function AnalyticsSection({ sectionId, children }: {
   );
 }
 
-// 진행률 표시기
+// 진행률 표시기 (entry가 필요한 경우는 onIntersect에서 처리)
 function ScrollProgressIndicator() {
+  const [progress, setProgress] = useState(0);
+  
   return (
     <IntersectionObserver
       threshold={Array.from({length: 101}, (_, i) => i / 100)} // 0.00 ~ 1.00
       rootMargin="-50% 0px -50% 0px"
+      onIntersect={(isIntersecting, entry) => {
+        setProgress(entry.intersectionRatio * 100);
+      }}
     >
-      {(isIntersecting, entry) => (
-        <div className="fixed top-0 left-0 w-full h-2 bg-gray-200 z-50">
-          <div 
-            className="h-full bg-blue-500 transition-all duration-300"
-            style={{ 
-              width: `${(entry?.intersectionRatio || 0) * 100}%` 
-            }}
-          />
-        </div>
-      )}
+      <div className="fixed top-0 left-0 w-full h-2 bg-gray-200 z-50">
+        <div 
+          className="h-full bg-blue-500 transition-all duration-300"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
     </IntersectionObserver>
   );
 }
@@ -983,10 +1005,9 @@ function ConditionalContent({ shouldLoad, children }: {
     <Show when={shouldLoad} fallback={<div>로딩이 비활성화되었습니다</div>}>
       <IntersectionObserver 
         threshold={0.1}
+        fallback={<ContentPlaceholder />}
       >
-        {(isIntersecting) => 
-          isIntersecting ? children : <ContentPlaceholder />
-        }
+        {children}
       </IntersectionObserver>
     </Show>
   );
@@ -996,18 +1017,18 @@ function ConditionalContent({ shouldLoad, children }: {
 **🔧 고급 패턴들**
 
 ```tsx
-// 다중 임계값 관찰
-<IntersectionObserver threshold={[0, 0.25, 0.5, 0.75, 1.0]}>
-  {(isIntersecting, entry) => (
-    <div 
-      className="transition-opacity duration-300"
-      style={{ 
-        opacity: entry?.intersectionRatio || 0 
-      }}
-    >
-      <GradualContent />
-    </div>
-  )}
+// 다중 임계값으로 점진적 페이드 효과
+<IntersectionObserver 
+  threshold={[0, 0.25, 0.5, 0.75, 1.0]}
+  fallback={<div className="opacity-0"><GradualContent /></div>}
+  onIntersect={(isIntersecting, entry) => {
+    // entry가 필요한 세밀한 제어는 콜백에서
+    console.log('Intersection ratio:', entry.intersectionRatio);
+  }}
+>
+  <div className="opacity-100 transition-opacity duration-300">
+    <GradualContent />
+  </div>
 </IntersectionObserver>
 
 // 루트 마진을 활용한 프리로딩
@@ -1020,11 +1041,12 @@ function ConditionalContent({ shouldLoad, children }: {
       preloadNextPageData();
     }
   }}
+  fallback={<div>프리로드 트리거 대기 중...</div>}
 >
   <div>다음 페이지 프리로드 트리거</div>
 </IntersectionObserver>
 
-// 뷰포트 벗어남 감지
+// 뷰포트 벗어남 감지 (entry 없이도 가능)
 <IntersectionObserver
   threshold={0}
   onIntersect={(isIntersecting) => {

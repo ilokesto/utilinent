@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { IntersectionObserverProps } from "./types";
+import { Show } from "./Show";
 
 export function IntersectionObserver({
   children,
+  fallback,
   threshold = 0,
   rootMargin = "0px",
   triggerOnce = false,
@@ -66,12 +68,14 @@ export function IntersectionObserver({
   }, [threshold, rootMargin, triggerOnce, hasTriggered, onIntersect]);
 
   const content = typeof children === 'function' 
-    ? children(isIntersecting, entry) 
+    ? children(isIntersecting) 
     : children;
 
   return (
     <div ref={elementRef}>
-      {content}
+      <Show when={isIntersecting} fallback={fallback}>
+        {content}
+      </Show>
     </div>
   );
 }

@@ -72,7 +72,8 @@ export type RepeatProps = {
 } & Fallback;
 
 export type IntersectionObserverProps = {
-  children: ReactNode | ((isIntersecting: boolean, entry?: IntersectionObserverEntry) => ReactNode);
+  children: ReactNode | ((isIntersecting: boolean) => ReactNode);
+  fallback?: ReactNode;
   threshold?: number | number[];
   rootMargin?: string;
   triggerOnce?: boolean;
