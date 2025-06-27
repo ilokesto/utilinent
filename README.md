@@ -1,8 +1,7 @@
 ![ilokestoUtilinent](https://github.com/user-attachments/assets/d0d67fc9-f4fc-4e9b-bf3c-e5bc96cfabf6)
 
 
-[![Build Size](https://img.shields.io/bundlephobia/minzip/utilinent?label=bundle%20size&style=flat&colorA=00000![ilokestoUtilinent](https://github.com/user-attachments/assets/88adec54-b4f9-49a3-8cdb-4b8928b0b61a)
-0&colorB=000000)](https://bundlephobia.com/result?p=utilinent)
+[![Build Size](https://img.shields.io/bundlephobia/minzip/utilinent?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=utilinent)
 [![Version](https://img.shields.io/npm/v/utilinent?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/utilinent)
 [![Downloads](https://img.shields.io/npm/dt/utilinent.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/utilinent)
 
