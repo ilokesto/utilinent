@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import type { IntersectionObserverProps } from "./types";
+import type { ObserverProps } from "./types";
 import { Show } from "./Show";
 
-export function IntersectionObserver({
+export function Observer({
   children,
   fallback,
   threshold = 0,
   rootMargin = "0px",
   triggerOnce = false,
   onIntersect,
-}: IntersectionObserverProps) {
+}: ObserverProps) {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const [entry, setEntry] = useState<IntersectionObserverEntry | undefined>();
@@ -72,7 +72,20 @@ export function IntersectionObserver({
     : children;
 
   return (
-    <div ref={elementRef}>
+    <div 
+      ref={elementRef}
+      style={
+        // fallback이 없고 isIntersecting이 false인 경우
+        !fallback && !isIntersecting 
+          ? { 
+              minHeight: '1px', 
+              minWidth: '1px',
+              flexShrink: 0,  // flex 컨테이너에서 축소되지 않도록
+              display: 'block' // inline 요소가 되지 않도록
+            } 
+          : undefined
+      }
+    >
       <Show when={isIntersecting} fallback={fallback}>
         {content}
       </Show>

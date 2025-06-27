@@ -23,7 +23,7 @@ npm install utilinent
 ```
 
 ```typescript
-import { Show, For, createSwitcher, OptionalWrapper, Mount, Repeat, IntersectionObserver } from "utilinent"
+import { Show, For, createSwitcher, OptionalWrapper, Mount, Repeat, Observer, Slacker } from "utilinent"
 ```
 
 ## 📋 목차
@@ -34,7 +34,8 @@ import { Show, For, createSwitcher, OptionalWrapper, Mount, Repeat, Intersection
 - [OptionalWrapper - 조건부 래퍼](#optionalwrapper---조건부-래퍼)
 - [Mount - 클라이언트 사이드 렌더링](#mount---클라이언트-사이드-렌더링)
 - [Repeat - 횟수 기반 반복 렌더링](#repeat---횟수-기반-반복-렌더링)
-- [IntersectionObserver - 뷰포트 감지](#intersectionobserver---뷰포트-감지)
+- [Observer - 뷰포트 감지](#observer---뷰포트-감지)
+- [Slacker - 스마트 지연 로딩](#slacker---스마트-지연-로딩)
 
 ---
 
@@ -731,7 +732,7 @@ function NavigationMenu({ menuCount }: { menuCount: number }) {
 ```
 ---
 
-# IntersectionObserver - 뷰포트 감지
+# Observer - 뷰포트 감지
 
 **기존 방식의 문제점**
 뷰포트에 요소가 들어오거나 나가는 것을 감지하기 위해 직접 `IntersectionObserver` API를 사용하면 보일러플레이트 코드가 많아지고, cleanup 처리를 놓치기 쉽습니다.
@@ -774,12 +775,12 @@ function LazyImage({ src, alt }: { src: string, alt: string }) {
 }
 ```
 
-**IntersectionObserver 컴포넌트의 해결책**
+**Observer 컴포넌트의 해결책**
 
-`IntersectionObserver` 컴포넌트는 뷰포트 감지 로직을 간단하고 재사용 가능하게 만들어 다양한 최적화 패턴을 쉽게 구현할 수 있게 해줍니다.
+`Observer` 컴포넌트는 뷰포트 감지 로직을 간단하고 재사용 가능하게 만들어 다양한 최적화 패턴을 쉽게 구현할 수 있게 해줍니다.
 
 ```tsx
-interface IntersectionObserverProps {
+interface ObserverProps {
   children: ReactNode | ((isIntersecting: boolean) => ReactNode);
   fallback?: ReactNode;                            // 뷰포트에 보이지 않을 때 표시할 내용
   threshold?: number | number[];                    // 교차 임계값 (0.0 ~ 1.0)
@@ -789,22 +790,22 @@ interface IntersectionObserverProps {
 }
 ```
 
-**✅ IntersectionObserver를 사용한 개선된 방식**
+**✅ Observer를 사용한 개선된 방식**
 
 **지연 로딩 (Lazy Loading)**
 
 ```tsx
 // fallback을 활용한 깔끔한 지연 로딩
-<IntersectionObserver 
+<Observer 
   threshold={0.1} 
   triggerOnce={true}
   fallback={<div className="w-full h-64 bg-gray-200 animate-pulse" />}
 >
   <img src={imageUrl} alt="지연 로딩 이미지" loading="lazy" />
-</IntersectionObserver>
+</Observer>
 
 // 함수형 children으로 더 세밀한 제어
-<IntersectionObserver 
+<Observer 
   threshold={0.1} 
   triggerOnce={true}
   fallback={<ImageSkeleton />}
@@ -814,24 +815,24 @@ interface IntersectionObserverProps {
       <img src={imageUrl} alt="지연 로딩 이미지" loading="lazy" />
     ) : null
   }
-</IntersectionObserver>
+</Observer>
 
 // Show 컴포넌트와 함께 사용하여 조건부 활성화
 <Show when={shouldLoad}>
-  <IntersectionObserver 
+  <Observer 
     threshold={0.2} 
     triggerOnce={true}
     fallback={<ComponentSkeleton />}
   >
     <HeavyComponent data={data} />
-  </IntersectionObserver>
+  </Observer>
 </Show>
 ```
 
 **무한 스크롤**
 ```tsx
 // 무한 스크롤 트리거
-<IntersectionObserver
+<Observer
   threshold={1.0}
   rootMargin="0px 0px 200px 0px"  // 하단 200px 전에 트리거
   onIntersect={(isIntersecting) => {
@@ -843,7 +844,7 @@ interface IntersectionObserverProps {
   <div className="h-20 flex items-center justify-center">
     {isLoading ? <Spinner /> : "더 보기"}
   </div>
-</IntersectionObserver>
+</Observer>
 
 // 페이지네이션과 함께
 <For each={items}>
@@ -851,21 +852,21 @@ interface IntersectionObserverProps {
 </For>
 
 <Show when={hasNextPage}>
-  <IntersectionObserver
+  <Observer
     threshold={0.5}
     onIntersect={(isIntersecting) => {
       if (isIntersecting) loadNextPage();
     }}
   >
     <LoadMoreButton />
-  </IntersectionObserver>
+  </Observer>
 </Show>
 ```
 
 **애니메이션 트리거**
 ```tsx
 // 뷰포트 진입 시 애니메이션
-<IntersectionObserver 
+<Observer 
   threshold={0.3} 
   triggerOnce={true}
   fallback={
@@ -877,10 +878,10 @@ interface IntersectionObserverProps {
   <div className="opacity-100 translate-y-0 transition-all duration-1000">
     <FeatureCard />
   </div>
-</IntersectionObserver>
+</Observer>
 
 // 함수형 children으로 더 세밀한 애니메이션 제어
-<IntersectionObserver threshold={0.3} triggerOnce={true}>
+<Observer threshold={0.3} triggerOnce={true}>
   {(isIntersecting) => (
     <div className={`transition-all duration-1000 ${
       isIntersecting 
@@ -890,12 +891,12 @@ interface IntersectionObserverProps {
       <FeatureCard />
     </div>
   )}
-</IntersectionObserver>
+</Observer>
 
 // 순차적 애니메이션
 <Repeat times={features.length}>
   {(index) => (
-    <IntersectionObserver 
+    <Observer 
       key={index}
       threshold={0.5} 
       triggerOnce={true}
@@ -911,7 +912,7 @@ interface IntersectionObserverProps {
       >
         <FeatureItem feature={features[index]} />
       </div>
-    </IntersectionObserver>
+    </Observer>
   )}
 </Repeat>
 ```
@@ -925,7 +926,7 @@ function ImageGallery({ images }: { images: ImageData[] }) {
     <div className="grid grid-cols-3 gap-4">
       <For each={images}>
         {(image) => (
-          <IntersectionObserver 
+          <Observer 
             key={image.id}
             threshold={0.1}
             triggerOnce={true}
@@ -943,7 +944,7 @@ function ImageGallery({ images }: { images: ImageData[] }) {
                 loading="lazy"
               />
             </div>
-          </IntersectionObserver>
+          </Observer>
         )}
       </For>
     </div>
@@ -956,7 +957,7 @@ function AnalyticsSection({ sectionId, children }: {
   children: ReactNode 
 }) {
   return (
-    <IntersectionObserver
+    <Observer
       threshold={0.5}
       triggerOnce={true}
       onIntersect={(isIntersecting, entry) => {
@@ -970,7 +971,7 @@ function AnalyticsSection({ sectionId, children }: {
       }}
     >
       {children}
-    </IntersectionObserver>
+    </Observer>
   );
 }
 
@@ -979,7 +980,7 @@ function ScrollProgressIndicator() {
   const [progress, setProgress] = useState(0);
   
   return (
-    <IntersectionObserver
+    <Observer
       threshold={Array.from({length: 101}, (_, i) => i / 100)} // 0.00 ~ 1.00
       rootMargin="-50% 0px -50% 0px"
       onIntersect={(isIntersecting, entry) => {
@@ -992,7 +993,7 @@ function ScrollProgressIndicator() {
           style={{ width: `${progress}%` }}
         />
       </div>
-    </IntersectionObserver>
+    </Observer>
   );
 }
 
@@ -1003,12 +1004,12 @@ function ConditionalContent({ shouldLoad, children }: {
 }) {
   return (
     <Show when={shouldLoad} fallback={<div>로딩이 비활성화되었습니다</div>}>
-      <IntersectionObserver 
+      <Observer 
         threshold={0.1}
         fallback={<ContentPlaceholder />}
       >
         {children}
-      </IntersectionObserver>
+      </Observer>
     </Show>
   );
 }
@@ -1018,7 +1019,7 @@ function ConditionalContent({ shouldLoad, children }: {
 
 ```tsx
 // 다중 임계값으로 점진적 페이드 효과
-<IntersectionObserver 
+<Observer 
   threshold={[0, 0.25, 0.5, 0.75, 1.0]}
   fallback={<div className="opacity-0"><GradualContent /></div>}
   onIntersect={(isIntersecting, entry) => {
@@ -1029,10 +1030,10 @@ function ConditionalContent({ shouldLoad, children }: {
   <div className="opacity-100 transition-opacity duration-300">
     <GradualContent />
   </div>
-</IntersectionObserver>
+</Observer>
 
 // 루트 마진을 활용한 프리로딩
-<IntersectionObserver
+<Observer
   threshold={0}
   rootMargin="0px 0px 500px 0px"  // 500px 전에 미리 로딩
   triggerOnce={true}
@@ -1044,10 +1045,10 @@ function ConditionalContent({ shouldLoad, children }: {
   fallback={<div>프리로드 트리거 대기 중...</div>}
 >
   <div>다음 페이지 프리로드 트리거</div>
-</IntersectionObserver>
+</Observer>
 
 // 뷰포트 벗어남 감지 (entry 없이도 가능)
-<IntersectionObserver
+<Observer
   threshold={0}
   onIntersect={(isIntersecting) => {
     if (!isIntersecting) {
@@ -1058,10 +1059,407 @@ function ConditionalContent({ shouldLoad, children }: {
   }}
 >
   <VideoPlayer src={videoUrl} />
+</Observer>
+```
+
+> **⚠️ 브라우저 호환성**: `Observer`는 내부적으로 `IntersectionObserver` API를 사용하므로 현대 브라우저에서 잘 지원되지만, 구형 브라우저에서는 폴리필이 필요할 수 있습니다. 컴포넌트는 API가 지원되지 않는 환경에서 graceful fallback을 제공합니다.
+
+```tsx
+// Observer 사용 - 더 간결함
+<Observer threshold={0.1} fallback={<Skeleton />}>
+  <HeavyComponent />
+</Observer>
+
+// 기존 IntersectionObserver와 동일한 기능
+<IntersectionObserver threshold={0.1} fallback={<Skeleton />}>
+  <HeavyComponent />
 </IntersectionObserver>
 ```
 
-> **⚠️ 브라우저 호환성**: `IntersectionObserver`는 현대 브라우저에서 잘 지원되지만, 구형 브라우저에서는 폴리필이 필요할 수 있습니다. 컴포넌트는 API가 지원되지 않는 환경에서 graceful fallback을 제공합니다.
+**🎯 빠른 사용 예제**
+
+```tsx
+// 지연 로딩
+<Observer threshold={0.1} triggerOnce={true} fallback={<ImageSkeleton />}>
+  <img src={imageUrl} alt="지연 로딩 이미지" />
+</Observer>
+
+// 애니메이션 트리거
+<Observer threshold={0.3} triggerOnce={true}>
+  {(isIntersecting) => (
+    <div className={`transition-all duration-1000 ${
+      isIntersecting ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+    }`}>
+      <FeatureCard />
+    </div>
+  )}
+</Observer>
+
+// 무한 스크롤
+<Observer
+  threshold={1.0}
+  rootMargin="0px 0px 200px 0px"
+  onIntersect={(isIntersecting) => {
+    if (isIntersecting && hasNextPage) {
+      loadMoreItems();
+    }
+  }}
+>
+  <LoadMoreButton />
+</Observer>
+```
+
+# Slacker - 스마트 지연 로딩
+
+복잡한 컴포넌트나 데이터를 미리 로드하면 초기 페이지 로딩이 느려지고, 사용자가 실제로 보지 않는 콘텐츠까지 로드하게 됩니다.
+
+**❌ 일반적인 방식의 문제점**
+
+```tsx
+// 모든 차트가 한 번에 로드 (페이지 로딩 느림)
+function Dashboard() {
+  return (
+    <div>
+      <HeavyChart1 data={data1} />
+      <HeavyChart2 data={data2} />
+      <HeavyChart3 data={data3} />
+    </div>
+  );
+}
+
+// 수동 lazy loading (복잡한 상태 관리)
+function LazyChart() {
+  const [inView, setInView] = useState(false);
+  const [Component, setComponent] = useState(null);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    if (inView && !Component) {
+      setLoading(true);
+      Promise.all([
+        import('./HeavyChart'),
+        fetch('/api/data').then(r => r.json())
+      ]).then(([module, fetchedData]) => {
+        setComponent(module.default);
+        setData(fetchedData);
+        setLoading(false);
+      });
+    }
+  }, [inView]);
+  
+  return (
+    <div ref={observerRef}>
+      {loading && <ChartSkeleton />}
+      {Component && data && <Component data={data} />}
+    </div>
+  );
+}
+```
+
+**Slacker 컴포넌트의 해결책**
+
+`Slacker` 컴포넌트는 뷰포트에 진입할 때까지 로딩을 지연시키고, loader에서 반환된 데이터를 children 함수에 전달하여 렌더링하는 스마트한 지연 로딩 솔루션입니다.
+
+```tsx
+interface SlackerProps {
+  children: (loaded: any) => ReactNode;            // loader의 결과를 받는 함수
+  fallback?: ReactNode;                            // 로딩 중 표시할 내용
+  threshold?: number | number[];                   // 교차 임계값 (기본: 0.1)
+  rootMargin?: string;                            // 루트 마진 (기본: "50px")
+  loader: () => Promise<any> | any;               // 동적 로딩 함수 (필수)
+}
+```
+
+**✅ Slacker를 사용한 개선된 방식**
+
+```tsx
+// 컴포넌트 lazy loading
+<Slacker 
+  fallback={<ChartSkeleton />}
+  loader={async () => {
+    const { HeavyChart } = await import('./HeavyChart');
+    return HeavyChart;
+  }}
+>
+  {(Component) => <Component data={data} />}
+</Slacker>
+
+// 데이터 lazy loading
+<Slacker 
+  fallback={<div>Loading data...</div>}
+  loader={async () => {
+    const response = await fetch('/api/data');
+    return response.json();
+  }}
+>
+  {(data) => (
+    <div>
+      <h2>{data.title}</h2>
+      <p>{data.description}</p>
+    </div>
+  )}
+</Slacker>
+
+// 컴포넌트와 데이터 함께 로딩
+<Slacker 
+  fallback={<ChartSkeleton />}
+  loader={async () => {
+    const [{ Chart }, chartData] = await Promise.all([
+      import('chart.js'),
+      fetch('/api/chart-data').then(r => r.json())
+    ]);
+    return { Chart, data: chartData };
+  }}
+>
+  {({ Chart, data }) => <Chart data={data} />}
+</Slacker>
+```
+
+**🎯 실제 사용 사례**
+
+```tsx
+// 대시보드의 차트들
+function Dashboard() {
+  return (
+    <div className="grid grid-cols-2 gap-6">
+      <Slacker 
+        fallback={<ChartSkeleton />}
+        loader={async () => {
+          const [{ PieChart }, salesData] = await Promise.all([
+            import('./charts/PieChart'),
+            fetch('/api/sales').then(r => r.json())
+          ]);
+          return { Component: PieChart, data: salesData };
+        }}
+      >
+        {({ Component, data }) => <Component data={data} />}
+      </Slacker>
+      
+      <Slacker 
+        fallback={<ChartSkeleton />}
+        loader={async () => {
+          const [{ LineChart }, trafficData] = await Promise.all([
+            import('./charts/LineChart'),
+            fetch('/api/traffic').then(r => r.json())
+          ]);
+          return { Component: LineChart, data: trafficData };
+        }}
+      >
+        {({ Component, data }) => <Component data={data} />}
+      </Slacker>
+    </div>
+  );
+}
+
+// 이미지 갤러리의 고해상도 이미지
+function PhotoGallery({ photos }: { photos: Photo[] }) {
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <For each={photos}>
+        {(photo) => (
+          <Slacker
+            key={photo.id}
+            fallback={
+              <div className="aspect-square bg-gray-200 animate-pulse rounded-lg" />
+            }
+            loader={async () => {
+              const [imageUrl, metadata] = await Promise.all([
+                loadHighResImage(photo.id),
+                fetch(`/api/photos/${photo.id}/metadata`).then(r => r.json())
+              ]);
+              return { imageUrl, metadata };
+            }}
+          >
+            {({ imageUrl, metadata }) => (
+              <div className="aspect-square rounded-lg overflow-hidden">
+                <img 
+                  src={imageUrl} 
+                  alt={metadata.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="p-2">
+                  <p className="text-sm text-gray-600">{metadata.description}</p>
+                </div>
+              </div>
+            )}
+          </Slacker>
+        )}
+      </For>
+    </div>
+  );
+}
+
+// 복잡한 에디터 컴포넌트
+<Slacker 
+  fallback={
+    <div className="h-96 bg-gray-100 rounded border-2 border-dashed flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+        <p>에디터 로딩 중...</p>
+      </div>
+    </div>
+  }
+  loader={async () => {
+    const [
+      { default: CodeMirror },
+      { default: prettier },
+      extensions
+    ] = await Promise.all([
+      import('@uiw/react-codemirror'),
+      import('prettier/standalone'),
+      import('./editor-extensions')
+    ]);
+    return { CodeMirror, prettier, extensions };
+  }}
+>
+  {({ CodeMirror, prettier, extensions }) => (
+    <CodeMirror
+      value={code}
+      height="400px"
+      extensions={extensions}
+      onChange={(val) => setCode(prettier.format(val))}
+    />
+  )}
+</Slacker>
+
+// 지도 컴포넌트
+<Slacker 
+  fallback={<MapSkeleton />}
+  threshold={0.3}
+  rootMargin="100px"  // 더 일찍 로딩 시작
+  loader={async () => {
+    const [{ Map }, { Marker }, locationData] = await Promise.all([
+      import('react-leaflet'),
+      import('react-leaflet'),
+      fetch('/api/locations').then(r => r.json())
+    ]);
+    
+    // 분석 트래킹은 loader 내부에서 처리
+    analytics.track('map_loaded');
+    
+    return { Map, Marker, locations: locationData };
+  }}
+>
+  {({ Map, Marker, locations }) => (
+    <Map center={[51.505, -0.09]} zoom={13} style={{ height: '400px' }}>
+      <For each={locations}>
+        {(location) => (
+          <Marker key={location.id} position={[location.lat, location.lng]} />
+        )}
+      </For>
+    </Map>
+  )}
+</Slacker>
+```
+
+**🔧 고급 패턴들**
+
+```tsx
+// 조건부 lazy loading - Show와 함께 사용
+<Show when={userCanSeeAdvancedFeatures} fallback={<BasicView />}>
+  <Slacker 
+    fallback={<AdvancedFeatureSkeleton />}
+    loader={async () => {
+      const { AdvancedDashboard } = await import('./AdvancedDashboard');
+      return AdvancedDashboard;
+    }}
+  >
+    {(Component) => <Component user={user} />}
+  </Slacker>
+</Show>
+
+// 에러 핸들링과 재시도
+function SafeSlacker({ children, ...props }) {
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  
+  const wrappedLoader = async () => {
+    try {
+      setError(null);
+      return await props.loader();
+    } catch (err) {
+      setError(err);
+      throw err;
+    }
+  };
+  
+  if (error && retryCount < 3) {
+    return (
+      <div className="text-center p-4">
+        <p>로딩 실패: {error.message}</p>
+        <button 
+          onClick={() => setRetryCount(c => c + 1)}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          재시도 ({retryCount}/3)
+        </button>
+      </div>
+    );
+  }
+  
+  return (
+    <Slacker {...props} loader={wrappedLoader}>
+      {children}
+    </Slacker>
+  );
+}
+
+// 프리로딩 전략
+<Slacker 
+  rootMargin="200px 0px"  // 뷰포트 200px 전에 로딩 시작
+  threshold={0}
+  fallback={<ContentSkeleton />}
+  loader={async () => {
+    // 중요한 리소스는 우선 로딩
+    const mainContent = await import('./MainContent');
+    
+    // 덜 중요한 리소스는 백그라운드에서 로딩
+    setTimeout(async () => {
+      await import('./SecondaryFeatures');
+    }, 100);
+    
+    return mainContent.default;
+  }}
+>
+  {(Component) => <Component />}
+</Slacker>
+
+// 점진적 로딩
+<Slacker 
+  fallback={<BasicChart />}  // 먼저 기본 차트 표시
+  loader={async () => {
+    const { EnhancedChart } = await import('./EnhancedChart');
+    return EnhancedChart;
+  }}
+>
+  {(EnhancedChart) => <EnhancedChart data={data} />}
+</Slacker>
+
+// 뷰포트 진입 분석이 필요한 경우 - Observer와 조합
+<Observer
+  onIntersect={(isIntersecting) => {
+    if (isIntersecting) {
+      analytics.track('heavy_component_section_viewed');
+    }
+  }}
+>
+  <Slacker 
+    fallback={<HeavyComponentSkeleton />}
+    loader={async () => {
+      const { HeavyComponent } = await import('./HeavyComponent');
+      analytics.track('heavy_component_loaded');
+      return HeavyComponent;
+    }}
+  >
+    {(Component) => <Component />}
+  </Slacker>
+</Observer>
+```
+
+> **💡 성능 팁**: `Slacker`는 triggerOnce가 기본적으로 활성화되어 있어 한 번 로드된 후에는 다시 언로드되지 않습니다. 메모리 사용량을 고려하여 큰 컴포넌트는 필요에 따라 언마운트하는 로직을 별도로 구현하세요.
+
+> **🔍 분석/트래킹**: 로딩 이벤트 추적은 loader 함수 내부에서 처리하고, 뷰포트 진입 자체를 감지해야 한다면 `Observer` 컴포넌트와 조합하여 사용하세요.
 
 
 # 🤝 기여하기

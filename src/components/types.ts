@@ -71,11 +71,19 @@ export type RepeatProps = {
   children: (index: number) => ReactNode;
 } & Fallback;
 
-export type IntersectionObserverProps = {
+export type ObserverProps = {
   children: ReactNode | ((isIntersecting: boolean) => ReactNode);
   fallback?: ReactNode;
   threshold?: number | number[];
   rootMargin?: string;
   triggerOnce?: boolean;
   onIntersect?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void;
+};
+
+export type SlackerProps = {
+  children: (loaded: any) => ReactNode;            // loader의 결과를 받는 함수
+  fallback?: ReactNode;                            // 뷰포트에 보이지 않을 때 표시할 내용
+  threshold?: number | number[];
+  rootMargin?: string;
+  loader: () => Promise<any> | any;                // 동적 로딩 함수 (필수)
 };

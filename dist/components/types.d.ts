@@ -26,3 +26,22 @@ export type SwitchProps<T, K extends LiteralKeys<T>> = {
 export type MountProps = {
     children: ReactNode | (() => ReactNode | Promise<ReactNode>);
 } & Fallback;
+export type RepeatProps = {
+    times: number;
+    children: (index: number) => ReactNode;
+} & Fallback;
+export type ObserverProps = {
+    children: ReactNode | ((isIntersecting: boolean) => ReactNode);
+    fallback?: ReactNode;
+    threshold?: number | number[];
+    rootMargin?: string;
+    triggerOnce?: boolean;
+    onIntersect?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void;
+};
+export type SlackerProps = {
+    children: (loaded: any) => ReactNode;
+    fallback?: ReactNode;
+    threshold?: number | number[];
+    rootMargin?: string;
+    loader: () => Promise<any> | any;
+};
