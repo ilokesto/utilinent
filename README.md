@@ -23,7 +23,7 @@ npm install utilinent
 ```
 
 ```typescript
-import { Show, For, createSwitcher, OptionalWrapper, Mount, Repeat } from "utilinent"
+import { Show, For, createSwitcher, OptionalWrapper, Mount, Repeat, IntersectionObserver } from "utilinent"
 ```
 
 ## 📋 목차
@@ -34,6 +34,7 @@ import { Show, For, createSwitcher, OptionalWrapper, Mount, Repeat } from "utili
 - [OptionalWrapper - 조건부 래퍼](#optionalwrapper---조건부-래퍼)
 - [Mount - 클라이언트 사이드 렌더링](#mount---클라이언트-사이드-렌더링)
 - [Repeat - 횟수 기반 반복 렌더링](#repeat---횟수-기반-반복-렌더링)
+- [IntersectionObserver - 뷰포트 감지](#intersectionobserver---뷰포트-감지)
 
 ---
 
@@ -730,23 +731,321 @@ function NavigationMenu({ menuCount }: { menuCount: number }) {
 ```
 ---
 
-## 🤝 기여하기
+# IntersectionObserver - 뷰포트 감지
 
-Utilinent는 오픈소스 프로젝트입니다. 버그 리포트, 기능 제안, 풀 리퀘스트를 환영합니다!
+**기존 방식의 문제점**
+뷰포트에 요소가 들어오거나 나가는 것을 감지하기 위해 직접 `IntersectionObserver` API를 사용하면 보일러플레이트 코드가 많아지고, cleanup 처리를 놓치기 쉽습니다.
 
-1. 이슈를 먼저 확인해주세요
-2. 새로운 기능을 제안하거나 버그를 발견하면 이슈를 생성해주세요
-3. 풀 리퀘스트를 보내기 전에 테스트를 실행해주세요
+```tsx
+// ❌ 복잡한 기존 방식
+function LazyImage({ src, alt }: { src: string, alt: string }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-## 📄 라이선스
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
 
-MIT License
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasLoaded) {
+          setIsVisible(true);
+          setHasLoaded(true);
+          observer.unobserve(element);
+        }
+      },
+      { threshold: 0.1 }
+    );
 
-## 🔗 관련 링크
+    observer.observe(element);
+    return () => observer.unobserve(element);
+  }, [hasLoaded]);
 
-- [GitHub Repository](https://github.com/ilokesto/utilinent)
-- [NPM Package](https://www.npmjs.com/ayden94/utilinent)
+  return (
+    <div ref={ref}>
+      {isVisible ? (
+        <img src={src} alt={alt} />
+      ) : (
+        <div className="w-full h-64 bg-gray-200" />
+      )}
+    </div>
+  );
+}
+```
 
----
+**IntersectionObserver 컴포넌트의 해결책**
 
-**Utilinent와 함께 더 나은 React 개발 경험을 만들어보세요! 🚀**
+`IntersectionObserver` 컴포넌트는 뷰포트 감지 로직을 간단하고 재사용 가능하게 만들어 다양한 최적화 패턴을 쉽게 구현할 수 있게 해줍니다.
+
+```tsx
+interface IntersectionObserverProps {
+  children: ReactNode | ((isIntersecting: boolean, entry?: IntersectionObserverEntry) => ReactNode);
+  threshold?: number | number[];                    // 교차 임계값 (0.0 ~ 1.0)
+  rootMargin?: string;                              // 루트 마진
+  triggerOnce?: boolean;                           // 한 번만 트리거할지 여부
+  disabled?: boolean;                              // 관찰 비활성화
+  fallback?: ReactNode;                            // disabled일 때 표시할 내용
+  onIntersect?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void; // 교차 이벤트 콜백
+}
+```
+
+**✅ IntersectionObserver를 사용한 개선된 방식**
+
+**지연 로딩 (Lazy Loading)**
+
+두 가지 방식으로 지연 로딩을 구현할 수 있습니다:
+
+```tsx
+// 방식 1: fallback prop 사용 (비활성화/에러 상황 처리)
+<IntersectionObserver 
+  threshold={0.1} 
+  triggerOnce={true}
+  disabled={!shouldLoad}
+  fallback={<ImagePlaceholder />}  // disabled일 때 표시
+>
+  {(isIntersecting) => 
+    isIntersecting ? (
+      <img src={imageUrl} alt="지연 로딩 이미지" loading="lazy" />
+    ) : (
+      <div className="w-full h-64 bg-gray-200 animate-pulse" />  // 아직 안 보일 때
+    )
+  }
+</IntersectionObserver>
+
+// 방식 2: fallback을 활용한 지연 로딩
+<IntersectionObserver 
+  threshold={0.2} 
+  triggerOnce={true}
+  fallback={<ComponentSkeleton />}
+>
+  {(isIntersecting) => 
+    isIntersecting && <HeavyComponent data={data} />
+  }
+</IntersectionObserver>
+```
+
+> **💡 fallback vs 조건부 렌더링**
+> - **fallback**: 컴포넌트 비활성화나 브라우저 미지원 시의 대체 UI
+> - **조건부 렌더링**: 실제 뷰포트 교차 상태에 따른 동적 UI
+
+**무한 스크롤**
+```tsx
+// 무한 스크롤 트리거
+<IntersectionObserver
+  threshold={1.0}
+  rootMargin="0px 0px 200px 0px"  // 하단 200px 전에 트리거
+  onIntersect={(isIntersecting) => {
+    if (isIntersecting && hasNextPage && !isLoading) {
+      loadMoreItems();
+    }
+  }}
+>
+  <div className="h-20 flex items-center justify-center">
+    {isLoading ? <Spinner /> : "더 보기"}
+  </div>
+</IntersectionObserver>
+
+// 페이지네이션과 함께
+<For each={items}>
+  {(item) => <ItemCard key={item.id} item={item} />}
+</For>
+
+<Show when={hasNextPage}>
+  <IntersectionObserver
+    threshold={0.5}
+    onIntersect={(isIntersecting) => {
+      if (isIntersecting) loadNextPage();
+    }}
+  >
+    <LoadMoreButton />
+  </IntersectionObserver>
+</Show>
+```
+
+**애니메이션 트리거**
+```tsx
+// 뷰포트 진입 시 애니메이션
+<IntersectionObserver threshold={0.3} triggerOnce={true}>
+  {(isIntersecting) => (
+    <div className={`transition-all duration-1000 ${
+      isIntersecting 
+        ? 'opacity-100 translate-y-0' 
+        : 'opacity-0 translate-y-10'
+    }`}>
+      <FeatureCard />
+    </div>
+  )}
+</IntersectionObserver>
+
+// 순차적 애니메이션
+<Repeat times={features.length}>
+  {(index) => (
+    <IntersectionObserver 
+      key={index}
+      threshold={0.5} 
+      triggerOnce={true}
+    >
+      {(isIntersecting) => (
+        <div 
+          className={`transition-all duration-700 ${
+            isIntersecting ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+          }`}
+          style={{ 
+            transitionDelay: isIntersecting ? `${index * 100}ms` : '0ms' 
+          }}
+        >
+          <FeatureItem feature={features[index]} />
+        </div>
+      )}
+    </IntersectionObserver>
+  )}
+</Repeat>
+```
+
+**🎯 실제 사용 사례**
+
+```tsx
+// 갤러리 이미지 지연 로딩
+function ImageGallery({ images }: { images: ImageData[] }) {
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <For each={images}>
+        {(image) => (
+          <IntersectionObserver 
+            key={image.id}
+            threshold={0.1}
+            triggerOnce={true}
+          >
+            {(isIntersecting) => (
+              <div className="aspect-square overflow-hidden rounded-lg">
+                {isIntersecting ? (
+                  <img 
+                    src={image.url} 
+                    alt={image.alt}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-300 animate-pulse" />
+                )}
+              </div>
+            )}
+          </IntersectionObserver>
+        )}
+      </For>
+    </div>
+  );
+}
+
+// 뷰포트 진입 분석
+function AnalyticsSection({ sectionId, children }: { 
+  sectionId: string, 
+  children: ReactNode 
+}) {
+  return (
+    <IntersectionObserver
+      threshold={0.5}
+      triggerOnce={true}
+      onIntersect={(isIntersecting, entry) => {
+        if (isIntersecting) {
+          analytics.track('section_viewed', {
+            sectionId,
+            visibilityRatio: entry?.intersectionRatio,
+            viewportHeight: window.innerHeight
+          });
+        }
+      }}
+    >
+      {children}
+    </IntersectionObserver>
+  );
+}
+
+// 진행률 표시기
+function ScrollProgressIndicator() {
+  return (
+    <IntersectionObserver
+      threshold={Array.from({length: 101}, (_, i) => i / 100)} // 0.00 ~ 1.00
+      rootMargin="-50% 0px -50% 0px"
+    >
+      {(isIntersecting, entry) => (
+        <div className="fixed top-0 left-0 w-full h-2 bg-gray-200 z-50">
+          <div 
+            className="h-full bg-blue-500 transition-all duration-300"
+            style={{ 
+              width: `${(entry?.intersectionRatio || 0) * 100}%` 
+            }}
+          />
+        </div>
+      )}
+    </IntersectionObserver>
+  );
+}
+
+// 조건부 로딩
+function ConditionalContent({ shouldLoad, children }: {
+  shouldLoad: boolean,
+  children: ReactNode
+}) {
+  return (
+    <IntersectionObserver 
+      disabled={!shouldLoad}
+      threshold={0.1}
+      fallback={<div>로딩이 비활성화되었습니다</div>}
+    >
+      {(isIntersecting) => 
+        isIntersecting ? children : <ContentPlaceholder />
+      }
+    </IntersectionObserver>
+  );
+}
+```
+
+**🔧 고급 패턴들**
+
+```tsx
+// 다중 임계값 관찰
+<IntersectionObserver threshold={[0, 0.25, 0.5, 0.75, 1.0]}>
+  {(isIntersecting, entry) => (
+    <div 
+      className="transition-opacity duration-300"
+      style={{ 
+        opacity: entry?.intersectionRatio || 0 
+      }}
+    >
+      <GradualContent />
+    </div>
+  )}
+</IntersectionObserver>
+
+// 루트 마진을 활용한 프리로딩
+<IntersectionObserver
+  threshold={0}
+  rootMargin="0px 0px 500px 0px"  // 500px 전에 미리 로딩
+  triggerOnce={true}
+  onIntersect={(isIntersecting) => {
+    if (isIntersecting) {
+      preloadNextPageData();
+    }
+  }}
+>
+  <div>다음 페이지 프리로드 트리거</div>
+</IntersectionObserver>
+
+// 뷰포트 벗어남 감지
+<IntersectionObserver
+  threshold={0}
+  onIntersect={(isIntersecting) => {
+    if (!isIntersecting) {
+      pauseVideo();
+    } else {
+      playVideo();
+    }
+  }}
+>
+  <VideoPlayer src={videoUrl} />
+</IntersectionObserver>
+```
+
+> **⚠️ 브라우저 호환성**: `IntersectionObserver`는 현대 브라우저에서 잘 지원되지만, 구형 브라우저에서는 폴리필이 필요할 수 있습니다. 컴포넌트는 API가 지원되지 않는 환경에서 graceful fallback을 제공합니다.

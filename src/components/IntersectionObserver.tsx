@@ -1,0 +1,84 @@
+import { useEffect, useRef, useState } from "react";
+import type { IntersectionObserverProps } from "./types";
+
+export function IntersectionObserver({
+  children,
+  threshold = 0,
+  rootMargin = "0px",
+  triggerOnce = false,
+  disabled = false,
+  onIntersect,
+  fallback,
+}: IntersectionObserverProps) {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [hasTriggered, setHasTriggered] = useState(false);
+  const [entry, setEntry] = useState<IntersectionObserverEntry | undefined>();
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = elementRef.current;
+    
+    // disabled이거나 요소가 없으면 관찰하지 않음
+    if (disabled || !element) {
+      return;
+    }
+
+    // triggerOnce가 true이고 이미 트리거되었으면 관찰하지 않음
+    if (triggerOnce && hasTriggered) {
+      return;
+    }
+
+    // IntersectionObserver가 지원되지 않는 브라우저에서는 항상 intersecting으로 처리
+    if (!window.IntersectionObserver) {
+      setIsIntersecting(true);
+      return;
+    }
+
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        const isCurrentlyIntersecting = entry.isIntersecting;
+        
+        setIsIntersecting(isCurrentlyIntersecting);
+        setEntry(entry);
+        
+        // onIntersect 콜백 호출
+        if (onIntersect) {
+          onIntersect(isCurrentlyIntersecting, entry);
+        }
+        
+        // triggerOnce가 true이고 교차가 시작되면 더 이상 관찰하지 않음
+        if (triggerOnce && isCurrentlyIntersecting) {
+          setHasTriggered(true);
+          observer.unobserve(element);
+        }
+      },
+      {
+        threshold,
+        rootMargin,
+      }
+    );
+
+    observer.observe(element);
+
+    // cleanup
+    return () => {
+      observer.unobserve(element);
+    };
+  }, [threshold, rootMargin, triggerOnce, disabled, hasTriggered, onIntersect]);
+
+  // disabled일 때 fallback 렌더링
+  if (disabled) {
+    return fallback || null;
+  }
+
+  const content = typeof children === 'function' 
+    ? children(isIntersecting, entry) 
+    : children;
+
+  return (
+    <div ref={elementRef}>
+      {content}
+    </div>
+  );
+}
