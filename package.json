@@ -1,12 +1,12 @@
 {
-  "name": "utilinent",
+  "name": "@ilokesto/utilinent",
   "version": "0.0.10",
   "scripts": {
     "build": "vite build && tsc --emitDeclarationOnly"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ayden94/utilinent.git"
+    "url": "git+https://github.com/ilokesto/utilinent.git"
   },
   "sideEffects": false,
   "types": "dist/index.d.ts",
@@ -26,6 +26,9 @@
   "peerDependencies": {
     "react": ">=18.0.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@types/node": "^22.9.0",
     "@types/react": "^18.3.12",
@@ -34,9 +37,6 @@
     "@vitejs/plugin-react": "^4.3.3",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
-    "rollup-plugin-visualizer": "^5.12.0",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.10",
-    "vite-plugin-compression": "^0.5.1"
+    "typescript": "^5.4.5"
   }
 }
