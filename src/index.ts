@@ -5,3 +5,4 @@ export * from './components/Mount';
 export * from './components/Repeat';
 export * from './components/Observer';
 export * from './components/Slacker';
+export * from './components/OptionalWrapper';

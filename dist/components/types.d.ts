@@ -31,7 +31,7 @@ export type RepeatProps = {
     children: (index: number) => ReactNode;
 } & Fallback;
 export type ObserverProps = {
-    children: ReactNode | ((isIntersecting: boolean) => ReactNode);
+    children?: ReactNode | ((isIntersecting: boolean) => ReactNode);
     fallback?: ReactNode;
     threshold?: number | number[];
     rootMargin?: string;
