@@ -62,8 +62,8 @@ React에서 조건부 렌더링을 할 때 삼항 연산자(`? :`), AND 연산�
 ```tsx
 interface ShowProps<T> {
   when: T;                                           // 조건값 (truthy/falsy 체크)
-  fallback?: ReactNode;                             // 조건이 false일 때 렌더링할 내용
-  children: ReactNode | ((item: NonNullable<T>) => ReactNode); // 조건이 true일 때의 내용
+  fallback?: React.ReactNode;                             // 조건이 false일 때 렌더링할 내용
+  children: React.ReactNode | ((item: NonNullable<T>) => React.ReactNode); // 조건이 true일 때의 내용
 }
 ```
 
@@ -131,8 +131,8 @@ React에서 배열을 렌더링할 때 `Array.map()`을 사용하는 것은 일�
 ```tsx
 interface ForProps<T extends Array<unknown>> {
   each: T | null | undefined;                       // 렌더링할 배열
-  fallback?: ReactNode;                             // 배열이 비어있거나 null일 때의 대체 내용
-  children: (item: T[number], index: number) => ReactNode; // 각 아이템을 렌더링하는 함수
+  fallback?: React.ReactNode;                             // 배열이 비어있거나 null일 때의 대체 내용
+  children: (item: T[number], index: number) => React.ReactNode; // 각 아이템을 렌더링하는 함수
 }
 ```
 
@@ -230,13 +230,13 @@ function createSwitcher<T, K extends LiteralKeys<T>>(data: T): {
   Switch: ({ 
     when: K,                                        // 분기할 필드명
     children: Array<ReactElement>,                  // Match 컴포넌트들
-    fallback?: ReactNode                           // 매칭되는 case가 없을 때의 대체 내용
-  }) => ReactNode;
+    fallback?: React.ReactNode                           // 매칭되는 case가 없을 때의 대체 내용
+  }) => React.ReactNode;
   
   Match: <V extends ExtractValues<T, K>>({
     case: V,                                       // 매칭할 값
-    children: (props: ExtractByKeyValue<T, K, V>) => ReactNode // 해당 case의 정확한 타입 제공
-  }) => ReactNode;
+    children: (props: ExtractByKeyValue<T, K, V>) => React.ReactNode // 해당 case의 정확한 타입 제공
+  }) => React.ReactNode;
 }
 ```
 
@@ -392,8 +392,8 @@ function ComplexStatus({ state }: { state: ComplexState }) {
 ```tsx
 interface OptionalWrapperProps {
   when: boolean;                                    // 래퍼를 적용할 조건
-  children: ReactNode;                              // 감싸질 내용
-  wrapper: (children: ReactNode) => ReactNode;      // 조건이 true일 때 적용할 래퍼 함수
+  children: React.ReactNode;                              // 감싸질 내용
+  wrapper: (children: React.ReactNode) => React.ReactNode;      // 조건이 true일 때 적용할 래퍼 함수
 }
 ```
 
@@ -493,8 +493,8 @@ function ClientOnlyComponent() {
 
 ```tsx
 interface MountProps {
-  fallback?: ReactNode;                             // 마운트 전 또는 로딩 중 표시할 내용
-  children: ReactNode | (() => ReactNode | Promise<ReactNode>); // 마운트 후 렌더링할 내용
+  fallback?: React.ReactNode;                             // 마운트 전 또는 로딩 중 표시할 내용
+  children: React.ReactNode | (() => React.ReactNode | Promise<ReactNode>); // 마운트 후 렌더링할 내용
 }
 ```
 
@@ -598,8 +598,8 @@ function NewWay() {
 ```tsx
 interface RepeatProps {
   times: number;                                    // 반복 횟수
-  fallback?: ReactNode;                             // times가 0 이하일 때의 대체 내용
-  children: (index: number) => ReactNode;           // 각 반복에서 렌더링할 함수
+  fallback?: React.ReactNode;                             // times가 0 이하일 때의 대체 내용
+  children: (index: number) => React.ReactNode;           // 각 반복에서 렌더링할 함수
 }
 ```
 
@@ -784,8 +784,8 @@ function LazyImage({ src, alt }: { src: string, alt: string }) {
 
 ```tsx
 interface ObserverProps {
-  children: ReactNode | ((isIntersecting: boolean) => ReactNode);
-  fallback?: ReactNode;                            // 뷰포트에 보이지 않을 때 표시할 내용
+  children: React.ReactNode | ((isIntersecting: boolean) => React.ReactNode);
+  fallback?: React.ReactNode;                            // 뷰포트에 보이지 않을 때 표시할 내용
   threshold?: number | number[];                    // 교차 임계값 (0.0 ~ 1.0)
   rootMargin?: string;                              // 루트 마진
   triggerOnce?: boolean;                           // 한 번만 트리거할지 여부
@@ -957,7 +957,7 @@ function ImageGallery({ images }: { images: ImageData[] }) {
 // 뷰포트 진입 분석
 function AnalyticsSection({ sectionId, children }: { 
   sectionId: string, 
-  children: ReactNode 
+  children: React.ReactNode 
 }) {
   return (
     <Observer
@@ -1003,7 +1003,7 @@ function ScrollProgressIndicator() {
 // 조건부 로딩 - Show 컴포넌트와 함께 사용
 function ConditionalContent({ shouldLoad, children }: {
   shouldLoad: boolean,
-  children: ReactNode
+  children: React.ReactNode
 }) {
   return (
     <Show when={shouldLoad} fallback={<div>로딩이 비활성화되었습니다</div>}>
@@ -1166,8 +1166,8 @@ function LazyChart() {
 
 ```tsx
 interface SlackerProps {
-  children: (loaded: any) => ReactNode;            // loader의 결과를 받는 함수
-  fallback?: ReactNode;                            // 로딩 중 표시할 내용
+  children: (loaded: any) => React.ReactNode;            // loader의 결과를 받는 함수
+  fallback?: React.ReactNode;                            // 로딩 중 표시할 내용
   threshold?: number | number[];                   // 교차 임계값 (기본: 0.1)
   rootMargin?: string;                            // 루트 마진 (기본: "50px")
   loader: () => Promise<any> | any;               // 동적 로딩 함수 (필수)

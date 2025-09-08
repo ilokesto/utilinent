@@ -1,18 +1,22 @@
-import type { ReactElement, ReactNode } from "react";
-
-export { ReactNode }
-type Fallback = { fallback?: ReactNode };
+import type { ReactElement } from "react";
+type Fallback = { fallback?: React.ReactNode };
 
 export type ShowProps<T> = {
   when: T;
-  children: ReactNode | ((item: NonNullable<T>) => ReactNode);
+  children: React.ReactNode | ((item: NonNullable<T>) => React.ReactNode);
 } & Fallback;
 
 export type ForProps<T extends Array<unknown>> = {
   each: T | null | undefined; 
-  fallback?: ReactNode;
-  children: (item: T[number], index: number) => ReactNode;
+  fallback?: React.ReactNode;
+  children: (item: T[number], index: number) => React.ReactNode;
 };
+
+export type OptionalWrapperProps = {
+  when: boolean, 
+  children: React.ReactNode, 
+  wrapper: (children: React.ReactNode) => React.ReactNode
+}
 
 export type ExtractValues<T, K extends keyof T> = T extends any ? T[K] : never;
 
@@ -63,17 +67,17 @@ export type SwitchProps<T, K extends LiteralKeys<T>> = {
 } & Fallback;
 
 export type MountProps = {
-  children: ReactNode | (() => ReactNode | Promise<ReactNode>);
+  children: React.ReactNode | (() => React.ReactNode | Promise<React.ReactNode>);
 } & Fallback;
 
 export type RepeatProps = {
   times: number;
-  children: (index: number) => ReactNode;
+  children: (index: number) => React.ReactNode;
 } & Fallback;
 
 export type ObserverProps = {
-  children?: ReactNode | ((isIntersecting: boolean) => ReactNode);
-  fallback?: ReactNode;
+  children?: React.ReactNode | ((isIntersecting: boolean) => React.ReactNode);
+  fallback?: React.ReactNode;
   threshold?: number | number[];
   rootMargin?: string;
   triggerOnce?: boolean;
@@ -81,8 +85,8 @@ export type ObserverProps = {
 };
 
 export type SlackerProps = {
-  children: (loaded: any) => ReactNode;            // loader의 결과를 받는 함수
-  fallback?: ReactNode;                            // 뷰포트에 보이지 않을 때 표시할 내용
+  children: (loaded: any) => React.ReactNode;            // loader의 결과를 받는 함수
+  fallback?: React.ReactNode;                            // 뷰포트에 보이지 않을 때 표시할 내용
   threshold?: number | number[];
   rootMargin?: string;
   loader: () => Promise<any> | any;                // 동적 로딩 함수 (필수)

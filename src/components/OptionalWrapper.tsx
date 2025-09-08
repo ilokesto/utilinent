@@ -1,15 +1,11 @@
 import { Show } from "./Show";
-import { ReactNode } from "./types";
+import { OptionalWrapperProps } from "./types";
 
 export function OptionalWrapper({
   when,
   children,
   wrapper,
-}: {
-  when: boolean, 
-  children: ReactNode, 
-  wrapper: (children: ReactNode) => ReactNode
-}): ReactNode {
+}: OptionalWrapperProps): React.ReactNode {
   return <Show when={when} fallback={children}>
     {wrapper(children)}
   </Show>;

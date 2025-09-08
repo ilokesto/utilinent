@@ -1,7 +1,7 @@
 /// <reference types="react" />
-import { ReactNode } from "./types";
+import { React.ReactNode } from "./types";
 export declare function OptionalWrapper({ when, children, wrapper, }: {
     when: boolean;
-    children: ReactNode;
-    wrapper: (children: ReactNode) => ReactNode;
-}): ReactNode;
+    children: React.ReactNode;
+    wrapper: (children: React.ReactNode) => React.ReactNode;
+}): React.ReactNode;

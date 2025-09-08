@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState } from "react";
 import { Observer } from "./Observer";
 import { SlackerProps } from "./types";
 
