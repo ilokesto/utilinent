@@ -1,3 +1,4 @@
+import { Show } from "./Show";
 import { ReactNode } from "./types";
 
 export function OptionalWrapper({
@@ -9,5 +10,7 @@ export function OptionalWrapper({
   children: ReactNode, 
   wrapper: (children: ReactNode) => ReactNode
 }): ReactNode {
-  return when ? wrapper(children) : children;
+  return <Show when={when} fallback={children}>
+    {wrapper(children)}
+  </Show>;
 }
