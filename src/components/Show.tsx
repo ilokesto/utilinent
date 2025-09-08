@@ -1,4 +1,4 @@
-import type { ShowProps } from "./types";
+import type { ShowProps } from "../types";
 
 export function Show<T,>({ when, children, fallback = null }: ShowProps<T>) {
   return when

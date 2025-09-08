@@ -1,4 +1,4 @@
-import type { ExtractByKeyValue, ExtractValues, LiteralKeys, SwitchProps } from "./types";
+import type { ExtractByKeyValue, ExtractValues, LiteralKeys, SwitchProps } from "../types";
 
 export function createSwitcher<T, K extends LiteralKeys<T>>(data: T) {
   function Switch({ children, when, fallback = null }: SwitchProps<T, K>) {

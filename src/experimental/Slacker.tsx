@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Observer } from "./Observer";
-import { SlackerProps } from "./types";
+import { Observer } from "../components/Observer";
+import { SlackerProps } from "../types";
 
 /**
  * Slacker 컴포넌트 - Lazy Loading 전용

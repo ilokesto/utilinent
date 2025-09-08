@@ -1,6 +1,6 @@
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
+import type { ObserverProps } from "../types";
 import { Show } from "./Show";
-import type { ObserverProps } from "./types";
 
 export function Observer({
   children,

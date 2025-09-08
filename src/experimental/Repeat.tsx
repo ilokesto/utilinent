@@ -1,4 +1,4 @@
-import type { RepeatProps } from "./types";
+import type { RepeatProps } from "../types";
 
 export function Repeat({ times, children, fallback }: RepeatProps) {
   // times가 0 이하이거나 유효하지 않은 경우 fallback 렌더링

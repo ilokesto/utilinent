@@ -1,4 +1,4 @@
-import type { ForProps } from "./types";
+import type { ForProps } from "../types";
 
 export function For<T extends Array<unknown>>({
   each,

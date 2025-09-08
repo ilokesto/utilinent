@@ -1,5 +1,5 @@
+import { OptionalWrapperProps } from "../types";
 import { Show } from "./Show";
-import { OptionalWrapperProps } from "./types";
 
 export function OptionalWrapper({
   when,
