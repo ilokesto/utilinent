@@ -7,14 +7,14 @@ export function Observer({
   fallback = null,
   threshold = 0,
   rootMargin = "0px",
-  triggerOnce = false,
-  onIntersect,
+  triggerOnce: freezeOnceVisible = false,
+  onIntersect: onChange,
 }: ObserverProps) {
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold,
     rootMargin,
-    freezeOnceVisible: triggerOnce,
-    onChange: onIntersect,
+    freezeOnceVisible,
+    onChange,
   });
 
   return (
