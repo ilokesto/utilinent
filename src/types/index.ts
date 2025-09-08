@@ -1,21 +1,47 @@
 import type { ReactElement } from "react";
-type Fallback = { fallback?: React.ReactNode };
+// type Fallback = { fallback?: React.ReactNode };
 
-export type ShowProps<T> = {
+interface Fallback {
+  fallback?: React.ReactNode;
+}
+
+export interface ShowProps<T = unknown> extends Fallback {
   when: T;
   children: React.ReactNode | ((item: NonNullable<T>) => React.ReactNode);
-} & Fallback;
+}
 
-export type ForProps<T extends Array<unknown>> = {
-  each: T | null | undefined; 
-  fallback?: React.ReactNode;
+export interface ForProps<T extends Array<unknown>> extends Fallback {
+  each: T | null | undefined; // 배열 또는 null/undefined 허용
   children: (item: T[number], index: number) => React.ReactNode;
-};
+}
 
-export type OptionalWrapperProps = {
-  when: boolean, 
-  children: React.ReactNode, 
-  wrapper: (children: React.ReactNode) => React.ReactNode
+export interface OptionalWrapperProps {
+  when: boolean; 
+  children: React.ReactNode; 
+  wrapper: (children: React.ReactNode) => React.ReactNode;
+  fallback?: (children: React.ReactNode) => React.ReactNode;
+}
+
+export interface RepeatProps extends Fallback {
+  times: number; 
+  children: (index: number) => React.ReactNode; 
+}
+
+export interface ObserverProps extends Fallback {
+  children?: React.ReactNode | ((isIntersecting: boolean) => React.ReactNode);
+  threshold?: number | number[];
+  rootMargin?: string;
+  triggerOnce?: boolean;
+  onIntersect?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void;
+}
+
+export interface SwitchProps<T, K extends LiteralKeys<T>> extends Fallback {
+  children: Array<ReactElement>;
+  when: K;
+}
+
+export interface MountProps extends Fallback {
+  children: React.ReactNode | (() => React.ReactNode | Promise<React.ReactNode>);
 }
 
 export type ExtractValues<T, K extends keyof T> = T extends any ? T[K] : never;
@@ -61,28 +87,7 @@ export type GetLiteralKeys<T> = {
 
 export type LiteralKeys<T> = [GetLiteralKeys<T>] extends [never] ? keyof T : GetLiteralKeys<T>;
 
-export type SwitchProps<T, K extends LiteralKeys<T>> = {
-  children: Array<ReactElement>,
-  when: K,
-} & Fallback;
 
-export type MountProps = {
-  children: React.ReactNode | (() => React.ReactNode | Promise<React.ReactNode>);
-} & Fallback;
-
-export type RepeatProps = {
-  times: number;
-  children: (index: number) => React.ReactNode;
-} & Fallback;
-
-export type ObserverProps = {
-  children?: React.ReactNode | ((isIntersecting: boolean) => React.ReactNode);
-  fallback?: React.ReactNode;
-  threshold?: number | number[];
-  rootMargin?: string;
-  triggerOnce?: boolean;
-  onIntersect?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void;
-};
 
 export type SlackerProps = {
   children: (loaded: any) => React.ReactNode;            // loader의 결과를 받는 함수
