@@ -1,3 +1,3 @@
-/// <reference types="react" />
-import type { ShowProps } from "./types";
-export declare function Show<T>({ when, children, fallback }: ShowProps<T>): import("react").ReactNode;
+import type { ShowProps, ShowPropsArray } from "../types";
+export declare function Show<T extends unknown[]>({ when, children, fallback }: ShowPropsArray<T>): React.ReactNode;
+export declare function Show<T extends unknown>({ when, children, fallback }: ShowProps<T>): React.ReactNode;

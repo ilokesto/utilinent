@@ -2,7 +2,7 @@
   "name": "@ilokesto/utilinent",
   "version": "0.0.13",
   "scripts": {
-    "build": "vite build && tsc --emitDeclarationOnly"
+    "build": "rm -rf dist && tsc --emitDeclarationOnly"
   },
   "repository": {
     "type": "git",

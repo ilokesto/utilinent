@@ -1,7 +1,2 @@
-/// <reference types="react" />
-import { React.ReactNode } from "./types";
-export declare function OptionalWrapper({ when, children, wrapper, }: {
-    when: boolean;
-    children: React.ReactNode;
-    wrapper: (children: React.ReactNode) => React.ReactNode;
-}): React.ReactNode;
+import { OptionalWrapperProps } from "../types";
+export declare function OptionalWrapper({ when, children, wrapper, fallback }: OptionalWrapperProps): React.ReactNode;

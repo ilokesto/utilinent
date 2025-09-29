@@ -1,6 +1,4 @@
-import { jsx as _jsx } from "react/jsx-runtime";
-import { useState } from "react";
-import { Observer } from "./Observer";
+import { SlackerProps } from "../types";
 /**
  * Slacker 컴포넌트 - Lazy Loading 전용
  *
@@ -72,25 +70,4 @@ import { Observer } from "./Observer";
  * </Slacker>
  * ```
  */
-export function Slacker({ children, fallback, loader, threshold = 0.1, rootMargin = "50px", }) {
-    const [loadedData, setLoadedData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [hasLoaded, setHasLoaded] = useState(false);
-    const handleIntersect = async (isIntersecting) => {
-        if (isIntersecting && !hasLoaded) {
-            setIsLoading(true);
-            try {
-                const data = await loader();
-                setLoadedData(data);
-                setHasLoaded(true);
-            }
-            catch (error) {
-                console.error('Slacker loader failed:', error);
-            }
-            finally {
-                setIsLoading(false);
-            }
-        }
-    };
-    return (_jsx(Observer, { threshold: threshold, rootMargin: rootMargin, fallback: fallback, triggerOnce: true, onIntersect: handleIntersect, children: hasLoaded ? children(loadedData) : null }));
-}
+export declare function Slacker({ children, fallback, loader, threshold, rootMargin, }: SlackerProps): import("react/jsx-runtime").JSX.Element;
