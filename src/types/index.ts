@@ -4,6 +4,14 @@ import type { ReactElement } from "react";
 interface Fallback {
   fallback?: React.ReactNode;
 }
+export type NonNullableElements<T extends readonly any[]> = {
+  -readonly [P in keyof T]: NonNullable<T[P]>;
+};
+
+export interface ShowPropsArray<T extends unknown[]> extends Fallback {
+  when: T;
+  children: React.ReactNode | ((item: NonNullableElements<T>) => React.ReactNode);
+}
 
 export interface ShowProps<T = unknown> extends Fallback {
   when: T;
