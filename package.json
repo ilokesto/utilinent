@@ -2,7 +2,7 @@
   "name": "@ilokesto/utilinent",
   "version": "0.0.14",
   "scripts": {
-    "build": "rm -rf dist && tsc --emitDeclarationOnly"
+    "build": "rm -rf dist && tsc"
   },
   "repository": {
     "type": "git",
