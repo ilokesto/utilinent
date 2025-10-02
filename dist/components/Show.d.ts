@@ -4,12 +4,46 @@ type ShowTagHelper<K extends keyof JSX.IntrinsicElements> = {
     <T extends unknown>(props: ShowProps<T> & ComponentPropsWithRef<K>): React.ReactNode;
     <T extends unknown[]>(props: ShowPropsArray<T> & ComponentPropsWithRef<K>): React.ReactNode;
 };
-type ShowTagHelpers = {
-    [K in keyof JSX.IntrinsicElements]: ShowTagHelper<K>;
-};
-type ShowType = {
+interface ShowType {
     <T extends unknown>(props: ShowProps<T>): React.ReactNode;
     <T extends unknown[]>(props: ShowPropsArray<T>): React.ReactNode;
-} & ShowTagHelpers;
+    div: ShowTagHelper<"div">;
+    span: ShowTagHelper<"span">;
+    h1: ShowTagHelper<"h1">;
+    h2: ShowTagHelper<"h2">;
+    h3: ShowTagHelper<"h3">;
+    h4: ShowTagHelper<"h4">;
+    h5: ShowTagHelper<"h5">;
+    h6: ShowTagHelper<"h6">;
+    p: ShowTagHelper<"p">;
+    a: ShowTagHelper<"a">;
+    button: ShowTagHelper<"button">;
+    section: ShowTagHelper<"section">;
+    article: ShowTagHelper<"article">;
+    header: ShowTagHelper<"header">;
+    footer: ShowTagHelper<"footer">;
+    nav: ShowTagHelper<"nav">;
+    main: ShowTagHelper<"main">;
+    aside: ShowTagHelper<"aside">;
+    ul: ShowTagHelper<"ul">;
+    ol: ShowTagHelper<"ol">;
+    li: ShowTagHelper<"li">;
+    label: ShowTagHelper<"label">;
+    input: ShowTagHelper<"input">;
+    textarea: ShowTagHelper<"textarea">;
+    select: ShowTagHelper<"select">;
+    form: ShowTagHelper<"form">;
+    table: ShowTagHelper<"table">;
+    thead: ShowTagHelper<"thead">;
+    tbody: ShowTagHelper<"tbody">;
+    tfoot: ShowTagHelper<"tfoot">;
+    tr: ShowTagHelper<"tr">;
+    th: ShowTagHelper<"th">;
+    td: ShowTagHelper<"td">;
+    img: ShowTagHelper<"img">;
+    video: ShowTagHelper<"video">;
+    canvas: ShowTagHelper<"canvas">;
+    [K: string]: ShowTagHelper<any>;
+}
 export declare const Show: ShowType;
 export {};
