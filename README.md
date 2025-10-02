@@ -23,7 +23,7 @@ pnpm add @ilokesto/utilinent
 기본적으로 다음 컴포넌트들을 가져와 사용할 수 있습니다.
 
 ```tsx
-import { Show, For, Repeat, Observer, OptionalWrapper } from '@ilokesto/utilinent';
+import { Show, For, Repeat, Observer, OptionalWrapper, useIntersectionObserver } from '@ilokesto/utilinent';
 ```
 
 #### `<Show>`
@@ -134,12 +134,35 @@ function Post({ post, withLink }) {
 }
 ```
 
+### 훅(Hooks)
+
+#### `useIntersectionObserver`
+
+Intersection Observer API를 React 훅으로 감싼 것입니다. 컴포넌트의 뷰포트 내 가시성을 추적하는 데 사용됩니다.
+
+**사용 예시:**
+
+```tsx
+import { useIntersectionObserver } from '@ilokesto/utilinent';
+import { useRef } from 'react';
+
+function MyComponent() {
+  const { ref, isIntersecting } = useIntersectionObserver({ threshold: 0.5 });
+
+  return (
+    <div ref={ref} style={{ transition: 'opacity 0.5s', opacity: isIntersecting ? 1 : 0.2 }}>
+      {isIntersecting ? '이제 화면에 보입니다!' : '화면 밖에 있습니다.'}
+    </div>
+  );
+}
+```
+
 ### 실험적 기능
 
 실험적인 컴포넌트 및 훅은 `experimental` 경로에서 가져올 수 있습니다. 이 기능들은 API가 변경될 수 있습니다.
 
 ```tsx
-import { Mount, Slacker, createSwitcher, useIntersectionObserver, Slot, Slottable } from '@ilokesto/utilinent/experimental';
+import { Mount, Slacker, createSwitcher, Slot, Slottable } from '@ilokesto/utilinent/experimental';
 ```
 
 #### `<Slot>` 및 `<Slottable>`
@@ -253,27 +276,6 @@ function Media() {
         {(data) => <video src={data.src} controls />}
       </Match>
     </Switch>
-  );
-}
-```
-
-#### `useIntersectionObserver`
-
-Intersection Observer API를 React 훅으로 감싼 것입니다. 컴포넌트의 뷰포트 내 가시성을 추적하는 데 사용됩니다.
-
-**사용 예시:**
-
-```tsx
-import { useIntersectionObserver } from '@ilokesto/utilinent/experimental';
-import { useRef } from 'react';
-
-function MyComponent() {
-  const { ref, isIntersecting } = useIntersectionObserver({ threshold: 0.5 });
-
-  return (
-    <div ref={ref} style={{ transition: 'opacity 0.5s', opacity: isIntersecting ? 1 : 0.2 }}>
-      {isIntersecting ? '이제 화면에 보입니다!' : '화면 밖에 있습니다.'}
-    </div>
   );
 }
 ```
