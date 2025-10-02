@@ -1,2 +1,9 @@
-import type { RepeatProps } from "../types";
-export declare function Repeat({ times, children, fallback }: RepeatProps): string | number | true | Iterable<import("react").ReactNode> | import("react/jsx-runtime").JSX.Element | null;
+import { ComponentPropsWithRef } from "react";
+import { RepeatProps } from "../types";
+type RepeatType = {
+    (props: RepeatProps): React.ReactNode;
+} & {
+    [K in keyof JSX.IntrinsicElements]: (props: RepeatProps & ComponentPropsWithRef<K>) => React.ReactNode;
+};
+export declare const Repeat: RepeatType;
+export {};

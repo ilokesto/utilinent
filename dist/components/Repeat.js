@@ -1,8 +1,17 @@
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
-export function Repeat({ times, children, fallback }) {
-    // times가 0 이하이거나 유효하지 않은 경우 fallback 렌더링
+import { createElement } from "react";
+import { htmlTags } from "../constants/htmlTags";
+function BaseRepeat({ times, children, fallback = null }) {
     if (!times || times <= 0 || !Number.isInteger(times)) {
-        return fallback || null;
+        return fallback ?? null;
     }
-    return (_jsx(_Fragment, { children: Array.from({ length: times }, (_, index) => children(index)) }));
+    return _jsx(_Fragment, { children: Array.from({ length: times }, (_, i) => children(i)) });
 }
+const renderForTag = (tag) => ({ times, children, fallback = null, ...props }) => {
+    if (!times || times <= 0 || !Number.isInteger(times)) {
+        return fallback ?? null;
+    }
+    const content = Array.from({ length: times }, (_, i) => children(i));
+    return createElement(tag, props, content);
+};
+export const Repeat = Object.assign(BaseRepeat, Object.fromEntries(htmlTags.map(tag => [tag, renderForTag(tag)])));
