@@ -2,15 +2,19 @@ import { ComponentPropsWithRef, createElement } from "react";
 import { htmlTags } from "../constants/htmlTags";
 import { ShowProps, ShowPropsArray } from "../types";
 
-type ShowType = {
-  <T extends unknown[]>(props: ShowPropsArray<T>): React.ReactNode;
-  <T extends unknown>(props: ShowProps<T>): React.ReactNode;
-} & {
-  [K in keyof JSX.IntrinsicElements]: {
-    <T extends unknown[]>(props: ShowPropsArray<T> & ComponentPropsWithRef<K>): React.ReactNode;
-    <T extends unknown>(props: ShowProps<T> & ComponentPropsWithRef<K>): React.ReactNode;
-  }
+type ShowTagHelper<K extends keyof JSX.IntrinsicElements> = {
+  <T extends unknown>(props: ShowProps<T> & ComponentPropsWithRef<K>): React.ReactNode;
+  <T extends unknown[]>(props: ShowPropsArray<T> & ComponentPropsWithRef<K>): React.ReactNode;
 };
+
+type ShowTagHelpers = {
+  [K in keyof JSX.IntrinsicElements]: ShowTagHelper<K>;
+};
+
+type ShowType = {
+  <T extends unknown>(props: ShowProps<T>): React.ReactNode;
+  <T extends unknown[]>(props: ShowPropsArray<T>): React.ReactNode;
+} & ShowTagHelpers;
 
 const BaseShow = <T,>({ when, children, fallback = null }: ShowProps<T> | ShowPropsArray<T[]>) => {
   const shouldRender = Array.isArray(when) ? when.every(Boolean) : !!when;
