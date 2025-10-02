@@ -1,6 +1,6 @@
 {
   "name": "@ilokesto/utilinent",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "scripts": {
     "build": "rm -rf dist && tsc"
   },
@@ -9,7 +9,7 @@
     "url": "git+https://github.com/ilokesto/utilinent.git"
   },
   "sideEffects": false,
-"types": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "module": "dist/index.js",
   "exports": {
     ".": {
