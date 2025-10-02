@@ -12,13 +12,13 @@ export interface ShowProps<T = unknown> extends Fallback {
 }
 
 type ShowTagHelper<K extends keyof JSX.IntrinsicElements> = {
-  <T extends unknown>(props: ShowProps<T> & ComponentPropsWithRef<K>): React.ReactNode;
   <T extends unknown[]>(props: ShowPropsArray<T> & ComponentPropsWithRef<K>): React.ReactNode;
+  <T extends unknown>(props: ShowProps<T> & ComponentPropsWithRef<K>): React.ReactNode;
 };
 
 export interface ShowType {
-  <T extends unknown>(props: ShowProps<T>): React.ReactNode;
   <T extends unknown[]>(props: ShowPropsArray<T>): React.ReactNode;
+  <T extends unknown>(props: ShowProps<T>): React.ReactNode;
   
   // 명시적으로 각 HTML 태그를 정의
   a: ShowTagHelper<"a">;
