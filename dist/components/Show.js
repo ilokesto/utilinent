@@ -15,4 +15,8 @@ const renderForTag = (tag) => ({ when, children, fallback = null, ...props }) =>
     const content = typeof children === "function" ? children(when) : children;
     return createElement(tag, props, content);
 };
-export const Show = Object.assign(BaseShow, Object.fromEntries(htmlTags.map(tag => [tag, renderForTag(tag)])));
+const tagEntries = htmlTags.reduce((acc, tag) => {
+    acc[tag] = renderForTag(tag);
+    return acc;
+}, {});
+export const Show = Object.assign(BaseShow, tagEntries);

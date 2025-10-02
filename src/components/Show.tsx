@@ -32,7 +32,9 @@ const renderForTag =
     return createElement(tag, props, content);
   };
 
-export const Show = Object.assign(
-  BaseShow,
-  Object.fromEntries(htmlTags.map(tag => [tag, renderForTag(tag)]))
-) as unknown as ShowType;
+const tagEntries = htmlTags.reduce((acc, tag) => {
+  (acc as any)[tag] = renderForTag(tag);
+  return acc;
+}, {} as Partial<ShowType>);
+
+export const Show = Object.assign(BaseShow, tagEntries) as ShowType;
