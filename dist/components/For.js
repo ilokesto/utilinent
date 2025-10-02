@@ -9,4 +9,8 @@ const renderForTag = (tag) => ({ each, children, fallback = null, ...props }) =>
     const content = each.map(children);
     return createElement(tag, props, content);
 };
-export const For = Object.assign(BaseFor, Object.fromEntries(htmlTags.map(tag => [tag, renderForTag(tag)])));
+const tagEntries = htmlTags.reduce((acc, tag) => {
+    acc[tag] = renderForTag(tag);
+    return acc;
+}, {});
+export const For = Object.assign(BaseFor, tagEntries);

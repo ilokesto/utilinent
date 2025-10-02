@@ -1,9 +1,2 @@
-import { ComponentPropsWithRef } from "react";
-import { RepeatProps } from "../types";
-type RepeatType = {
-    (props: RepeatProps): React.ReactNode;
-} & {
-    [K in keyof JSX.IntrinsicElements]: (props: RepeatProps & ComponentPropsWithRef<K>) => React.ReactNode;
-};
+import type { RepeatType } from "../types/repeat";
 export declare const Repeat: RepeatType;
-export {};

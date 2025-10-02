@@ -1,14 +1,6 @@
 import { ComponentPropsWithRef, createElement } from "react";
 import { htmlTags } from "../constants/htmlTags";
-import { RepeatProps } from "../types";
-
-type RepeatType = {
-  (props: RepeatProps): React.ReactNode;
-} & {
-  [K in keyof JSX.IntrinsicElements]: (
-    props: RepeatProps & ComponentPropsWithRef<K>
-  ) => React.ReactNode;
-};
+import type { RepeatProps, RepeatType } from "../types/repeat";
 
 function BaseRepeat({ times, children, fallback = null }: RepeatProps) {
   if (!times || times <= 0 || !Number.isInteger(times)) {
@@ -28,7 +20,9 @@ const renderForTag =
     return createElement(tag, props, content);
   };
 
-export const Repeat = Object.assign(
-  BaseRepeat,
-  Object.fromEntries(htmlTags.map(tag => [tag, renderForTag(tag)]))
-) as unknown as RepeatType;
+const tagEntries = htmlTags.reduce((acc, tag) => {
+  (acc as any)[tag] = renderForTag(tag);
+  return acc;
+}, {} as any);
+
+export const Repeat = Object.assign(BaseRepeat, tagEntries) as unknown as RepeatType;

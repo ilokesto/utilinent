@@ -1,38 +1,17 @@
 import type { ReactElement } from "react";
-// type Fallback = { fallback?: React.ReactNode };
 
-interface Fallback {
+export interface Fallback {
   fallback?: React.ReactNode;
 }
 export type NonNullableElements<T extends readonly any[]> = {
   -readonly [P in keyof T]: NonNullable<T[P]>;
 };
 
-export interface ShowPropsArray<T extends unknown[]> extends Fallback {
-  when: T;
-  children: React.ReactNode | ((item: NonNullableElements<T>) => React.ReactNode);
-}
-
-export interface ShowProps<T = unknown> extends Fallback {
-  when: T;
-  children: React.ReactNode | ((item: NonNullable<T>) => React.ReactNode);
-}
-
-export interface ForProps<T extends Array<unknown>> extends Fallback {
-  each: T | null | undefined; // 배열 또는 null/undefined 허용
-  children: (item: T[number], index: number) => React.ReactNode;
-}
-
 export interface OptionalWrapperProps {
   when: boolean; 
   children: React.ReactNode; 
   wrapper: (children: React.ReactNode) => React.ReactNode;
   fallback?: (children: React.ReactNode) => React.ReactNode;
-}
-
-export interface RepeatProps extends Fallback {
-  times: number; 
-  children: (index: number) => React.ReactNode; 
 }
 
 export interface ObserverProps extends Fallback {

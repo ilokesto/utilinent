@@ -14,4 +14,8 @@ const renderForTag = (tag) => ({ times, children, fallback = null, ...props }) =
     const content = Array.from({ length: times }, (_, i) => children(i));
     return createElement(tag, props, content);
 };
-export const Repeat = Object.assign(BaseRepeat, Object.fromEntries(htmlTags.map(tag => [tag, renderForTag(tag)])));
+const tagEntries = htmlTags.reduce((acc, tag) => {
+    acc[tag] = renderForTag(tag);
+    return acc;
+}, {});
+export const Repeat = Object.assign(BaseRepeat, tagEntries);
