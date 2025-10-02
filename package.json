@@ -9,8 +9,18 @@
     "url": "git+https://github.com/ilokesto/utilinent.git"
   },
   "sideEffects": false,
-  "types": "dist/index.d.ts",
+"types": "dist/index.d.ts",
   "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./experimental": {
+      "import": "./dist/experimental.js",
+      "types": "./dist/experimental.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
