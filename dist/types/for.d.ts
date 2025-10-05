@@ -5,7 +5,7 @@ export interface ForProps<T extends Array<unknown>> extends Fallback {
     children: (item: T[number], index: number) => React.ReactNode;
 }
 type ForTagHelper<K extends keyof JSX.IntrinsicElements> = {
-    <T extends Array<unknown>>(props: ForProps<T> & ComponentPropsWithRef<K>): React.ReactNode;
+    <T extends Array<unknown>>(props: ForProps<T> & Omit<ComponentPropsWithRef<K>, 'children'>): React.ReactNode;
 };
 export interface ForType {
     <T extends Array<unknown>>(props: ForProps<T>): React.ReactNode;
