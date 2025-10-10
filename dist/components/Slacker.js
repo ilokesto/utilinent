@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useCallback, useState } from "react";
-import { Observer } from "../components/Observer";
+import { Observer } from "./Observer";
 export function Slacker({ children, errorFallback, loadingFallback, loader, threshold = 0.1, rootMargin = "50px", onError, maxRetries = 0, retryDelay = 1000, }) {
     const [loadedData, setLoadedData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
