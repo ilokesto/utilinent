@@ -1,21 +1,29 @@
 import { jsx as _jsx } from "react/jsx-runtime";
+import { forwardRef, useCallback } from "react";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import { Show } from "./Show";
-export function Observer({ children, fallback = null, threshold = 0, rootMargin = "0px", triggerOnce: freezeOnceVisible = false, onIntersect: onChange, }) {
-    const { ref, isIntersecting } = useIntersectionObserver({
+export const Observer = forwardRef(function Observer({ children, fallback = null, threshold = 0, rootMargin = "0px", triggerOnce: freezeOnceVisible = false, onIntersect: onChange, style, ...props }, forwardedRef) {
+    const { ref: observerRef, isIntersecting } = useIntersectionObserver({
         threshold,
         rootMargin,
         freezeOnceVisible,
         onChange,
     });
-    return (_jsx(Show.div, { ref: ref, style: 
-        // fallback이 없고 isIntersecting이 false인 경우
-        !fallback && !isIntersecting
-            ? {
-                minHeight: "1px",
-                minWidth: "1px",
-                flexShrink: 0, // flex 컨테이너에서 축소되지 않도록
-                display: "block", // inline 요소가 되지 않도록
-            }
-            : undefined, when: isIntersecting, fallback: fallback, children: typeof children === "function" ? children(isIntersecting) : children }));
-}
+    const mergedRef = useCallback((node) => {
+        // Set observer ref
+        observerRef(node);
+        // Handle forwarded ref
+        if (typeof forwardedRef === "function") {
+            forwardedRef(node);
+        }
+        else if (forwardedRef) {
+            forwardedRef.current = node;
+        }
+    }, [observerRef, forwardedRef]);
+    return (_jsx(Show.div, { ref: mergedRef, when: isIntersecting, fallback: fallback, style: {
+            ...style,
+            minHeight: style?.minHeight ?? "1px",
+            minWidth: style?.minWidth ?? "1px",
+            display: style?.display ?? "block",
+        }, ...props, children: typeof children === "function" ? children(isIntersecting) : children }));
+});

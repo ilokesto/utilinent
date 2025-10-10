@@ -12,9 +12,11 @@ const renderForTag = (tag) =>
 // forward ref so consumers like Observer can pass a ref to the real DOM element
 forwardRef(function Render({ when, children, fallback = null, ...props }, ref) {
     const shouldRender = Array.isArray(when) ? when.every(Boolean) : !!when;
-    if (!shouldRender)
-        return fallback;
-    const content = typeof children === "function" ? children(when) : children;
+    const content = shouldRender
+        ? typeof children === "function"
+            ? children(when)
+            : children
+        : fallback;
     return createElement(tag, { ...props, ref }, content);
 });
 const tagEntries = htmlTags.reduce((acc, tag) => {

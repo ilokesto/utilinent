@@ -10,10 +10,9 @@ function BaseRepeat({ times, children, fallback = null }) {
 const renderForTag = (tag) => 
 // forward ref so consumers can attach a ref to the underlying DOM element
 forwardRef(({ times, children, fallback = null, ...props }, ref) => {
-    if (!times || times <= 0 || !Number.isInteger(times)) {
-        return fallback ?? null;
-    }
-    const content = Array.from({ length: times }, (_, i) => children(i));
+    const content = times && times > 0 && Number.isInteger(times)
+        ? Array.from({ length: times }, (_, i) => children(i))
+        : fallback ?? null;
     return createElement(tag, { ...props, ref }, content);
 });
 const tagEntries = htmlTags.reduce((acc, tag) => {

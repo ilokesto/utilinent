@@ -3,26 +3,26 @@ export function useIntersectionObserver({ threshold = 0, root = null, rootMargin
     const [element, setElement] = useState(null);
     const [isIntersecting, setIsIntersecting] = useState(initialIsIntersecting);
     const [entry, setEntry] = useState();
-    const observerRef = useRef(null);
-    const changeCallbackRef = useRef(onChange);
-    // Memoize options to prevent unnecessary observer recreation
-    const observerOptions = useMemo(() => ({
-        threshold,
-        root,
-        rootMargin,
-    }), [threshold, root, rootMargin]);
-    const isFrozen = freezeOnceVisible && isIntersecting;
+    const onChangeRef = useRef(onChange);
+    const isFirstCallbackRef = useRef(true);
+    const isFrozen = useRef(false);
     // Keep callback ref updated
     useEffect(() => {
-        changeCallbackRef.current = onChange;
+        onChangeRef.current = onChange;
     }, [onChange]);
+    // Memoize options
+    const observerOptions = useMemo(() => ({ threshold, root, rootMargin }), [threshold, root, rootMargin]);
     // Ref callback to set the element
     const ref = useCallback((node) => {
         setElement(node);
     }, []);
     // Main intersection observer effect
     useEffect(() => {
-        if (!element || !("IntersectionObserver" in window) || isFrozen) {
+        if (!element || !("IntersectionObserver" in window)) {
+            return;
+        }
+        // If frozen (triggerOnce + already intersected), skip observation
+        if (isFrozen.current) {
             return;
         }
         const observer = new IntersectionObserver((entries) => {
@@ -34,28 +34,38 @@ export function useIntersectionObserver({ threshold = 0, root = null, rootMargin
                 : [observer.thresholds];
             const isCurrentlyIntersecting = intersectionEntry.isIntersecting &&
                 thresholds.some((t) => intersectionEntry.intersectionRatio >= t);
+            // Update state
             setIsIntersecting(isCurrentlyIntersecting);
             setEntry(intersectionEntry);
-            // Call onChange callback if provided
-            changeCallbackRef.current?.(isCurrentlyIntersecting, intersectionEntry);
+            // Skip the first callback (initial observation)
+            if (isFirstCallbackRef.current) {
+                isFirstCallbackRef.current = false;
+                return;
+            }
+            // Call onChange callback
+            onChangeRef.current?.(isCurrentlyIntersecting, intersectionEntry);
+            // Freeze if triggerOnce and now intersecting
+            if (freezeOnceVisible && isCurrentlyIntersecting) {
+                isFrozen.current = true;
+                // Immediately disconnect to stop further observations
+                observer.disconnect();
+            }
         }, observerOptions);
         observer.observe(element);
-        observerRef.current = observer;
         return () => {
             observer.disconnect();
-            observerRef.current = null;
         };
-    }, [element, observerOptions, isFrozen]);
-    // Reset state when element is removed and not frozen
+    }, [element, observerOptions, freezeOnceVisible]);
+    // Reset when element is removed
     useEffect(() => {
-        if (!element && !freezeOnceVisible && !isFrozen) {
+        if (!element) {
             setIsIntersecting(initialIsIntersecting);
             setEntry(undefined);
+            isFirstCallbackRef.current = true;
+            if (!freezeOnceVisible) {
+                isFrozen.current = false;
+            }
         }
-    }, [element, freezeOnceVisible, isFrozen, initialIsIntersecting]);
-    return useMemo(() => ({
-        ref,
-        isIntersecting,
-        entry,
-    }), [ref, isIntersecting, entry]);
+    }, [element, freezeOnceVisible, initialIsIntersecting]);
+    return useMemo(() => ({ ref, isIntersecting, entry }), [ref, isIntersecting, entry]);
 }

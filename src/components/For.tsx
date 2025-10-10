@@ -7,7 +7,7 @@ function BaseFor<T extends Array<unknown>>({
   children,
   fallback = null,
 }: ForProps<T>) {
-  return each && each.length > 0 ? each.map(children) : fallback;
+  return <>{each && each.length > 0 ? each.map(children) : fallback}</>;
 }
 
 const renderForTag =
@@ -17,8 +17,7 @@ const renderForTag =
     { each, children, fallback = null, ...props }: ForProps<T> & ComponentPropsWithRef<any>,
     ref: any
   ) => {
-    if (!each || each.length === 0) return fallback;
-    const content = each.map(children);
+    const content = each && each.length > 0 ? each.map(children) : fallback;
     return createElement(tag, { ...props, ref }, content);
   });
 

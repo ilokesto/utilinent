@@ -20,9 +20,11 @@ const renderForTag =
     ref: any
   ) {
     const shouldRender = Array.isArray(when) ? when.every(Boolean) : !!when;
-    if (!shouldRender) return fallback;
-
-    const content = typeof children === "function" ? children(when as any) : children;
+    const content = shouldRender
+      ? typeof children === "function"
+        ? children(when as any)
+        : children
+      : fallback;
     return createElement(tag, { ...props, ref }, content);
   });
 
