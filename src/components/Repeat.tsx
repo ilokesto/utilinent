@@ -1,13 +1,14 @@
 import { ComponentPropsWithRef, createElement, forwardRef } from "react";
 import { htmlTags } from "../constants/htmlTags";
 import type { RepeatProps, RepeatType } from "../types/repeat";
+import { For } from "./For";
 
 function BaseRepeat({ times, children, fallback = null }: RepeatProps) {
   if (!times || times <= 0 || !Number.isInteger(times)) {
     return fallback ?? null;
   }
 
-  return <>{Array.from({ length: times }, (_, i) => children(i))}</>;
+  return <For each={Array.from({ length: times }, (_, i) => i)}>{children}</For>;
 }
 
 const renderForTag =
