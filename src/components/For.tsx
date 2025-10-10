@@ -1,4 +1,4 @@
-import { ComponentPropsWithRef, createElement } from "react";
+import { ComponentPropsWithRef, createElement, forwardRef } from "react";
 import { htmlTags } from "../constants/htmlTags";
 import type { ForProps, ForType } from "../types/for";
 
@@ -12,16 +12,15 @@ function BaseFor<T extends Array<unknown>>({
 
 const renderForTag =
   (tag: any) =>
-  <T extends Array<unknown>>({
-    each,
-    children,
-    fallback = null,
-    ...props
-  }: ForProps<T> & ComponentPropsWithRef<any>) => {
+  // forward ref so consumers can attach a ref to the underlying DOM element
+  forwardRef(<T extends Array<unknown>>(
+    { each, children, fallback = null, ...props }: ForProps<T> & ComponentPropsWithRef<any>,
+    ref: any
+  ) => {
     if (!each || each.length === 0) return fallback;
     const content = each.map(children);
-    return createElement(tag, props, content);
-  };
+    return createElement(tag, { ...props, ref }, content);
+  });
 
 const tagEntries = htmlTags.reduce((acc, tag) => {
   (acc as any)[tag] = renderForTag(tag);

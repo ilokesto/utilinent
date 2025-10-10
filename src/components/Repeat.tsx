@@ -1,4 +1,4 @@
-import { ComponentPropsWithRef, createElement } from "react";
+import { ComponentPropsWithRef, createElement, forwardRef } from "react";
 import { htmlTags } from "../constants/htmlTags";
 import type { RepeatProps, RepeatType } from "../types/repeat";
 
@@ -12,13 +12,16 @@ function BaseRepeat({ times, children, fallback = null }: RepeatProps) {
 
 const renderForTag =
   (tag: any) =>
-  ({ times, children, fallback = null, ...props }: RepeatProps & ComponentPropsWithRef<any>) => {
-    if (!times || times <= 0 || !Number.isInteger(times)) {
-      return fallback ?? null;
+  // forward ref so consumers can attach a ref to the underlying DOM element
+  forwardRef(
+    ({ times, children, fallback = null, ...props }: RepeatProps & ComponentPropsWithRef<any>, ref: any) => {
+      if (!times || times <= 0 || !Number.isInteger(times)) {
+        return fallback ?? null;
+      }
+      const content = Array.from({ length: times }, (_, i) => children(i));
+      return createElement(tag, { ...props, ref }, content);
     }
-    const content = Array.from({ length: times }, (_, i) => children(i));
-    return createElement(tag, props, content);
-  };
+  );
 
 const tagEntries = htmlTags.reduce((acc, tag) => {
   (acc as any)[tag] = renderForTag(tag);
