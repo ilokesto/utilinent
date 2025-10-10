@@ -1,6 +1,6 @@
 {
   "name": "@ilokesto/utilinent",
-  "version": "0.0.26",
+  "version": "1.0.0",
   "scripts": {
     "build": "rm -rf dist && tsc"
   },
@@ -8,6 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/ilokesto/utilinent.git"
   },
+  "homepage": "https://ilokesto.vercel.app/utilinent",
   "sideEffects": false,
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
