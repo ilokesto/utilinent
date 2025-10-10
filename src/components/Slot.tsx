@@ -44,12 +44,20 @@ export const Slot = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>((
   const slottable = childrenArray.find(isSlottable);
 
   if (slottable) {
+    // Slottable의 children을 가져와서 병합
+    const slottableChild = (slottable.props as any).children;
+    
+    if (!isValidElement(slottableChild)) {
+      return null;
+    }
+
     const newElement = cloneElement(
-      slottable,
+      slottableChild as any,
       {
-        ...mergeProps(slotProps, slottable.props),
-        ref: composeRefs(ref, (slottable as any).ref)
-      },
+        ...mergeProps(slotProps, (slottableChild as any).props),
+        ref: ref ? composeRefs(ref, (slottableChild as any).ref) : (slottableChild as any).ref,
+        key: (slottable as any).key
+      } as any,
     );
 
     const newChildren = childrenArray.map((child) => {
@@ -70,7 +78,7 @@ export const Slot = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>((
 
   return cloneElement(child, {
     ...mergeProps(slotProps, child.props),
-    ref: composeRefs(ref, (child as any).ref)
+    ref: ref ? composeRefs(ref, (child as any).ref) : (child as any).ref
   });
 });
 

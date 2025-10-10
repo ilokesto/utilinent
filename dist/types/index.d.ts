@@ -32,11 +32,20 @@ export type GetLiteralKeys<T> = {
     [K in keyof T]: T[K] extends string ? string extends T[K] ? never : K : T[K] extends number ? number extends T[K] ? never : K : T[K] extends boolean ? boolean extends T[K] ? never : K : T[K] extends bigint ? bigint extends T[K] ? never : K : T[K] extends symbol ? symbol extends T[K] ? never : K : never;
 }[keyof T];
 export type LiteralKeys<T> = [GetLiteralKeys<T>] extends [never] ? keyof T : GetLiteralKeys<T>;
-export type SlackerProps = {
-    children: (loaded: any) => React.ReactNode;
-    fallback?: React.ReactNode;
+export type SlackerFallbackProps = {
+    isLoading: boolean;
+    error: Error | null;
+    retry: () => void;
+};
+export type SlackerProps<T = any> = {
+    children: (loaded: T) => React.ReactNode;
+    errorFallback?: React.ReactNode | ((props: SlackerFallbackProps) => React.ReactNode);
+    loadingFallback?: React.ReactNode;
     threshold?: number | number[];
     rootMargin?: string;
-    loader: () => Promise<any> | any;
+    loader: () => Promise<T> | T;
+    onError?: (error: Error) => void;
+    maxRetries?: number;
+    retryDelay?: number;
 };
 export {};
