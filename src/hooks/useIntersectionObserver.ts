@@ -33,6 +33,7 @@ export function useIntersectionObserver({
   const onChangeRef = useRef(onChange);
   const isFirstCallbackRef = useRef(true);
   const isFrozen = useRef(false);
+  const prevIsIntersectingRef = useRef(initialIsIntersecting);
 
   // Keep callback ref updated
   useEffect(() => {
@@ -73,6 +74,9 @@ export function useIntersectionObserver({
         intersectionEntry.isIntersecting &&
         thresholds.some((t) => intersectionEntry.intersectionRatio >= t);
 
+      const wasIntersecting = prevIsIntersectingRef.current;
+      prevIsIntersectingRef.current = isCurrentlyIntersecting;
+
       // Update state
       setIsIntersecting(isCurrentlyIntersecting);
       setEntry(intersectionEntry);
@@ -84,7 +88,9 @@ export function useIntersectionObserver({
       }
 
       // Call onChange callback
-      onChangeRef.current?.(isCurrentlyIntersecting, intersectionEntry);
+      if (!wasIntersecting && isCurrentlyIntersecting) {
+        onChangeRef.current?.(isCurrentlyIntersecting, intersectionEntry);
+      }
 
       // Freeze if triggerOnce and now intersecting
       if (freezeOnceVisible && isCurrentlyIntersecting) {
@@ -107,7 +113,8 @@ export function useIntersectionObserver({
       setIsIntersecting(initialIsIntersecting);
       setEntry(undefined);
       isFirstCallbackRef.current = true;
-      
+      prevIsIntersectingRef.current = initialIsIntersecting;
+
       if (!freezeOnceVisible) {
         isFrozen.current = false;
       }
