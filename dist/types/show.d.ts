@@ -9,8 +9,8 @@ export interface ShowProps<T = unknown> extends Fallback {
     children: React.ReactNode | ((item: NonNullable<T>) => React.ReactNode);
 }
 type ShowTagHelper<K extends keyof JSX.IntrinsicElements> = {
-    <T extends unknown[]>(props: ShowPropsArray<T> & ComponentPropsWithRef<K>): React.ReactNode;
-    <T extends unknown>(props: ShowProps<T> & ComponentPropsWithRef<K>): React.ReactNode;
+    <T extends unknown[]>(props: Omit<ComponentPropsWithRef<K>, "children"> & ShowPropsArray<T>): React.ReactNode;
+    <T extends unknown>(props: Omit<ComponentPropsWithRef<K>, "children"> & ShowProps<T>): React.ReactNode;
 };
 export interface ShowType {
     <T extends unknown[]>(props: ShowPropsArray<T>): React.ReactNode;
