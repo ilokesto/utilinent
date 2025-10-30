@@ -3,7 +3,7 @@ import { Fallback, NonNullableElements } from "./";
 
 export interface ShowPropsArray<T extends unknown[]> extends Fallback {
   when: T;
-  children: React.ReactNode | ((item: NonNullableElements<T>) => React.ReactNode);
+  children: React.ReactNode | ((...items: NonNullableElements<T>) => React.ReactNode);
 }
 
 export interface ShowProps<T = unknown> extends Fallback {
