@@ -7,7 +7,7 @@ export interface RepeatProps extends Fallback {
 }
 
 type RepeatTagHelper<K extends keyof JSX.IntrinsicElements> = {
-  (props: RepeatProps & ComponentPropsWithRef<K>): React.ReactNode;
+  (props: RepeatProps & Omit<ComponentPropsWithRef<K>, "children">): React.ReactNode;
 };
 
 export interface RepeatType {
