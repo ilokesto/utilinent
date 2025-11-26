@@ -6,19 +6,28 @@ function BaseFor<T extends Array<unknown>>({
   each,
   children,
   fallback = null,
+  before,
+  after,
 }: ForProps<T>) {
-  return <>{each && each.length > 0 ? each.map(children) : fallback}</>;
+  const content = each && each.length > 0 ? each.map(children) : fallback;
+  return (
+    <>
+      {before}
+      {content}
+      {after}
+    </>
+  );
 }
 
 const renderForTag =
   (tag: any) =>
   // forward ref so consumers can attach a ref to the underlying DOM element
   forwardRef(<T extends Array<unknown>>(
-    { each, children, fallback = null, ...props }: ForProps<T> & ComponentPropsWithRef<any>,
+    { each, children, fallback = null, before, after, ...props }: ForProps<T> & ComponentPropsWithRef<any>,
     ref: any
   ) => {
     const content = each && each.length > 0 ? each.map(children) : fallback;
-    return createElement(tag, { ...props, ref }, content);
+    return createElement(tag, { ...props, ref }, before, content, after);
   });
 
 const tagEntries = htmlTags.reduce((acc, tag) => {

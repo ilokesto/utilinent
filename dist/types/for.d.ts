@@ -1,8 +1,10 @@
-import { ComponentPropsWithRef } from "react";
+import { ComponentPropsWithRef, ReactNode } from "react";
 import { Fallback } from ".";
 export interface ForProps<T extends Array<unknown>> extends Fallback {
     each: T | null | undefined;
     children: (item: T[number], index: number) => React.ReactNode;
+    before?: ReactNode;
+    after?: ReactNode;
 }
 type ForTagHelper<K extends keyof JSX.IntrinsicElements> = {
     <T extends Array<unknown>>(props: ForProps<T> & Omit<ComponentPropsWithRef<K>, 'children'>): React.ReactNode;
