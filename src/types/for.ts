@@ -1,19 +1,19 @@
-import { ComponentPropsWithRef, ReactNode } from "react";
+
 import { Fallback } from ".";
 
 export interface ForProps<T extends Array<unknown>> extends Fallback {
   each: T | null | undefined; // 배열 또는 null/undefined 허용
   children: (item: T[number], index: number) => React.ReactNode;
-  before?: ReactNode;
-  after?: ReactNode;
+  before?: React.ReactNode;
+  after?: React.ReactNode;
 }
 
 type ForTagHelper<K extends keyof JSX.IntrinsicElements> = {
-  <T extends Array<unknown>>(props: ForProps<T> & Omit<ComponentPropsWithRef<K>, 'children'>): React.ReactNode;
+  <const T extends Array<unknown>>(props: ForProps<T> & Omit<React.ComponentPropsWithRef<K>, 'children'>): React.ReactNode;
 };
 
 export interface ForType {
-  <T extends Array<unknown>>(props: ForProps<T>): React.ReactNode;
+  <const T extends Array<unknown>>(props: ForProps<T>): React.ReactNode;
   
   // 명시적으로 각 HTML 태그를 정의
   a: ForTagHelper<"a">;
