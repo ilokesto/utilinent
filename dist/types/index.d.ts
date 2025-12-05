@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+export type { UtilinentRegister } from "./register";
 export interface Fallback {
     fallback?: React.ReactNode;
 }
@@ -48,4 +49,3 @@ export type SlackerProps<T = any> = {
     maxRetries?: number;
     retryDelay?: number;
 };
-export {};

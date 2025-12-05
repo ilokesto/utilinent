@@ -1,5 +1,6 @@
 import { ComponentPropsWithRef, createElement, forwardRef } from "react";
 import { htmlTags } from "../constants/htmlTags";
+import { PluginManager } from "../core/PluginManager";
 import type { RepeatProps, RepeatType } from "../types/repeat";
 import { For } from "./For";
 
@@ -24,9 +25,35 @@ const renderForTag =
     }
   );
 
+// HTML 태그들을 등록
 const tagEntries = htmlTags.reduce((acc, tag) => {
   (acc as any)[tag] = renderForTag(tag);
   return acc;
 }, {} as any);
 
-export const Repeat = Object.assign(BaseRepeat, tagEntries) as unknown as RepeatType;
+export const Repeat = new Proxy(Object.assign(BaseRepeat, tagEntries), {
+  get(target, prop) {
+    // 기존 속성이 있으면 반환
+    if (prop in target) {
+      return (target as any)[prop];
+    }
+
+    // 플러그인에서 동적으로 조회
+    const propName = String(prop);
+    
+    // 'repeat' 카테고리에서 먼저 찾기
+    if (PluginManager.has('repeat', propName)) {
+      const component = PluginManager.get('repeat', propName);
+      return renderForTag(component);
+    }
+    
+    // 'base' 카테고리에서 찾기
+    if (PluginManager.has('base', propName)) {
+      const component = PluginManager.get('base', propName);
+      return renderForTag(component);
+    }
+
+    // 찾지 못하면 undefined 반환
+    return undefined;
+  }
+}) as unknown as RepeatType;

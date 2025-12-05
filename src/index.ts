@@ -8,3 +8,6 @@ export * from './components/Slot';
 
 export * from './hooks/useIntersectionObserver';
 
+export { PluginManager } from './core/PluginManager';
+export { UtilinentRegister } from './types/register';
+
