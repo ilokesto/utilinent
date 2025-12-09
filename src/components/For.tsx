@@ -51,13 +51,19 @@ export const For = new Proxy(Object.assign(BaseFor, tagEntries), {
     // 'for' 카테고리에서 먼저 찾기
     if (PluginManager.has('for', propName)) {
       const component = PluginManager.get('for', propName);
-      return renderForTag(component);
+      const specialized = renderForTag(component);
+      // 캐싱하여 다음 조회 시 동일한 참조 반환
+      (target as any)[prop] = specialized;
+      return specialized;
     }
     
     // 'base' 카테고리에서 찾기
     if (PluginManager.has('base', propName)) {
       const component = PluginManager.get('base', propName);
-      return renderForTag(component);
+      const specialized = renderForTag(component);
+      // 캐싱하여 다음 조회 시 동일한 참조 반환
+      (target as any)[prop] = specialized;
+      return specialized;
     }
 
     // 찾지 못하면 undefined 반환
