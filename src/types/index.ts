@@ -7,8 +7,8 @@ export type NonNullableElements<T extends readonly any[]> = {
   -readonly [P in keyof T]: NonNullable<T[P]>;
 };
 
-export interface OptionalWrapperProps {
-  when: boolean; 
+export interface OptionalWrapperProps<T = unknown> {
+  when: T; 
   children: React.ReactNode; 
   wrapper: (children: React.ReactNode) => React.ReactNode;
   fallback?: (children: React.ReactNode) => React.ReactNode;
