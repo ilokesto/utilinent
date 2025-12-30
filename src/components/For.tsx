@@ -1,72 +1,24 @@
 import { ComponentPropsWithRef, createElement, forwardRef } from "react";
-import { htmlTags } from "../constants/htmlTags";
-import { PluginManager } from "../core/PluginManager";
+import { createTagProxy } from "../core/createTagProxy";
 import type { ForProps, ForType } from "../types/for";
 
 function BaseFor<T extends Array<unknown>>({
   each,
   children,
   fallback = null,
-  before,
-  after,
 }: ForProps<T>) {
-  const content = each && each.length > 0 ? each.map(children) : fallback;
-  return (
-    <>
-      {before}
-      {content}
-      {after}
-    </>
-  );
+  return each && each.length > 0 ? each.map(children) : fallback;
 }
 
 const renderForTag =
   (tag: any) =>
   // forward ref so consumers can attach a ref to the underlying DOM element
   forwardRef(<T extends Array<unknown>>(
-    { each, children, fallback = null, before, after, ...props }: ForProps<T> & ComponentPropsWithRef<any>,
+    { each, children, fallback = null, ...props }: ForProps<T> & ComponentPropsWithRef<any>,
     ref: any
   ) => {
-    const content = each && each.length > 0 ? each.map(children) : fallback;
-    return createElement(tag, { ...props, ref }, before, content, after);
+    const content = BaseFor({ each, children, fallback });
+    return createElement(tag, { ...props, ref }, content);
   });
 
-// HTML 태그들을 등록
-const tagEntries = htmlTags.reduce((acc, tag) => {
-  (acc as any)[tag] = renderForTag(tag);
-  return acc;
-}, {} as any);
-
-// Proxy를 사용하여 동적으로 플러그인 조회
-export const For = new Proxy(Object.assign(BaseFor, tagEntries), {
-  get(target, prop) {
-    // 기존 속성이 있으면 반환
-    if (prop in target) {
-      return (target as any)[prop];
-    }
-
-    // 플러그인에서 동적으로 조회
-    const propName = String(prop);
-    
-    // 'for' 카테고리에서 먼저 찾기
-    if (PluginManager.has('for', propName)) {
-      const component = PluginManager.get('for', propName);
-      const specialized = renderForTag(component);
-      // 캐싱하여 다음 조회 시 동일한 참조 반환
-      (target as any)[prop] = specialized;
-      return specialized;
-    }
-    
-    // 'base' 카테고리에서 찾기
-    if (PluginManager.has('base', propName)) {
-      const component = PluginManager.get('base', propName);
-      const specialized = renderForTag(component);
-      // 캐싱하여 다음 조회 시 동일한 참조 반환
-      (target as any)[prop] = specialized;
-      return specialized;
-    }
-
-    // 찾지 못하면 undefined 반환
-    return undefined;
-  }
-}) as unknown as ForType;
+export const For = createTagProxy<ForType, typeof BaseFor>(BaseFor, renderForTag, "for");
