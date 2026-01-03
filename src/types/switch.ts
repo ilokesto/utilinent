@@ -22,9 +22,8 @@ type SwitchTagHelper<K> = K extends keyof HtmlTag
     : K;
 
 export type SwitchType = BaseSwitchType & {
-  [K in keyof HtmlTag]: SwitchTagHelper<K>;
+  [K in keyof HtmlTag]: SwitchTagHelper<HtmlTag[K]>;
 } & {
-  // Register에 등록된 컴포넌트들을 자동으로 추가
   [K in keyof RegisterProps<"switch">]: SwitchTagHelper<RegisterProps<"switch">[K]>;
 } & {
   [K in keyof RegisterProps<"base">]: SwitchTagHelper<RegisterProps<"base">[K]>;

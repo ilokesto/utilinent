@@ -18,9 +18,8 @@ type MountTagHelper<K> = K extends keyof HtmlTag
     : K;
 
 export type MountType = BaseMountType & {
-  [K in keyof HtmlTag]: MountTagHelper<K>;
+  [K in keyof HtmlTag]: MountTagHelper<HtmlTag[K]>;
 } & {
-  // Register에 등록된 컴포넌트들을 자동으로 추가
   [K in keyof RegisterProps<"mount">]: MountTagHelper<RegisterProps<"mount">[K]>;
 } & {
   [K in keyof RegisterProps<"base">]: MountTagHelper<RegisterProps<"base">[K]>;

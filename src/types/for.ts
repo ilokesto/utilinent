@@ -18,9 +18,8 @@ type ForTagHelper<K> = K extends keyof HtmlTag
     : K;
 
 export type ForType = BaseForType & {
-  [K in keyof HtmlTag]: ForTagHelper<K>;
+  [K in keyof HtmlTag]: ForTagHelper<HtmlTag[K]>;
 } & {
-  // Register에 등록된 컴포넌트들을 자동으로 추가
   [K in keyof RegisterProps<"for">]: ForTagHelper<RegisterProps<"for">[K]>;
 } & {
   [K in keyof RegisterProps<"base">]: ForTagHelper<RegisterProps<"base">[K]>;

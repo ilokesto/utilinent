@@ -25,9 +25,8 @@ type ShowTagHelper<K> = K extends keyof HtmlTag
     : K;
 
 export type ShowType = BaseShowType & {
-  [K in keyof HtmlTag]: ShowTagHelper<K>;
+  [K in keyof HtmlTag]: ShowTagHelper<HtmlTag[K]>;
 } & {
-  // Register에 등록된 컴포넌트들을 자동으로 추가
   [K in keyof RegisterProps<"show">]: ShowTagHelper<RegisterProps<"show">[K]>;
 } & {
   [K in keyof RegisterProps<"base">]: ShowTagHelper<RegisterProps<"base">[K]>;
