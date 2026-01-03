@@ -1,7 +1,12 @@
 import { ComponentPropsWithRef } from "react";
-import { MountProps } from ".";
+import { Fallback } from ".";
 import { HtmlTag } from "../constants/htmlTags";
 import { RegisterProps } from "./register";
+
+interface MountProps extends Fallback {
+  children: React.ReactNode | (() => React.ReactNode | Promise<React.ReactNode>);
+  onError?: (error: unknown) => void;
+}
 
 type MountTagHelper<K extends HtmlTag> = {
   (props: MountProps & Omit<ComponentPropsWithRef<K>, "children">): React.ReactNode;
