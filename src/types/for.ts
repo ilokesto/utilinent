@@ -7,16 +7,18 @@ export interface ForProps<T extends Array<unknown>> extends Fallback {
   children: (item: T[number], index: number) => React.ReactNode;
 };
 
+type BaseForType<X = object> = {
+  <const T extends Array<unknown>>(props: X & ForProps<T>): React.ReactNode;
+}
+
 type ForTagHelper<K> = K extends keyof HtmlTag
-  ? {<const T extends Array<unknown>>(props: Omit<React.ComponentPropsWithRef<K>, 'children'> & ForProps<T>): React.ReactNode;}
+  ? BaseForType<React.ComponentPropsWithRef<HtmlTag[K]>>
   : K extends React.ComponentType<infer P>
-    ? {<const T extends Array<unknown>>(props: Omit<P, 'children'> & ForProps<T>): React.ReactNode;}
+    ? BaseForType<P>
     : K;
 
-export type ForType = {
-    <const T extends Array<unknown>>(props: ForProps<T>): React.ReactNode;
-} & {
-    [K in keyof HtmlTag]: ForTagHelper<K>;
+export type ForType = BaseForType & {
+  [K in keyof HtmlTag]: ForTagHelper<K>;
 } & {
   // Register에 등록된 컴포넌트들을 자동으로 추가
   [K in keyof RegisterProps<"for">]: ForTagHelper<RegisterProps<"for">[K]>;

@@ -8,32 +8,27 @@ export interface ShowPropsArray<T extends unknown[]> extends Fallback {
   children: React.ReactNode | ((item: NonNullableElements<T>) => React.ReactNode);
 }
 
+type BaseShowType<X = object> = {
+  <const T extends Array<unknown>>(props: X & ShowPropsArray<T>): React.ReactNode;
+  <const T extends unknown>(props: X & ShowProps<T>): React.ReactNode;
+  }
+
 export interface ShowProps<T = unknown> extends Fallback {
   when: T;
   children: React.ReactNode | ((item: NonNullable<T>) => React.ReactNode);
 }
 
-type ShowTagHelper<K extends keyof HtmlTag> = {
-  <const T extends unknown[]>(props: Omit<ComponentPropsWithRef<K>, "children"> & ShowPropsArray<T>): React.ReactNode;
-  <const T extends unknown>(props: Omit<ComponentPropsWithRef<K>, "children"> & ShowProps<T>): React.ReactNode;
-};
+type ShowTagHelper<K> = K extends keyof HtmlTag
+  ? BaseShowType<ComponentPropsWithRef<HtmlTag[K]>>
+  : K extends React.ComponentType<infer P>
+    ? BaseShowType<P>
+    : K;
 
-// 등록된 컴포넌트를 ShowProps와 함께 사용할 수 있도록 래핑하는 헬퍼 타입
-type ShowRegisterHelper<C> = C extends React.ComponentType<infer P>
-  ? {
-      <const T extends unknown[]>(props: Omit<P, "children"> & ShowPropsArray<T>): React.ReactNode;
-      <const T extends unknown>(props: Omit<P, "children"> & ShowProps<T>): React.ReactNode;
-    }
-  : C;
-
-export type ShowType = {
-  <const T extends unknown[]>(props: ShowPropsArray<T>): React.ReactNode;
-  <const T extends unknown>(props: ShowProps<T>): React.ReactNode;
-} & {
+export type ShowType = BaseShowType & {
   [K in keyof HtmlTag]: ShowTagHelper<K>;
 } & {
   // Register에 등록된 컴포넌트들을 자동으로 추가
-  [K in keyof RegisterProps<"show">]: ShowRegisterHelper<RegisterProps<"show">[K]>;
+  [K in keyof RegisterProps<"show">]: ShowTagHelper<RegisterProps<"show">[K]>;
 } & {
-  [K in keyof RegisterProps<"base">]: ShowRegisterHelper<RegisterProps<"base">[K]>;
+  [K in keyof RegisterProps<"base">]: ShowTagHelper<RegisterProps<"base">[K]>;
 };

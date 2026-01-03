@@ -11,15 +11,17 @@ export interface SwitchProps extends Fallback {
   children: React.ReactNode;
 }
 
+type BaseSwitchType<X = object> = {
+  (props: X & SwitchProps): React.ReactNode;
+}
+
 type SwitchTagHelper<K> = K extends keyof HtmlTag
-  ? {(props: Omit<React.ComponentPropsWithRef<K>, 'children'> & SwitchProps): React.ReactNode;}
+  ? BaseSwitchType<Omit<React.ComponentPropsWithRef<K>, 'children'>>
   : K extends React.ComponentType<infer P>
-    ? {(props: Omit<P, 'children'> & SwitchProps): React.ReactNode;}
+    ? BaseSwitchType<Omit<P, 'children'>>
     : K;
 
-export type SwitchType = {
-  (props: SwitchProps): React.ReactNode;
-} & {
+export type SwitchType = BaseSwitchType & {
   [K in keyof HtmlTag]: SwitchTagHelper<K>;
 } & {
   // Register에 등록된 컴포넌트들을 자동으로 추가
