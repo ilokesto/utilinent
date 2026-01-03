@@ -9,8 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { createTagProxy } from "../core/createTagProxy";
-import type { MountProps } from "../types";
-import type { MountType } from "../types/mount";
+import type { MountProps, MountType } from "../types/mount";
 
 const isPromiseLike = (value: unknown): value is PromiseLike<ReactNode> =>
   (typeof value === "object" || typeof value === "function") &&

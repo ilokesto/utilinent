@@ -9,7 +9,7 @@ export function createTagProxy<TProxy extends object, TBase extends object = TPr
   renderForTag: (tag: any) => any,
   category: TagProxyCategory
 ): TProxy {
-  const tagEntries = htmlTags.reduce((acc, tag) => {
+  const tagEntries = Object.keys(htmlTags).reduce((acc, tag) => {
     (acc as any)[tag] = renderForTag(tag);
     return acc;
   }, {} as Record<string, any>);

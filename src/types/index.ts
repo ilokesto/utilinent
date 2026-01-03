@@ -22,10 +22,6 @@ export interface ObserverProps extends Fallback {
   onIntersect?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void;
 }
 
-export interface MountProps extends Fallback {
-  children: React.ReactNode | (() => React.ReactNode | Promise<React.ReactNode>);
-  onError?: (error: unknown) => void;
-}
 
 export type ExtractValues<T, K extends keyof T> = T extends any ? T[K] : never;
 
