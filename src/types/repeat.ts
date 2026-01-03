@@ -1,7 +1,7 @@
 import { ComponentPropsWithRef } from "react";
 import { Fallback } from ".";
 import { HtmlTag } from "../constants/htmlTags";
-import { UtilinentRegisterBase, UtilinentRegisterRepeat } from "./register";
+import { RegisterProps } from "./register";
 
 export interface RepeatProps extends Fallback {
   times: number; 
@@ -25,7 +25,7 @@ export type RepeatType = {
   [K in HtmlTag]: RepeatTagHelper<K>;
 } & {
   // Register에 등록된 컴포넌트들을 자동으로 추가
-  [K in keyof UtilinentRegisterRepeat]: RepeatRegisterHelper<UtilinentRegisterRepeat[K]>;
+  [K in keyof RegisterProps<"repeat">]: RepeatRegisterHelper<RegisterProps<"repeat">[K]>;
 } & {
-  [K in keyof UtilinentRegisterBase]: RepeatRegisterHelper<UtilinentRegisterBase[K]>;
+  [K in keyof RegisterProps<"base">]: RepeatRegisterHelper<RegisterProps<"base">[K]>;
 };

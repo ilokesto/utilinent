@@ -1,7 +1,7 @@
 import { ComponentPropsWithRef } from "react";
-import { HtmlTag } from "../constants/htmlTags";
 import { Fallback } from ".";
-import { UtilinentRegisterBase, UtilinentRegisterSwitch } from "./register";
+import { HtmlTag } from "../constants/htmlTags";
+import { RegisterProps } from "./register";
 
 export interface MatchProps<T = unknown> {
   when: T | null | undefined | false;
@@ -29,7 +29,7 @@ export type SwitchType = {
   [K in HtmlTag]: SwitchTagHelper<K>;
 } & {
   // Register에 등록된 컴포넌트들을 자동으로 추가
-  [K in keyof UtilinentRegisterSwitch]: SwitchRegisterHelper<UtilinentRegisterSwitch[K]>;
+  [K in keyof RegisterProps<"switch">]: SwitchRegisterHelper<RegisterProps<"switch">[K]>;
 } & {
-  [K in keyof UtilinentRegisterBase]: SwitchRegisterHelper<UtilinentRegisterBase[K]>;
+  [K in keyof RegisterProps<"base">]: SwitchRegisterHelper<RegisterProps<"base">[K]>;
 };

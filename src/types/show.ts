@@ -1,7 +1,7 @@
 import { ComponentPropsWithRef } from "react";
 import { HtmlTag } from "../constants/htmlTags";
 import { Fallback, NonNullableElements } from "./";
-import { UtilinentRegisterBase, UtilinentRegisterShow } from "./register";
+import { RegisterProps } from "./register";
 
 export interface ShowPropsArray<T extends unknown[]> extends Fallback {
   when: T;
@@ -33,7 +33,7 @@ export type ShowType = {
   [K in HtmlTag]: ShowTagHelper<K>;
 } & {
   // Register에 등록된 컴포넌트들을 자동으로 추가
-  [K in keyof UtilinentRegisterShow]: ShowRegisterHelper<UtilinentRegisterShow[K]>;
+  [K in keyof RegisterProps<"show">]: ShowRegisterHelper<RegisterProps<"show">[K]>;
 } & {
-  [K in keyof UtilinentRegisterBase]: ShowRegisterHelper<UtilinentRegisterBase[K]>;
+  [K in keyof RegisterProps<"base">]: ShowRegisterHelper<RegisterProps<"base">[K]>;
 };

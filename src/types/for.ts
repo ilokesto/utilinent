@@ -1,7 +1,7 @@
 
 import { Fallback } from ".";
 import { HtmlTag } from "../constants/htmlTags";
-import { UtilinentRegisterBase, UtilinentRegisterFor } from "./register";
+import { RegisterProps } from "./register";
 
 export interface ForProps<T extends Array<unknown>> extends Fallback {
   each: T | null | undefined; // 배열 또는 null/undefined 허용
@@ -25,7 +25,7 @@ export type ForType = {
     [K in HtmlTag]: ForTagHelper<K>;
 } & {
   // Register에 등록된 컴포넌트들을 자동으로 추가
-  [K in keyof UtilinentRegisterFor]: ForRegisterHelper<UtilinentRegisterFor[K]>;
+  [K in keyof RegisterProps<"for">]: ForRegisterHelper<RegisterProps<"for">[K]>;
 } & {
-  [K in keyof UtilinentRegisterBase]: ForRegisterHelper<UtilinentRegisterBase[K]>;
+  [K in keyof RegisterProps<"base">]: ForRegisterHelper<RegisterProps<"base">[K]>;
 };
