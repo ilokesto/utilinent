@@ -8,7 +8,7 @@ export interface MountProps extends Fallback {
 }
 
 type MountTagHelper<K> = K extends keyof HtmlTag
-  ? {(props:  Omit<React.ComponentPropsWithRef<K>, 'children'> & MountProps): React.ReactNode;}
+  ? {(props: Omit<React.ComponentPropsWithRef<K>, 'children'> & MountProps): React.ReactNode;}
   : K extends React.ComponentType<infer P>
     ? {(props: Omit<P, 'children'> & MountProps): React.ReactNode;}
     : K;

@@ -8,7 +8,7 @@ export interface RepeatProps extends Fallback {
 }
 
 type RepeatTagHelper<K> = K extends keyof HtmlTag
-  ? {(props:  Omit<React.ComponentPropsWithRef<K>, 'children'> & RepeatProps): React.ReactNode;}
+  ? {(props: Omit<React.ComponentPropsWithRef<K>, 'children'> & RepeatProps): React.ReactNode;}
   : K extends React.ComponentType<infer P>
     ? {(props: Omit<P, 'children'> & RepeatProps): React.ReactNode;}
     : K;

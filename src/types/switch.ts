@@ -12,7 +12,7 @@ export interface SwitchProps extends Fallback {
 }
 
 type SwitchTagHelper<K> = K extends keyof HtmlTag
-  ? {(props:  Omit<React.ComponentPropsWithRef<K>, 'children'> & SwitchProps): React.ReactNode;}
+  ? {(props: Omit<React.ComponentPropsWithRef<K>, 'children'> & SwitchProps): React.ReactNode;}
   : K extends React.ComponentType<infer P>
     ? {(props: Omit<P, 'children'> & SwitchProps): React.ReactNode;}
     : K;

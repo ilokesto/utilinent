@@ -1,4 +1,3 @@
-
 import { Fallback } from ".";
 import { HtmlTag } from "../constants/htmlTags";
 import { RegisterProps } from "./register";
@@ -9,7 +8,7 @@ export interface ForProps<T extends Array<unknown>> extends Fallback {
 };
 
 type ForTagHelper<K> = K extends keyof HtmlTag
-  ? {<const T extends Array<unknown>>(props:  Omit<React.ComponentPropsWithRef<K>, 'children'> & ForProps<T>): React.ReactNode;}
+  ? {<const T extends Array<unknown>>(props: Omit<React.ComponentPropsWithRef<K>, 'children'> & ForProps<T>): React.ReactNode;}
   : K extends React.ComponentType<infer P>
     ? {<const T extends Array<unknown>>(props: Omit<P, 'children'> & ForProps<T>): React.ReactNode;}
     : K;
