@@ -1,11 +1,11 @@
-import type { TagProxyCategory } from "../types";
+import type { RegistryCategory } from "../types";
 
 /**
  * 플러그인 등록을 위한 타입
  * Register 인터페이스의 각 카테고리에 대해 부분적으로 등록 가능
  */
 type PluginRegistration = {
-  [K in TagProxyCategory]?: Record<string, any>;
+  [K in RegistryCategory]?: Record<string, any>;
 };
 
 /**
@@ -44,7 +44,7 @@ export class PluginManager {
   private static instance: PluginManager;
   
   private plugins: {
-    [key in TagProxyCategory]: Map<string, any>;
+    [key in RegistryCategory]: Map<string, any>;
   } = {
     show: new Map(),
     for: new Map(),
@@ -89,7 +89,7 @@ export class PluginManager {
   static register(plugins: PluginRegistration): void {
     const instance = PluginManager.getInstance();
     
-    (Object.keys(plugins) as Array<TagProxyCategory>).forEach((category) => {
+    (Object.keys(plugins) as Array<RegistryCategory>).forEach((category) => {
       const components = plugins[category];
       if (components) {
         Object.entries(components).forEach(([name, component]) => {
@@ -102,7 +102,7 @@ export class PluginManager {
   /**
    * 단일 플러그인 컴포넌트를 등록합니다 (내부용)
    */
-  private registerOne<K extends TagProxyCategory>(
+  private registerOne<K extends RegistryCategory>(
     category: K,
     name: string,
     component: any
@@ -113,7 +113,7 @@ export class PluginManager {
   /**
    * 등록된 플러그인 컴포넌트를 가져옵니다 (내부용)
    */
-  static get<K extends TagProxyCategory>(category: K, name: string): any {
+  static get<K extends RegistryCategory>(category: K, name: string): any {
     const instance = PluginManager.getInstance();
     return instance.plugins[category].get(name);
   }
@@ -121,7 +121,7 @@ export class PluginManager {
   /**
    * 특정 카테고리의 모든 플러그인을 가져옵니다 (내부용)
    */
-  static getAll<K extends TagProxyCategory>(category: K): Map<string, any> {
+  static getAll<K extends RegistryCategory>(category: K): Map<string, any> {
     const instance = PluginManager.getInstance();
     return instance.plugins[category];
   }
@@ -129,7 +129,7 @@ export class PluginManager {
   /**
    * 플러그인이 등록되어 있는지 확인합니다
    */
-  static has<K extends TagProxyCategory>(category: K, name: string): boolean {
+  static has<K extends RegistryCategory>(category: K, name: string): boolean {
     const instance = PluginManager.getInstance();
     return instance.plugins[category].has(name);
   }
@@ -137,7 +137,7 @@ export class PluginManager {
   /**
    * 플러그인을 제거합니다
    */
-  static unregister<K extends TagProxyCategory>(category: K, name: string): boolean {
+  static unregister<K extends RegistryCategory>(category: K, name: string): boolean {
     const instance = PluginManager.getInstance();
     return instance.plugins[category].delete(name);
   }

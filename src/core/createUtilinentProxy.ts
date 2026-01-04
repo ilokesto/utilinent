@@ -1,11 +1,11 @@
 import { htmlTags } from "../constants/htmlTags";
-import type { TagProxyCategory } from "../types";
+import type { RegistryCategory } from "../types";
 import { PluginManager } from "./PluginManager";
 
 export function createUtilinentProxy<TProxy extends object, TBase extends object = TProxy>(
   base: TBase,
   renderForTag: (tag: any) => any,
-  category: TagProxyCategory
+  category: RegistryCategory
 ): TProxy {
   const tagEntries = Object.keys(htmlTags).reduce((acc, tag) => {
     (acc as any)[tag] = renderForTag(tag);

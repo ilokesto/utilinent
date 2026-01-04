@@ -1,6 +1,6 @@
-import { TagProxyCategory } from "./tagProxyTypes";
+import { RegistryCategory } from "./RegistryCategory";
 
 export interface UtilinentRegister {
 }
 
-export type RegisterProps<T extends TagProxyCategory> = UtilinentRegister extends { [X in T]: infer Props } ? Props : never;
+export type RegisterProps<T extends RegistryCategory> = UtilinentRegister extends { [X in T]: infer Props } ? Props : never;

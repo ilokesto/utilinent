@@ -1,6 +1,6 @@
 import { HtmlTag } from "../constants/htmlTags";
 import { RegisterProps } from "./register";
-import { TagProxyCategory } from "./tagProxyTypes";
+import { RegistryCategory } from "./RegistryCategory";
 
 export interface TagHelperFn {
   props: unknown;
@@ -21,7 +21,7 @@ export type TagHelper<K, F extends TagHelperFn, OmitChildren extends boolean = t
 
 export type TagProxyType<
   F extends TagHelperFn,
-  RegisterKey extends TagProxyCategory,
+  RegisterKey extends RegistryCategory,
   OmitChildren extends boolean = true
 > = Apply<F, object> & {
   [K in keyof HtmlTag]: TagHelper<K, F, OmitChildren>;
