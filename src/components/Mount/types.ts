@@ -1,4 +1,4 @@
-import type { BaseTypeHelperFn, Fallback, TagProxyType } from "../../types";
+import type { BaseTypeHelperFn, Fallback, ProxyType } from "../../types";
 
 export interface MountProps extends Fallback {
   children: React.ReactNode | (() => React.ReactNode | Promise<React.ReactNode>);
@@ -13,4 +13,4 @@ interface BaseMountTypeFn extends BaseTypeHelperFn {
   type: BaseMountType<this["props"]>;
 }
 
-export type MountType = TagProxyType<BaseMountTypeFn, "mount">;
+export type MountType = ProxyType<BaseMountTypeFn, "mount">;

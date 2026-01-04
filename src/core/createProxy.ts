@@ -2,7 +2,7 @@ import { htmlTags } from "../constants/htmlTags";
 import type { RegistryCategory } from "../types";
 import { PluginManager } from "./PluginManager";
 
-export function createUtilinentProxy<TProxy extends object, TBase extends object = TProxy>(
+export function createProxy<TProxy extends object, TBase extends object = TProxy>(
   base: TBase,
   renderForTag: (tag: any) => any,
   category: RegistryCategory

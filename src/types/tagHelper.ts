@@ -19,7 +19,7 @@ export type TagHelper<K, F extends BaseTypeHelperFn, OmitChildren extends boolea
     ? Apply<F, MaybeOmitChildren<P, OmitChildren>>
     : K;
 
-export type TagProxyType<
+export type ProxyType<
   F extends BaseTypeHelperFn,
   RegisterKey extends RegistryCategory,
   OmitChildren extends boolean = true

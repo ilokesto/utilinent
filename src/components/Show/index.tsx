@@ -1,5 +1,5 @@
 import { ComponentPropsWithRef, createElement, forwardRef } from "react";
-import { createUtilinentProxy } from "../../core/createUtilinentProxy";
+import { createProxy } from "../../core/createProxy";
 import { resolveWhen } from "../../utils/resolveWhen";
 import type { ShowProps, ShowPropsArray, ShowType } from "./types";
 
@@ -23,4 +23,5 @@ const renderForTag =
     return createElement(tag, { ...props, ref }, content);
   });
 
-export const Show: ShowType = createUtilinentProxy(BaseShow, renderForTag, "show");
+export const Show: ShowType = createProxy(BaseShow, renderForTag, "show");
+

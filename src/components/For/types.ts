@@ -1,4 +1,4 @@
-import type { BaseTypeHelperFn, Fallback, TagProxyType } from "../../types";
+import type { BaseTypeHelperFn, Fallback, ProxyType } from "../../types";
 
 export interface ForProps<T extends Array<unknown>> extends Fallback {
   each: T | null | undefined; // 배열 또는 null/undefined 허용
@@ -13,4 +13,4 @@ interface BaseForTypeFn extends BaseTypeHelperFn {
   type: BaseForType<this["props"]>;
 }
 
-export type ForType = TagProxyType<BaseForTypeFn, "for">;
+export type ForType = ProxyType<BaseForTypeFn, "for">;

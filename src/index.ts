@@ -16,3 +16,7 @@ export * from './hooks/useIntersectionObserver';
 export { PluginManager } from './core/PluginManager';
 export { UtilinentRegister } from './types';
 
+// export createProxy
+export { createProxy } from './core/createProxy';
+export { BaseTypeHelperFn, ProxyType } from './types';
+

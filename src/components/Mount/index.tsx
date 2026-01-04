@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { createUtilinentProxy } from "../../core/createUtilinentProxy";
+import { createProxy } from "../../core/createProxy";
 import type { MountProps, MountType } from "./types";
 
 const isPromiseLike = (value: unknown): value is PromiseLike<ReactNode> =>
@@ -95,4 +95,4 @@ const renderForTag =
     return createElement(tag, { ...props, ref }, content);
   });
 
-export const Mount: MountType = createUtilinentProxy(BaseMount, renderForTag, "mount");
+export const Mount: MountType = createProxy(BaseMount, renderForTag, "mount");

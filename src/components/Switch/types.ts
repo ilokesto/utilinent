@@ -1,5 +1,5 @@
 import { HtmlTag } from "../../constants/htmlTags";
-import type { BaseTypeHelperFn, Fallback, TagProxyType } from "../../types";
+import type { BaseTypeHelperFn, Fallback, ProxyType } from "../../types";
 
 export interface MatchProps<T = unknown> {
   when: T | null | undefined | false;
@@ -23,4 +23,4 @@ type SwitchTagHelper<K> = K extends keyof HtmlTag
     ? BaseSwitchType<Omit<P, 'children'>>
     : K;
 
-export type SwitchType = TagProxyType<BaseSwitchTypeFn, "switch">;
+export type SwitchType = ProxyType<BaseSwitchTypeFn, "switch">;

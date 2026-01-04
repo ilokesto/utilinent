@@ -1,4 +1,4 @@
-import type { BaseTypeHelperFn, Fallback, TagProxyType } from "../../types";
+import type { BaseTypeHelperFn, Fallback, ProxyType } from "../../types";
 
 export interface RepeatProps extends Fallback {
   times: number; 
@@ -13,4 +13,4 @@ interface BaseRepeatTypeFn extends BaseTypeHelperFn {
   type: BaseRepeatType<this["props"]>;
 }
 
-export type RepeatType =  TagProxyType<BaseRepeatTypeFn, "repeat">;
+export type RepeatType =  ProxyType<BaseRepeatTypeFn, "repeat">;
