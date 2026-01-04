@@ -26,7 +26,7 @@ interface BaseRepeatTypeFn extends TagHelperFn {
 type TestTagHelper<K> = TagHelper<K, BaseRepeatTypeFn>;
 
 type TestType = BaseRepeatType & {
-  [K in keyof HtmlTag]: TestTagHelper<K>;
+  [K in keyof HtmlTag]: TestTagHelper<HtmlTag[K]>;
 } & {
   // Register에 등록된 컴포넌트들을 자동으로 추가
   [K in keyof RegisterProps<"repeat">]: TestTagHelper<RegisterProps<"repeat">[K]>;

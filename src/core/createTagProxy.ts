@@ -1,8 +1,6 @@
 import { htmlTags } from "../constants/htmlTags";
+import type { TagProxyCategory } from "../types";
 import { PluginManager } from "./PluginManager";
-import type { TagProxyCategory } from "./tagProxyTypes";
-
-export type { TagProxyCategory } from "./tagProxyTypes";
 
 export function createTagProxy<TProxy extends object, TBase extends object = TProxy>(
   base: TBase,

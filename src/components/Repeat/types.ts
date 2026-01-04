@@ -1,6 +1,5 @@
 import { HtmlTag } from "../../constants/htmlTags";
-import { Fallback } from "../../types";
-import { RegisterProps } from "../../types/register";
+import type { Fallback, RegisterProps } from "../../types";
 
 export interface RepeatProps extends Fallback {
   times: number; 

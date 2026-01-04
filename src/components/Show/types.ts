@@ -1,6 +1,5 @@
 import { HtmlTag } from "../../constants/htmlTags";
-import { Fallback, NonNullableElements } from "../../types";
-import { RegisterProps } from "../../types/register";
+import type { Fallback, NonNullableElements, RegisterProps } from "../../types";
 
 export interface ShowPropsArray<T extends unknown[]> extends Fallback {
   when: T;

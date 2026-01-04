@@ -14,5 +14,5 @@ export * from './hooks/useIntersectionObserver';
 
 // export Register and PluginManager
 export { PluginManager } from './core/PluginManager';
-export { UtilinentRegister } from './types/register';
+export { UtilinentRegister } from './types';
 

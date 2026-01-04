@@ -1,4 +1,4 @@
-import type { TagProxyCategory } from "./tagProxyTypes";
+import type { TagProxyCategory } from "../types";
 
 /**
  * 플러그인 등록을 위한 타입

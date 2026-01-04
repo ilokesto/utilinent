@@ -1,6 +1,5 @@
 import { HtmlTag } from "../../constants/htmlTags";
-import { Fallback } from "../../types";
-import { RegisterProps } from "../../types/register";
+import type { Fallback, RegisterProps } from "../../types";
 
 export interface ForProps<T extends Array<unknown>> extends Fallback {
   each: T | null | undefined; // 배열 또는 null/undefined 허용
