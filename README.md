@@ -88,3 +88,12 @@ const UserListAfter = () => {
 
 export default UserListAfter;
 ```
+
+&nbsp;
+
+## Custom proxy components
+
+If you want to build your own `Show`-style component (for example, `Clickable`),
+there is a short guide in the repo:
+
+- `CUSTOM_CLICKABLE.md`

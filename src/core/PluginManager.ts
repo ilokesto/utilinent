@@ -1,12 +1,12 @@
 import type { RegistryCategory } from "../types";
 
+const DEFAULT_CATEGORIES = ["show", "for", "repeat", "mount", "switch", "base"] as const;
+
 /**
  * 플러그인 등록을 위한 타입
  * Register 인터페이스의 각 카테고리에 대해 부분적으로 등록 가능
  */
-type PluginRegistration = {
-  [K in RegistryCategory]?: Record<string, any>;
-};
+type PluginRegistration = Partial<Record<RegistryCategory, Record<string, any>>>;
 
 /**
  * 플러그인 컴포넌트를 등록하고 관리하는 싱글턴 클래스
@@ -43,19 +43,23 @@ type PluginRegistration = {
 export class PluginManager {
   private static instance: PluginManager;
   
-  private plugins: {
-    [key in RegistryCategory]: Map<string, any>;
-  } = {
-    show: new Map(),
-    for: new Map(),
-    repeat: new Map(),
-    mount: new Map(),
-    switch: new Map(),
-    base: new Map(),
-  };
+  private plugins = new Map<string, Map<string, any>>();
 
   private constructor() {
     // 싱글턴 패턴: private constructor
+    DEFAULT_CATEGORIES.forEach((category) => {
+      this.plugins.set(category, new Map());
+    });
+  }
+
+  private getCategory(category: string): Map<string, any> {
+    const existing = this.plugins.get(category);
+    if (existing) {
+      return existing;
+    }
+    const created = new Map<string, any>();
+    this.plugins.set(category, created);
+    return created;
   }
 
   /**
@@ -88,9 +92,8 @@ export class PluginManager {
    */
   static register(plugins: PluginRegistration): void {
     const instance = PluginManager.getInstance();
-    
-    (Object.keys(plugins) as Array<RegistryCategory>).forEach((category) => {
-      const components = plugins[category];
+
+    Object.entries(plugins).forEach(([category, components]) => {
       if (components) {
         Object.entries(components).forEach(([name, component]) => {
           instance.registerOne(category, name, component);
@@ -107,7 +110,7 @@ export class PluginManager {
     name: string,
     component: any
   ): void {
-    this.plugins[category].set(name, component);
+    this.getCategory(category).set(name, component);
   }
 
   /**
@@ -115,7 +118,7 @@ export class PluginManager {
    */
   static get<K extends RegistryCategory>(category: K, name: string): any {
     const instance = PluginManager.getInstance();
-    return instance.plugins[category].get(name);
+    return instance.plugins.get(category)?.get(name);
   }
 
   /**
@@ -123,7 +126,7 @@ export class PluginManager {
    */
   static getAll<K extends RegistryCategory>(category: K): Map<string, any> {
     const instance = PluginManager.getInstance();
-    return instance.plugins[category];
+    return instance.getCategory(category);
   }
 
   /**
@@ -131,7 +134,7 @@ export class PluginManager {
    */
   static has<K extends RegistryCategory>(category: K, name: string): boolean {
     const instance = PluginManager.getInstance();
-    return instance.plugins[category].has(name);
+    return instance.plugins.get(category)?.has(name) ?? false;
   }
 
   /**
@@ -139,6 +142,6 @@ export class PluginManager {
    */
   static unregister<K extends RegistryCategory>(category: K, name: string): boolean {
     const instance = PluginManager.getInstance();
-    return instance.plugins[category].delete(name);
+    return instance.plugins.get(category)?.delete(name) ?? false;
   }
 }

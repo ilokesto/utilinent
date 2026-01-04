@@ -4,7 +4,7 @@ import { PluginManager } from "./PluginManager";
 
 export function createProxy<TProxy extends object, TBase extends object = TProxy>(
   base: TBase,
-  renderForTag: (tag: any) => any,
+  renderForTag: (tag: any) => React.ForwardRefExoticComponent<any>,
   category: RegistryCategory
 ): TProxy {
   const tagEntries = Object.keys(htmlTags).reduce((acc, tag) => {
