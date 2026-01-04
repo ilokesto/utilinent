@@ -1,5 +1,4 @@
-import { HtmlTag } from "../../constants/htmlTags";
-import type { Fallback, RegisterProps } from "../../types";
+import type { Fallback, TagHelperFn, TagProxyType } from "../../types";
 
 export interface ForProps<T extends Array<unknown>> extends Fallback {
   each: T | null | undefined; // 배열 또는 null/undefined 허용
@@ -10,16 +9,8 @@ type BaseForType<X = object> = {
   <const T extends Array<unknown>>(props: X & ForProps<T>): React.ReactNode;
 }
 
-type ForTagHelper<K> = K extends keyof HtmlTag
-  ? BaseForType<Omit<React.ComponentPropsWithRef<HtmlTag[K]>, "children">>
-  : K extends React.ComponentType<infer P>
-    ? BaseForType<Omit<P, "children">>
-    : K;
+interface BaseForTypeFn extends TagHelperFn {
+  type: BaseForType<this["props"]>;
+}
 
-export type ForType = BaseForType & {
-  [K in keyof HtmlTag]: ForTagHelper<HtmlTag[K]>;
-} & {
-  [K in keyof RegisterProps<"for">]: ForTagHelper<RegisterProps<"for">[K]>;
-} & {
-  [K in keyof RegisterProps<"base">]: ForTagHelper<RegisterProps<"base">[K]>;
-};
+export type ForType = TagProxyType<BaseForTypeFn, "for">;

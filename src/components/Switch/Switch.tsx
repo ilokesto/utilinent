@@ -3,7 +3,7 @@ import {
   createElement,
   forwardRef
 } from "react";
-import { createTagProxy } from "../../core/createTagProxy";
+import { createUtilinentProxy } from "../../core/createUtilinentProxy";
 import { resolveWhen } from "../../utils/resolveWhen";
 import { flattenChildren } from "./flattenChildren";
 import { isMatchElement } from "./Match";
@@ -38,4 +38,4 @@ const renderForTag =
     return createElement(tag, { ...props, ref }, content);
   });
 
-export const Switch: SwitchType = createTagProxy(BaseSwitch, renderForTag, "switch");
+export const Switch: SwitchType = createUtilinentProxy(BaseSwitch, renderForTag, "switch");

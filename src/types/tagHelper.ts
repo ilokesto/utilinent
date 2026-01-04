@@ -1,6 +1,6 @@
-import { RepeatProps } from "../components/Repeat/types";
 import { HtmlTag } from "../constants/htmlTags";
 import { RegisterProps } from "./register";
+import { TagProxyCategory } from "./tagProxyTypes";
 
 export interface TagHelperFn {
   props: unknown;
@@ -9,27 +9,24 @@ export interface TagHelperFn {
 
 type Apply<F extends TagHelperFn, Props> = (F & { props: Props })["type"];
 
-export type TagHelper<K, F extends TagHelperFn> = K extends keyof HtmlTag
-  ? Apply<F, Omit<React.ComponentPropsWithRef<K>, "children">>
+type MaybeOmitChildren<Props, OmitChildren extends boolean> = OmitChildren extends true
+  ? Omit<Props, "children">
+  : Props;
+
+export type TagHelper<K, F extends TagHelperFn, OmitChildren extends boolean = true> = K extends keyof HtmlTag
+  ? Apply<F, MaybeOmitChildren<React.ComponentPropsWithRef<K>, OmitChildren>>
   : K extends React.ComponentType<infer P>
-    ? Apply<F, Omit<P, "children">>
+    ? Apply<F, MaybeOmitChildren<P, OmitChildren>>
     : K;
 
-type BaseRepeatType<X = object> = {
-  (props: X & RepeatProps): React.ReactNode;
-}
-
-interface BaseRepeatTypeFn extends TagHelperFn {
-  type: BaseRepeatType<this["props"]>;
-}
-
-type TestTagHelper<K> = TagHelper<K, BaseRepeatTypeFn>;
-
-type TestType = BaseRepeatType & {
-  [K in keyof HtmlTag]: TestTagHelper<HtmlTag[K]>;
+export type TagProxyType<
+  F extends TagHelperFn,
+  RegisterKey extends TagProxyCategory,
+  OmitChildren extends boolean = true
+> = Apply<F, object> & {
+  [K in keyof HtmlTag]: TagHelper<K, F, OmitChildren>;
 } & {
-  // Register에 등록된 컴포넌트들을 자동으로 추가
-  [K in keyof RegisterProps<"repeat">]: TestTagHelper<RegisterProps<"repeat">[K]>;
+  [K in keyof RegisterProps<RegisterKey>]: TagHelper<RegisterProps<RegisterKey>[K], F, OmitChildren>;
 } & {
-  [K in keyof RegisterProps<"base">]: TestTagHelper<RegisterProps<"base">[K]>;
+  [K in keyof RegisterProps<"base">]: TagHelper<RegisterProps<"base">[K], F, OmitChildren>;
 };

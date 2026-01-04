@@ -1,5 +1,5 @@
 import { ComponentPropsWithRef, createElement, forwardRef } from "react";
-import { createTagProxy } from "../../core/createTagProxy";
+import { createUtilinentProxy } from "../../core/createUtilinentProxy";
 import type { RepeatProps, RepeatType } from "./types";
 
 function BaseRepeat({ times, children, fallback = null }: RepeatProps) {
@@ -21,4 +21,4 @@ const renderForTag =
     }
   );
 
-export const Repeat : RepeatType = createTagProxy(BaseRepeat, renderForTag, "repeat");
+export const Repeat : RepeatType = createUtilinentProxy(BaseRepeat, renderForTag, "repeat");

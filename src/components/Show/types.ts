@@ -1,5 +1,4 @@
-import { HtmlTag } from "../../constants/htmlTags";
-import type { Fallback, NonNullableElements, RegisterProps } from "../../types";
+import type { Fallback, NonNullableElements, TagHelperFn, TagProxyType } from "../../types";
 
 export interface ShowPropsArray<T extends unknown[]> extends Fallback {
   when: T;
@@ -14,18 +13,10 @@ export interface ShowProps<T = unknown> extends Fallback {
 type BaseShowType<X = object> = {
   <const T extends Array<unknown>>(props: X & ShowPropsArray<T>): React.ReactNode;
   <const T extends unknown>(props: X & ShowProps<T>): React.ReactNode;
-  }
+}
 
-type ShowTagHelper<K> = K extends keyof HtmlTag
-  ? BaseShowType<Omit<React.ComponentPropsWithRef<HtmlTag[K]>, "children">>
-  : K extends React.ComponentType<infer P>
-    ? BaseShowType<Omit<P, "children">>
-    : K;
+interface BaseShowTypeFn extends TagHelperFn {
+  type: BaseShowType<this["props"]>;
+}
 
-export type ShowType = BaseShowType & {
-  [K in keyof HtmlTag]: ShowTagHelper<HtmlTag[K]>;
-} & {
-  [K in keyof RegisterProps<"show">]: ShowTagHelper<RegisterProps<"show">[K]>;
-} & {
-  [K in keyof RegisterProps<"base">]: ShowTagHelper<RegisterProps<"base">[K]>;
-};
+export type ShowType = TagProxyType<BaseShowTypeFn, "show">;

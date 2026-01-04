@@ -1,5 +1,5 @@
 import { ComponentPropsWithRef, createElement, forwardRef } from "react";
-import { createTagProxy } from "../../core/createTagProxy";
+import { createUtilinentProxy } from "../../core/createUtilinentProxy";
 import type { ForProps, ForType } from "./types";
 
 function BaseFor<T extends Array<unknown>>({
@@ -21,4 +21,4 @@ const renderForTag =
     return createElement(tag, { ...props, ref }, content);
   });
 
-export const For: ForType = createTagProxy(BaseFor, renderForTag, "for");
+export const For: ForType = createUtilinentProxy(BaseFor, renderForTag, "for");
