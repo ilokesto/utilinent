@@ -7,21 +7,6 @@ export type NonNullableElements<T extends readonly any[]> = {
   -readonly [P in keyof T]: NonNullable<T[P]>;
 };
 
-export interface OptionalWrapperProps<T = unknown> {
-  when: T; 
-  children: React.ReactNode; 
-  wrapper: (children: React.ReactNode) => React.ReactNode;
-  fallback?: (children: React.ReactNode) => React.ReactNode;
-}
-
-export interface ObserverProps extends Fallback {
-  children?: React.ReactNode | ((isIntersecting: boolean) => React.ReactNode);
-  threshold?: number | number[];
-  rootMargin?: string;
-  triggerOnce?: boolean;
-  onIntersect?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void;
-}
-
 
 export type ExtractValues<T, K extends keyof T> = T extends any ? T[K] : never;
 
@@ -66,21 +51,3 @@ export type GetLiteralKeys<T> = {
 
 export type LiteralKeys<T> = [GetLiteralKeys<T>] extends [never] ? keyof T : GetLiteralKeys<T>;
 
-
-export type SlackerFallbackProps = {
-  isLoading: boolean;
-  error: Error | null;
-  retry: () => void;
-};
-
-export type SlackerProps<T = any> = {
-  children: (loaded: T) => React.ReactNode;            // loader의 결과를 받는 함수
-  errorFallback?: React.ReactNode | ((props: SlackerFallbackProps) => React.ReactNode);  // 에러 발생 시에 표시할 내용
-  loadingFallback?: React.ReactNode; // 로딩 중 표시할 내용
-  threshold?: number | number[];
-  rootMargin?: string;
-  loader: () => Promise<T> | T;                         // 동적 로딩 함수 (필수)
-  onError?: (error: Error) => void;                     // 에러 콜백
-  maxRetries?: number;                                  // 최대 재시도 횟수 (기본: 0)
-  retryDelay?: number;                                  // 재시도 딜레이 ms (기본: 1000)
-};

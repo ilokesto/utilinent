@@ -1,6 +1,6 @@
-import { Fallback } from ".";
-import { HtmlTag } from "../constants/htmlTags";
-import { RegisterProps } from "./register";
+import { HtmlTag } from "../../constants/htmlTags";
+import { Fallback } from "../../types";
+import { RegisterProps } from "../../types/register";
 
 export interface MatchProps<T = unknown> {
   when: T | null | undefined | false;

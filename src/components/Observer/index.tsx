@@ -1,7 +1,7 @@
 import { ComponentPropsWithRef, forwardRef, useCallback } from "react";
-import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
-import type { ObserverProps } from "../types";
-import { Show } from "./Show";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import { Show } from "../Show";
+import { ObserverProps } from "./types";
 
 export const Observer = forwardRef<HTMLDivElement, ObserverProps & Omit<ComponentPropsWithRef<'div'>, 'ref'>>(
   function Observer(

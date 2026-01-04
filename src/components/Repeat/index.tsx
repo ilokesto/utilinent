@@ -1,6 +1,6 @@
 import { ComponentPropsWithRef, createElement, forwardRef } from "react";
-import { createTagProxy } from "../core/createTagProxy";
-import type { RepeatProps, RepeatType } from "../types/repeat";
+import { createTagProxy } from "../../core/createTagProxy";
+import type { RepeatProps, RepeatType } from "./types";
 
 function BaseRepeat({ times, children, fallback = null }: RepeatProps) {
   const content =
@@ -13,7 +13,6 @@ function BaseRepeat({ times, children, fallback = null }: RepeatProps) {
 
 const renderForTag =
   (tag: any) =>
-  // forward ref so consumers can attach a ref to the underlying DOM element
   forwardRef(
     ({ times, children, fallback = null, ...props }: RepeatProps & ComponentPropsWithRef<any>, ref: any) => {
       const content =
@@ -22,4 +21,4 @@ const renderForTag =
     }
   );
 
-export const Repeat = createTagProxy<RepeatType, typeof BaseRepeat>(BaseRepeat, renderForTag, "repeat");
+export const Repeat : RepeatType = createTagProxy(BaseRepeat, renderForTag, "repeat");

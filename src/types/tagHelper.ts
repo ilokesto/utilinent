@@ -1,6 +1,6 @@
+import { RepeatProps } from "../components/Repeat/types";
 import { HtmlTag } from "../constants/htmlTags";
 import { RegisterProps } from "./register";
-import { RepeatProps } from "./repeat";
 
 export interface TagHelperFn {
   props: unknown;
@@ -14,7 +14,6 @@ export type TagHelper<K, F extends TagHelperFn> = K extends keyof HtmlTag
   : K extends React.ComponentType<infer P>
     ? Apply<F, Omit<P, "children">>
     : K;
-
 
 type BaseRepeatType<X = object> = {
   (props: X & RepeatProps): React.ReactNode;

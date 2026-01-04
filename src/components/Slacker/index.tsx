@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { SlackerProps } from "../types";
-import { Observer } from "./Observer";
+import { Observer } from "../Observer";
+import { SlackerProps } from "./types";
 
 export function Slacker<T = any>({
   children,

@@ -8,8 +8,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { createTagProxy } from "../core/createTagProxy";
-import type { MountProps, MountType } from "../types/mount";
+import { createTagProxy } from "../../core/createTagProxy";
+import type { MountProps, MountType } from "./types";
 
 const isPromiseLike = (value: unknown): value is PromiseLike<ReactNode> =>
   (typeof value === "object" || typeof value === "function") &&
@@ -87,17 +87,12 @@ function BaseMount({ children, fallback = null, onError }: MountProps) {
 
 const renderForTag =
   (tag: any) =>
-  // forward ref so consumers can attach a ref to the underlying DOM element
   forwardRef(function Render(
     { children, fallback = null, onError, ...props }: MountProps & ComponentPropsWithRef<any>,
     ref: any
   ) {
     const content = BaseMount({ children, fallback, onError });
-    return createElement(
-      tag,
-      { ...props, ref },
-      content
-    );
+    return createElement(tag, { ...props, ref }, content);
   });
 
-export const Mount = createTagProxy<MountType, typeof BaseMount>(BaseMount, renderForTag, "mount");
+export const Mount: MountType = createTagProxy(BaseMount, renderForTag, "mount");

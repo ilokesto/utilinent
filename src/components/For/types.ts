@@ -1,6 +1,6 @@
-import { Fallback } from ".";
-import { HtmlTag } from "../constants/htmlTags";
-import { RegisterProps } from "./register";
+import { HtmlTag } from "../../constants/htmlTags";
+import { Fallback } from "../../types";
+import { RegisterProps } from "../../types/register";
 
 export interface ForProps<T extends Array<unknown>> extends Fallback {
   each: T | null | undefined; // 배열 또는 null/undefined 허용
@@ -12,9 +12,9 @@ type BaseForType<X = object> = {
 }
 
 type ForTagHelper<K> = K extends keyof HtmlTag
-  ? BaseForType<React.ComponentPropsWithRef<HtmlTag[K]>>
+  ? BaseForType<Omit<React.ComponentPropsWithRef<HtmlTag[K]>, "children">>
   : K extends React.ComponentType<infer P>
-    ? BaseForType<P>
+    ? BaseForType<Omit<P, "children">>
     : K;
 
 export type ForType = BaseForType & {

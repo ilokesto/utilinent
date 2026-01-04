@@ -1,6 +1,6 @@
-import { Fallback } from ".";
-import { HtmlTag } from "../constants/htmlTags";
-import { RegisterProps } from "./register";
+import { HtmlTag } from "../../constants/htmlTags";
+import { Fallback } from "../../types";
+import { RegisterProps } from "../../types/register";
 
 export interface RepeatProps extends Fallback {
   times: number; 
@@ -12,9 +12,9 @@ type BaseRepeatType<X = object> = {
 }
 
 type RepeatTagHelper<K> = K extends keyof HtmlTag
-  ? BaseRepeatType<React.ComponentPropsWithRef<HtmlTag[K]>>
+  ? BaseRepeatType<Omit<React.ComponentPropsWithRef<HtmlTag[K]>, "children">>
   : K extends React.ComponentType<infer P>
-    ? BaseRepeatType<P>
+    ? BaseRepeatType<Omit<P, "children">>
     : K;
 
 export type RepeatType = BaseRepeatType & {
