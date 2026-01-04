@@ -1,4 +1,4 @@
-import type { Fallback, TagHelperFn, TagProxyType } from "../../types";
+import type { BaseTypeHelperFn, Fallback, TagProxyType } from "../../types";
 
 export interface ForProps<T extends Array<unknown>> extends Fallback {
   each: T | null | undefined; // 배열 또는 null/undefined 허용
@@ -9,7 +9,7 @@ type BaseForType<X = object> = {
   <const T extends Array<unknown>>(props: X & ForProps<T>): React.ReactNode;
 }
 
-interface BaseForTypeFn extends TagHelperFn {
+interface BaseForTypeFn extends BaseTypeHelperFn {
   type: BaseForType<this["props"]>;
 }
 

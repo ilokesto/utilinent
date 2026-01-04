@@ -2,25 +2,25 @@ import { HtmlTag } from "../constants/htmlTags";
 import { RegisterProps } from "./register";
 import { RegistryCategory } from "./RegistryCategory";
 
-export interface TagHelperFn {
+export interface BaseTypeHelperFn {
   props: unknown;
   type: unknown;
 }
 
-type Apply<F extends TagHelperFn, Props> = (F & { props: Props })["type"];
+type Apply<F extends BaseTypeHelperFn, Props> = (F & { props: Props })["type"];
 
 type MaybeOmitChildren<Props, OmitChildren extends boolean> = OmitChildren extends true
   ? Omit<Props, "children">
   : Props;
 
-export type TagHelper<K, F extends TagHelperFn, OmitChildren extends boolean = true> = K extends keyof HtmlTag
+export type TagHelper<K, F extends BaseTypeHelperFn, OmitChildren extends boolean = true> = K extends keyof HtmlTag
   ? Apply<F, MaybeOmitChildren<React.ComponentPropsWithRef<K>, OmitChildren>>
   : K extends React.ComponentType<infer P>
     ? Apply<F, MaybeOmitChildren<P, OmitChildren>>
     : K;
 
 export type TagProxyType<
-  F extends TagHelperFn,
+  F extends BaseTypeHelperFn,
   RegisterKey extends RegistryCategory,
   OmitChildren extends boolean = true
 > = Apply<F, object> & {

@@ -1,5 +1,5 @@
 import { HtmlTag } from "../../constants/htmlTags";
-import type { Fallback, TagHelperFn, TagProxyType } from "../../types";
+import type { BaseTypeHelperFn, Fallback, TagProxyType } from "../../types";
 
 export interface MatchProps<T = unknown> {
   when: T | null | undefined | false;
@@ -14,7 +14,7 @@ type BaseSwitchType<X = object> = {
   (props: X & SwitchProps): React.ReactNode;
 }
 
-interface BaseSwitchTypeFn extends TagHelperFn {
+interface BaseSwitchTypeFn extends BaseTypeHelperFn {
   type: BaseSwitchType<this["props"]>;
 }
 type SwitchTagHelper<K> = K extends keyof HtmlTag

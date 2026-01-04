@@ -1,4 +1,4 @@
-import type { Fallback, NonNullableElements, TagHelperFn, TagProxyType } from "../../types";
+import type { BaseTypeHelperFn, Fallback, NonNullableElements, TagProxyType } from "../../types";
 
 export interface ShowPropsArray<T extends unknown[]> extends Fallback {
   when: T;
@@ -15,7 +15,7 @@ type BaseShowType<X = object> = {
   <const T extends unknown>(props: X & ShowProps<T>): React.ReactNode;
 }
 
-interface BaseShowTypeFn extends TagHelperFn {
+interface BaseShowTypeFn extends BaseTypeHelperFn {
   type: BaseShowType<this["props"]>;
 }
 
