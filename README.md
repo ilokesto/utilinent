@@ -1,13 +1,16 @@
+# @ilokesto/utilinent
+
+**English** | [한국어](./README.ko.md)
+
 [![Build Size](https://img.shields.io/bundlephobia/minzip/@ilokesto/utilinent?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=@ilokesto/utilinent)
 [![Version](https://img.shields.io/npm/v/@ilokesto/utilinent?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
 [![Downloads](https://img.shields.io/npm/dt/@ilokesto/utilinent.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
 
+## Documentation
 
-&nbsp;
-
-[Official documents](https://ilokesto.vercel.app/utilinent)
-
-&nbsp;
+- Full docs: [English](https://ilokesto.ayden94.com/en/utilinent) · [한국어](https://ilokesto.ayden94.com/ko/utilinent)
+- Source: [packages/utilinent](https://github.com/ilokesto/ilokesto/tree/main/packages/utilinent)
+- npm: [@ilokesto/utilinent](https://www.npmjs.com/package/@ilokesto/utilinent)
 
 As React apps grow, JSX often becomes cluttered with nested ternary operators and bloated map callbacks, which rapidly degrades readability. utilinent was created to solve these recurring UI patterns by providing small, declarative components.
 
@@ -17,7 +20,7 @@ By moving noisy logic out of views and into reusable components, utilinent impro
 
 &nbsp;
 
-##  Installation
+## Installation
 
 utilinent can be installed using several methods listed below.
 
