@@ -5,7 +5,9 @@ description: "중첩된 loading, empty, list JSX를 Show와 For로 바꿉니다.
 
 # 빠른 시작
 
-이 페이지는 흔한 React data component를 utilinent의 선언적인 markup으로 바꿉니다.
+이 페이지는 흔한 React 데이터 컴포넌트를 utilinent의 선언적인 마크업으로 바꿉니다.
+
+React 18 이상으로 만든 기존 애플리케이션에서 시작하세요. Utilinent는 앱을 만들거나 사용자 데이터를 가져오거나 로딩 상태를 소유하지 않습니다. 이 예시는 렌더링 분기만 교체합니다.
 
 ## 1. 설치
 
@@ -13,11 +15,10 @@ description: "중첩된 loading, empty, list JSX를 Show와 For로 바꿉니다.
 pnpm add @ilokesto/utilinent
 ```
 
-컴포넌트는 패키지 루트에서, 훅은 `./hooks` subpath에서 가져옵니다.
+`react`는 피어 의존성이므로 애플리케이션에 이미 설치되어 있어야 합니다. 컴포넌트는 패키지 루트에서, 훅은 `./hooks` 하위 경로에서 가져옵니다.
 
 ```tsx lineNumbers
-import { Show, For } from '@ilokesto/utilinent';
-import { useMediaQuery } from '@ilokesto/utilinent/hooks';
+import { For, Show } from '@ilokesto/utilinent';
 ```
 
 ## 2. 일반 React 코드에서 시작하기
@@ -83,7 +84,11 @@ export function UserList({ users, loading }: { users?: User[]; loading: boolean 
 }
 ```
 
-## 6. 필요하면 branch를 풍성하게 만들기
+`<UserList loading users={undefined} />`를 렌더링하면 `Loading users...`가 나타납니다. `<UserList loading={false} users={[]} />`로 바꾸면 `No users found.`가 나타나고, 사용자를 한 명 이상 넘기면 이름이 담긴 `<ul>`이 나타납니다.
+
+## 6. 필요하면 완성된 예시 확장하기
+
+아래 코드 조각은 위에서 완성한 컴포넌트의 반환값을 교체합니다. `UserListSkeleton`, `EmptyUsers`, `UserRow`는 애플리케이션에서 제공해야 하는 컴포넌트입니다.
 
 ```tsx lineNumbers
 <Show.section

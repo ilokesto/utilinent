@@ -35,7 +35,9 @@ export function UserList({ users, loading }: { users?: User[]; loading: boolean 
 }
 ```
 
-`Show`는 조건 branch를 처리합니다. `For.ul`은 실제 `<ul>` 안에 list를 렌더링하고, 배열이 비었거나 없으면 fallback을 보여줍니다.
+`Show`는 조건 분기를 처리합니다. `For.ul`은 실제 `<ul>` 안에 목록을 렌더링하고, 배열이 비었거나 없으면 대체 UI를 보여줍니다.
+
+`loading={true}`이면 로딩 메시지, `loading={false}`와 빈 배열이면 빈 상태 메시지, 사용자 배열을 넘기면 의미 있는 목록이 나타납니다. [빠른 시작](/ko/utilinent/quick-start)에서 각 전환을 순서대로 확인할 수 있습니다.
 
 ## 제공하는 것
 

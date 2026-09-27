@@ -15,7 +15,7 @@ import { Mount } from '@ilokesto/utilinent';
 </Mount>
 ```
 
-## Props
+## 프로퍼티
 
 | Prop | Type | 설명 |
 | --- | --- | --- |
@@ -35,7 +35,7 @@ import { Mount } from '@ilokesto/utilinent';
 
 Render 중에 작업을 시작하고 그 Promise를 `children`으로 직접 전달하지 마세요. React 19가 promise를 `ReactNode`에 포함하더라도 직접 `Promise<ReactElement>`, `Promise<string>`, 기타 `PromiseLike` child는 public type과 runtime contract 모두에서 의도적으로 지원하지 않습니다.
 
-## Timing, fallback, error
+## 실행 시점, 대체 UI, 오류
 
 - 직접 node는 초기 출력이며 `fallback`을 사용하지 않습니다.
 - Function child는 `fallback`으로 시작합니다. `Mount`는 commit 이후 layout effect에서 function을 호출합니다.
@@ -44,7 +44,7 @@ Render 중에 작업을 시작하고 그 Promise를 `children`으로 직접 전�
 - 동기 throw 또는 현재 Promise의 rejection은 fallback을 유지하고, 기존 console error를 기록하며, 실패한 invocation에 대해 `onError`를 한 번 호출합니다.
 - React Strict Mode는 development에서 effect를 다시 실행할 수 있으므로 factory는 여러 번 호출되어도 안전해야 합니다.
 
-## Tag form
+## 태그 형태
 
 ```tsx lineNumbers
 <Mount.div fallback={<Spinner />} className="preview">
@@ -52,7 +52,7 @@ Render 중에 작업을 시작하고 그 Promise를 `children`으로 직접 전�
 </Mount.div>
 ```
 
-## Race safety
+## 경합 안전성
 
 `children`이 바뀌면 더 최신 call이 시작됩니다. 이전 call의 fulfillment 또는 rejection은 무시되므로 현재 출력을 교체할 수 없고 `onError`도 호출하지 않습니다. Unmount 이후 settlement도 같은 방식으로 무시합니다. Pending 비동기 작업을 직접 node로 교체하면 해당 node를 즉시 표시합니다.
 

@@ -27,7 +27,7 @@ Fragment는 flatten되므로 Match를 묶어도 동작이 바뀌지 않습니다
 
 Function children은 non-null condition value를 받습니다.
 
-## Tag form
+## 태그 형태
 
 ```tsx lineNumbers
 <Switch.section fallback={<p>No branch</p>} className="status">
@@ -37,7 +37,7 @@ Function children은 non-null condition value를 받습니다.
 
 `Switch.section`은 selected branch를 `<section>`으로 감쌉니다.
 
-## Caveat
+## 주의 사항
 
 - `Match` element만 검사합니다.
 - 첫 번째 truthy match가 선택됩니다.

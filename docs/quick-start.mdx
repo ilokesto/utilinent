@@ -7,17 +7,18 @@ description: "Replace nested loading, empty, and list JSX with Show and For."
 
 This page turns a common React data component into declarative utilinent markup.
 
+Start in an existing React 18 or newer application. Utilinent does not create an app, fetch the users, or own the loading state; this example only replaces the rendering branches.
+
 ## 1. Install
 
 ```bash lineNumbers
 pnpm add @ilokesto/utilinent
 ```
 
-Components are imported from the package root; hooks live under the `./hooks` subpath.
+`react` is a peer dependency and should already be installed by the application. Components are imported from the package root; hooks live under the `./hooks` subpath.
 
 ```tsx lineNumbers
-import { Show, For } from '@ilokesto/utilinent';
-import { useMediaQuery } from '@ilokesto/utilinent/hooks';
+import { For, Show } from '@ilokesto/utilinent';
 ```
 
 ## 2. Start from the ordinary React version
@@ -83,7 +84,11 @@ export function UserList({ users, loading }: { users?: User[]; loading: boolean 
 }
 ```
 
-## 6. Add richer branches when needed
+Render `<UserList loading users={undefined} />` to see `Loading users...`. Change it to `<UserList loading={false} users={[]} />` to see `No users found.`, then pass one or more users to get a `<ul>` of names.
+
+## 6. Extend the completed example when needed
+
+The following fragment replaces the return value in the completed component above. `UserListSkeleton`, `EmptyUsers`, and `UserRow` are application components that you provide.
 
 ```tsx lineNumbers
 <Show.section

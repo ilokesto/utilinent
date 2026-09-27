@@ -37,6 +37,8 @@ export function UserList({ users, loading }: { users?: User[]; loading: boolean 
 
 `Show` handles the conditional branch. `For.ul` renders the list inside a real `<ul>` and shows a fallback when the array is empty or missing.
 
+Render the component with `loading={true}` to see the loading message, with `loading={false}` and an empty array to see the empty message, or with users to get a semantic list. The [quick start](/en/utilinent/quick-start) walks through each transition.
+
 ## What it gives you
 
 - Conditional rendering with [`Show`](/en/utilinent/reference/show).
@@ -57,5 +59,3 @@ export function UserList({ users, loading }: { users?: User[]; loading: boolean 
 - [Guides](/en/utilinent/guides/async-data): practical recipes for async data, lists, polymorphic tags, lazy loading, and custom proxy components.
 - [React integration](/en/utilinent/integrations/react): how these components fit normal React applications.
 - [Troubleshooting](/en/utilinent/troubleshooting): common mistakes and fixes.
-
-> This documentation lives in the `@ilokesto/utilinent` repository and is synced to the ilokesto docs site.

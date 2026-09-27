@@ -15,7 +15,7 @@ import { For } from '@ilokesto/utilinent';
 </For>
 ```
 
-## Props
+## 프로퍼티
 
 | Prop | Type | 설명 |
 | --- | --- | --- |
@@ -23,7 +23,7 @@ import { For } from '@ilokesto/utilinent';
 | `children` | `(item, index) => ReactNode` | 각 item의 render function입니다. |
 | `fallback` | `ReactNode` | Empty-state UI입니다. 기본값은 `null`입니다. |
 
-## Tag form
+## 태그 형태
 
 ```tsx lineNumbers
 <For.ul each={todos} fallback={<li>No todos</li>} className="todos">
@@ -33,7 +33,7 @@ import { For } from '@ilokesto/utilinent';
 
 Tag form은 wrapper element를 만듭니다. Semantic HTML을 지키려면 `ul` 안에는 `li`처럼 맞는 child element를 반환하세요.
 
-## Key
+## 키
 
 `For`는 key를 대신 만들지 않습니다. Array를 렌더링할 때는 render function에서 keyed element를 반환하세요.
 

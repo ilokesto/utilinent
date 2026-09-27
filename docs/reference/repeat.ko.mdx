@@ -13,7 +13,7 @@ import { Repeat } from '@ilokesto/utilinent';
 <Repeat times={3}>{(index) => <SkeletonCard key={index} />}</Repeat>
 ```
 
-## Props
+## 프로퍼티
 
 | Prop | Type | 설명 |
 | --- | --- | --- |
@@ -21,7 +21,7 @@ import { Repeat } from '@ilokesto/utilinent';
 | `children` | `(index) => ReactNode` | `0`부터 `times - 1`까지 각 index마다 호출됩니다. |
 | `fallback` | `ReactNode` | invalid 또는 non-positive count일 때 렌더링됩니다. |
 
-## Tag form
+## 태그 형태
 
 ```tsx lineNumbers
 <Repeat.ul times={5} aria-label="loading rows">
