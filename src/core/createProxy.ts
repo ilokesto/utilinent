@@ -34,21 +34,18 @@ export function createProxy<TProxy extends object, TBase extends object = TProxy
 
       const propName = String(prop);
 
-      if (PluginManager.has(category, propName)) {
-        const component = PluginManager.get(category, propName);
-        const specialized = renderForTag(component);
-        (currentTarget as any)[prop] = specialized;
-        return specialized;
+      let pluginCategory = category;
+      if (!PluginManager.has(pluginCategory, propName)) {
+        pluginCategory = "base";
+        if (!PluginManager.has(pluginCategory, propName)) {
+          return undefined;
+        }
       }
 
-      if (PluginManager.has("base", propName)) {
-        const component = PluginManager.get("base", propName);
-        const specialized = renderForTag(component);
-        (currentTarget as any)[prop] = specialized;
-        return specialized;
-      }
-
-      return undefined;
+      const component = PluginManager.get(pluginCategory, propName);
+      const specialized = renderForTag(component);
+      (currentTarget as any)[prop] = specialized;
+      return specialized;
     },
   }) as TProxy;
 }
