@@ -170,6 +170,72 @@ describe("useHover", () => {
 });
 
 describe("useKey", () => {
+  it("uses the latest handler without rebinding for handler-only renders", () => {
+    const firstHandler = vi.fn();
+    const latestHandler = vi.fn();
+    const addListener = vi.spyOn(window, "addEventListener");
+    const removeListener = vi.spyOn(window, "removeEventListener");
+    function Probe({ handler }: { handler: (event: KeyboardEvent) => void }) {
+      useKey("Escape", handler);
+      return null;
+    }
+    const { rerender } = render(<Probe handler={firstHandler} />);
+
+    rerender(<Probe handler={latestHandler} />);
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    });
+
+    expect(firstHandler).not.toHaveBeenCalled();
+    expect(latestHandler).toHaveBeenCalledTimes(1);
+    expect(addListener.mock.calls.filter(([type]) => type === "keydown")).toHaveLength(1);
+    expect(removeListener.mock.calls.filter(([type]) => type === "keydown")).toHaveLength(0);
+  });
+
+  it("rebinds when the key options change", () => {
+    const handler = vi.fn();
+    const addListener = vi.spyOn(window, "addEventListener");
+    const removeListener = vi.spyOn(window, "removeEventListener");
+    function Probe({ event }: { event: "keydown" | "keyup" }) {
+      useKey("Escape", handler, { event });
+      return null;
+    }
+    const { rerender } = render(<Probe event="keydown" />);
+
+    rerender(<Probe event="keyup" />);
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+      window.dispatchEvent(new KeyboardEvent("keyup", { code: "Escape" }));
+    });
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(addListener.mock.calls.filter(([type]) => type === "keydown")).toHaveLength(1);
+    expect(removeListener.mock.calls.filter(([type]) => type === "keydown")).toHaveLength(1);
+    expect(addListener.mock.calls.filter(([type]) => type === "keyup")).toHaveLength(1);
+  });
+
+  it("removes the subscription while disabled and restores it when enabled", () => {
+    const handler = vi.fn();
+    const addListener = vi.spyOn(window, "addEventListener");
+    const removeListener = vi.spyOn(window, "removeEventListener");
+    function Probe({ enabled }: { enabled: boolean }) {
+      useKey("Escape", handler, { enabled });
+      return null;
+    }
+    const { rerender, unmount } = render(<Probe enabled={true} />);
+
+    rerender(<Probe enabled={false} />);
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+    });
+    rerender(<Probe enabled={true} />);
+    unmount();
+
+    expect(handler).not.toHaveBeenCalled();
+    expect(addListener.mock.calls.filter(([type]) => type === "keydown")).toHaveLength(2);
+    expect(removeListener.mock.calls.filter(([type]) => type === "keydown")).toHaveLength(2);
+  });
+
   it("invokes the handler for the matching code", () => {
     const handler = vi.fn();
     function Probe() {
@@ -203,6 +269,22 @@ describe("useKey", () => {
       );
     });
     expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("invokes only on keyup when configured", () => {
+    const handler = vi.fn();
+    function Probe() {
+      useKey("Escape", handler, { event: "keyup" });
+      return null;
+    }
+    render(<Probe />);
+
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+      window.dispatchEvent(new KeyboardEvent("keyup", { code: "Escape" }));
+    });
+
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 });
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * Options for {@link useKey}.
@@ -40,6 +40,11 @@ export function useKey(
   options: UseKeyOptions = {},
 ): void {
   const { enabled = true, event = "keydown", ignoreEditable = false } = options;
+  const handlerRef = useRef(handler);
+
+  useEffect(() => {
+    handlerRef.current = handler;
+  });
 
   useEffect(() => {
     if (!enabled || typeof window === "undefined") {
@@ -53,12 +58,12 @@ export function useKey(
       if (ignoreEditable && isEditableTarget(event.target)) {
         return;
       }
-      handler(event);
+      handlerRef.current(event);
     };
 
     window.addEventListener(event, listener);
     return () => {
       window.removeEventListener(event, listener);
     };
-  }, [key, handler, enabled, event, ignoreEditable]);
+  }, [key, enabled, event, ignoreEditable]);
 }
