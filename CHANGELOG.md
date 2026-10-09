@@ -1,5 +1,12 @@
 # @ilokesto/utilinent
 
+## 1.2.1
+
+### Patch Changes
+
+- 99ef2f0: Keep `useKey` subscriptions stable when only the handler changes.
+- e4d94f5: Share plugin rendering and caching after category selection while preserving tag precedence, base fallback, and lazy per-proxy resolution.
+
 ## 1.2.0
 
 ### Minor Changes

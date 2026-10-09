@@ -1,6 +1,6 @@
 {
   "name": "@ilokesto/utilinent",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "build": "rm -rf dist && tsc",
     "test": "vitest run",
