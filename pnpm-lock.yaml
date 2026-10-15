@@ -463,6 +463,21 @@ importers:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@22.20.1)(jsdom@29.1.1)(vite@8.2.1(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.8.2))
 
+  packages/queryable:
+    devDependencies:
+      '@types/node':
+        specifier: ^26.1.1
+        version: 26.2.0
+      remeda:
+        specifier: 2.51.0
+        version: 2.51.0
+      typescript:
+        specifier: ^6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.8.2))
+
   packages/state:
     dependencies:
       '@ilokesto/store':
@@ -4976,6 +4991,10 @@ packages:
 
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
+
+  remeda@2.51.0:
+    resolution: {integrity: sha512-4X/oHoc10jkt1w1V8yG/8tS8jYYj7vaNZs3nrvuDVRE1+nDqRAnX/L0PbwL4wOKcXSLHnkXyOQOinSBGQdJ35A==}
+    engines: {node: '>=18.0.0'}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -10647,6 +10666,8 @@ snapshots:
       unified: 11.0.5
     transitivePeerDependencies:
       - supports-color
+
+  remeda@2.51.0: {}
 
   require-directory@2.1.1: {}
 

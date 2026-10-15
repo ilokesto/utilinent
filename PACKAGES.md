@@ -2,6 +2,15 @@
 
 Each row describes one package's responsibility, comparable libraries, and where it fits in the ecosystem.
 
+## @ilokesto/queryable (private beta)
+
+- **Scope**: Small Symbol-based query DSL over string-keyed records.
+- **Key idea**: Shared Symbol methods, ordered sequences, and opt-in lazy evaluation.
+- **Comparable to**: Lodash collection chains and small LINQ-style query helpers.
+- **Differentiator**: Bracket syntax, shared methods, no runtime dependencies.
+- **Status**: `0.0.1`, `private: true`; excluded from npm releases and public docs.
+- **Standalone**: No internal ilokesto dependencies.
+
 ## @ilokesto/store
 
 - **Scope**: Atomic, framework-agnostic state container with selector subscriptions.

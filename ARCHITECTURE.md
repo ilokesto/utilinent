@@ -21,6 +21,7 @@ This document describes how ilokesto packages relate to each other and the decis
 - `@ilokesto/store`
 - `@ilokesto/fetcher`
 - `@ilokesto/utilinent`
+- `@ilokesto/queryable` (private `0.0.1` beta; not in the release order or public docs)
 
 ### First-order consumers
 
