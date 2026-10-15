@@ -1,62 +1,102 @@
-# ilokesto Monorepo
+# ilokesto
 
-This repository is the source of truth for the **ilokesto** library ecosystem. It contains eight independently versioned npm packages managed with pnpm workspaces and Changesets.
+Libraries for state management, forms, React overlays, HTTP requests, and UI utilities.
+The eight `@ilokesto` packages share this repository but are versioned and published independently.
 
-## What this repository contains
+## Choose a package
 
-- **Package source**: publishable libraries under `packages/*`.
-- **Official documentation site**: the private Next.js application under `apps/docs`, using package-owned documentation.
-- **Cross-cutting documentation**: scope, architecture, and decisions shared across packages.
-- **Central automation**: one lockfile, one gated CI/release workflow, and root Changesets configuration.
+| Package | Use it for |
+| --- | --- |
+| [@ilokesto/store](packages/store/README.md) | Framework-agnostic state storage and selector subscriptions |
+| [@ilokesto/state](packages/state/README.md) | State and reducer primitives with framework bindings |
+| [@ilokesto/form](packages/form/README.md) | Headless form state, validation, field arrays, and submission |
+| [@ilokesto/overlay](packages/overlay/README.md) | A shared React runtime for layered UI |
+| [@ilokesto/modal](packages/modal/README.md) | Modal management built on the overlay runtime |
+| [@ilokesto/toast](packages/toast/README.md) | Toast notifications with positioning and auto-dismiss |
+| [@ilokesto/fetcher](packages/fetcher/README.md) | Type-safe HTTP requests with OpenAPI support |
+| [@ilokesto/utilinent](packages/utilinent/README.md) | React utilities for conditional rendering and async states |
 
-## Repository layout
+See [PACKAGES.md](PACKAGES.md) for package responsibilities and comparisons,
+and [ARCHITECTURE.md](ARCHITECTURE.md) for dependencies and design decisions.
 
-```
-ilokesto/
-├── .changeset/             # Release declarations and configuration
-├── .github/workflows/      # CI, release, and package docs sync
-├── apps/docs/             # Official bilingual documentation site
-├── packages/               # Publishable @ilokesto packages
-├── DECISIONS/              # Architecture Decision Records
-├── package.json            # Root scripts
-├── pnpm-lock.yaml          # Single dependency lockfile
-└── pnpm-workspace.yaml     # Applications, packages, and form examples
-```
+## Use a package
 
-## Workspace packages
-
-The workspace contains `store`, `state`, `form`, `overlay`, `modal`, `toast`, `fetcher`, and `utilinent` under `packages/`, the private documentation app under `apps/docs`, and form examples. Legacy local top-level `docs/` and `playground/` clones are not workspace projects.
-
-## Core principles
-
-- **Independent package versions**: Packages share a repository but version and publish independently.
-- **Root Changesets**: Consumer-facing changes add one file under `.changeset/`; publishing uses package-specific npm dist-tags.
-- **Docs live with source**: Each package keeps documentation in `packages/<name>/docs/`; `apps/docs` consumes these originals. Existing cross-repository sync workflows remain only until the production deployment is switched.
-- **Shared patterns over shared code**: Prefer conventions documented here before adding cross-package abstractions.
-
-## Getting started
+Install the package you need in your application. For example, to use the state container:
 
 ```bash
-pnpm install
-pnpm build
-pnpm test
-pnpm changeset
+pnpm add @ilokesto/store
 ```
 
-## Official documentation
+Each package README above includes installation instructions and usage examples.
+You do not need to clone this repository to use the libraries.
 
-Use Node.js 22 and the pinned pnpm version from `packageManager`.
+The official documentation is available in
+[English](https://ilokesto.ayden94.com/en) and
+[Korean](https://ilokesto.ayden94.com/ko).
+Public package pages document the selected published release; `/next` pages
+document the current workspace.
+
+## Develop locally
+
+Use Node.js 22 and the pnpm version pinned in the root
+[`package.json`](package.json) `packageManager` field.
+Run these commands from the repository root:
 
 ```bash
 pnpm install --frozen-lockfile
+pnpm build
+pnpm typecheck
+pnpm test
+```
+
+Root build, typecheck, and test commands include the documentation site.
+Run typecheck and tests sequentially because some tests rebuild shared distributions.
+See the [site guide](apps/docs/README.md) for browser prerequisites and site validation.
+
+For package-specific work, use pnpm filters. For example:
+
+```bash
+pnpm --filter @ilokesto/store test
+```
+
+### Preview documentation
+
+```bash
 pnpm docs:dev
 ```
 
-The site preserves `/en/<package>` and `/ko/<package>` routes. Edit package
-content in `packages/<name>/docs/` and site code in `apps/docs/`.
-Run `pnpm docs:build`, `pnpm docs:typecheck`, and `pnpm docs:test` for
-documentation-only validation. Root build, typecheck, and test commands include
-the site as well. The private app is not published to npm.
+This command builds the package dependencies and starts the documentation site.
+Open `http://localhost:3000/en` or `http://localhost:3000/ko`.
+To preview workspace documentation changes, use `/<language>/<package>/next`.
 
-See [the site guide](apps/docs/README.md) and
-[the deployment transition](DECISIONS/004-docs-in-monorepo.md).
+Edit package content in `packages/<name>/docs/` and site code in `apps/docs/`.
+The private documentation app is deployed from this monorepo and is not published to npm.
+See the [site guide](apps/docs/README.md) for the full documentation workflow.
+
+## Contribute
+
+Read the root [AGENTS.md](AGENTS.md) and the relevant package's `AGENTS.md`
+for development conventions and required checks.
+
+For consumer-facing package changes, add a release declaration under `.changeset/`:
+
+```bash
+pnpm changeset
+```
+
+Packages are released independently through the root GitHub Actions Changesets workflow.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for release automation and dependency-aware CI.
+
+## Repository guide
+
+| Location | Contents |
+| --- | --- |
+| `packages/` | Publishable libraries and their source documentation |
+| `apps/docs/` | Official English and Korean documentation site |
+| `.changeset/` | Package release declarations and configuration |
+| `.github/workflows/` | CI and release automation |
+| [DECISIONS/](DECISIONS/) | Architecture decision records |
+
+- [PACKAGES.md](PACKAGES.md): package scope, use cases, and comparable libraries.
+- [ARCHITECTURE.md](ARCHITECTURE.md): dependency relationships, design decisions, and automation.
+- [COMMANDS.md](COMMANDS.md): repository-specific OpenCode commands and skills.
