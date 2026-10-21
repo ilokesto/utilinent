@@ -1,0 +1,74 @@
+---
+title: "useFocusWithin"
+description: "Track focus on an element and its descendants."
+---
+
+# useFocusWithin
+
+`useFocusWithin` returns a stable callback `ref` and an `isFocusWithin` boolean.
+Use it when rendering or application behavior depends on focus inside a group.
+For style-only changes, prefer CSS `:focus-within` instead.
+
+```tsx lineNumbers
+import { useFocusWithin } from '@ilokesto/utilinent/hooks';
+
+function SearchGroup() {
+  const { ref, isFocusWithin } = useFocusWithin();
+  return (
+    <div ref={ref}>
+      <label>
+        Search
+        <input type="search" aria-describedby="search-help" />
+      </label>
+      <button type="button">Search</button>
+      <p id="search-help" hidden={!isFocusWithin}>
+        Enter a search term, then choose Search.
+      </p>
+    </div>
+  );
+}
+```
+
+## API
+
+```ts
+function useFocusWithin(): {
+  ref: (node: HTMLElement | null) => void;
+  isFocusWithin: boolean;
+};
+```
+
+Attach `ref` to one HTML element. The element itself or any of its DOM descendants
+can receive focus. Keyboard, pointer, and programmatic focus use the same state.
+Portaled content outside the target's DOM subtree is not considered inside.
+
+The hook listens for `focusin` and `focusout`. A `focusout` whose `relatedTarget`
+remains inside the target keeps the state `true`, so moving between children
+does not briefly report an exit. Focus moving outside, or a blur with a `null`
+`relatedTarget`, sets it to `false`.
+
+## Attachment and lifecycle
+
+- The server render and first client render return `false`, keeping hydration
+  consistent. After attachment, the hook checks `ownerDocument.activeElement`,
+  including a child that was already focused before attachment or hydration.
+- Targets can mount later or be replaced. Listeners follow the current target;
+  replacing it synchronizes the state with the new element.
+- Clearing the ref to `null` resets the state to `false`. Replacement, detachment,
+  and unmount remove the old listeners, including during Strict Mode replay.
+- Ordinary renders keep the same callback ref and do not re-register listeners.
+  Internal focus movement does not update state when the boolean is unchanged.
+
+## Prefer CSS for styling
+
+```css
+.search-group:focus-within {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+```
+
+This hook only observes focus. It does not move or trap focus, change tab order,
+manage modal or overlay lifetimes, or add ARIA attributes. Keep native focusable
+controls and visible focus indicators; the caller owns accessible names and
+relationships.

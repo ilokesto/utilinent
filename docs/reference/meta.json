@@ -27,6 +27,7 @@
     "use-event-listener",
     "use-click-away",
     "use-hover",
+    "use-focus-within",
     "use-key",
     "use-debounce",
     "use-pending-delay",
