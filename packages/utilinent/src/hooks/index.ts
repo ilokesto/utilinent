@@ -1,4 +1,5 @@
 export * from "./useClickAway";
+export * from "./usePageVisibility";
 export * from "./useDebounce";
 export * from "./useEventListener";
 export * from "./useFocusWithin";

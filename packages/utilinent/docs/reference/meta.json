@@ -33,6 +33,7 @@
     "use-pending-delay",
     "use-throttle",
     "use-isomorphic-layout-effect",
+    "use-page-visibility",
     "plugin-manager",
     "proxy-types"
   ]
