@@ -2,6 +2,7 @@
   "name": "@ilokesto/utilinent",
   "version": "1.2.1",
   "scripts": {
+    "bench": "node bench/run.mjs",
     "build": "rm -rf dist && tsc",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p test/tsconfig.json && pnpm typecheck:react19",
@@ -45,6 +46,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^22.9.0",

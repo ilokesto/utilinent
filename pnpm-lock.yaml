@@ -575,6 +575,9 @@ importers:
 
   packages/utilinent:
     devDependencies:
+      '@playwright/test':
+        specifier: ^1.61.1
+        version: 1.62.1
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1

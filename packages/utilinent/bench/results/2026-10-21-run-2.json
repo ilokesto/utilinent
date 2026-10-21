@@ -1,0 +1,362 @@
+{
+  "schemaVersion": 1,
+  "environment": {
+    "timestamp": "2026-10-21T05:12:24.820Z",
+    "sourceRevision": "e688025ded18bc78eaeb757341c7622a3a15ff40",
+    "utilinent": "1.2.1",
+    "node": "v24.20.0",
+    "react": "19.2.8",
+    "reactDom": "19.2.8",
+    "vite": "7.3.6",
+    "playwright": "1.62.1",
+    "chromium": "151.0.7922.34",
+    "platform": "darwin",
+    "osRelease": "27.2.0",
+    "arch": "arm64",
+    "cpu": "Apple M4 Pro",
+    "logicalCpus": 12,
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "headless": true,
+    "reactMode": "production; no StrictMode",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36"
+  },
+  "config": {
+    "warmup": 3,
+    "samples": 5,
+    "targets": 100,
+    "iterations": 20
+  },
+  "invariants": {
+    "pool": {
+      "sharedObservers": 0,
+      "subscriptions": 0
+    },
+    "domContainers": 0,
+    "nativeObserverRestored": true,
+    "lifecycleChecksPassed": true,
+    "retainedControlDetected": true
+  },
+  "measurements": {
+    "samples": [
+      {
+        "index": 0,
+        "lazy": {
+          "proxyCount": 20,
+          "cachedReads": 2000,
+          "wrappersBeforeAccess": 0,
+          "wrappersAfterFirstAccess": 20,
+          "wrappersAfterCachedReads": 20,
+          "stableIdentity": true,
+          "createProxyMs": 0,
+          "firstAccessMs": 0,
+          "cachedAccessMs": 0.10000002384185791
+        },
+        "observer": {
+          "targets": 100,
+          "subscribeMs": 0,
+          "nativeDeliveryWaitMs": 10.599999964237213,
+          "releaseMs": 0,
+          "active": {
+            "sharedObservers": 1,
+            "subscriptions": 100
+          },
+          "beforeFinalRelease": {
+            "sharedObservers": 1,
+            "subscriptions": 1
+          },
+          "final": {
+            "sharedObservers": 0,
+            "subscriptions": 0
+          },
+          "native": {
+            "constructed": 1,
+            "observe": 100,
+            "unobserve": 100,
+            "disconnect": 1,
+            "callbacks": 1
+          },
+          "deliveredTargets": 100
+        },
+        "mount": {
+          "iterations": 20,
+          "targetsPerMount": 100,
+          "targetLifecycles": 2000,
+          "mountMs": 6.0000001192092896,
+          "unmountMs": 0.8999999165534973,
+          "elapsedMs": 6.900000035762787,
+          "targetLifecyclesPerSecond": 289855.0709614456,
+          "native": {
+            "constructed": 20,
+            "observe": 2000,
+            "unobserve": 2000,
+            "disconnect": 20,
+            "callbacks": 0
+          }
+        }
+      },
+      {
+        "index": 1,
+        "lazy": {
+          "proxyCount": 20,
+          "cachedReads": 2000,
+          "wrappersBeforeAccess": 0,
+          "wrappersAfterFirstAccess": 20,
+          "wrappersAfterCachedReads": 20,
+          "stableIdentity": true,
+          "createProxyMs": 0,
+          "firstAccessMs": 0,
+          "cachedAccessMs": 0.09999996423721313
+        },
+        "observer": {
+          "targets": 100,
+          "subscribeMs": 0,
+          "nativeDeliveryWaitMs": 8.900000035762787,
+          "releaseMs": 0,
+          "active": {
+            "sharedObservers": 1,
+            "subscriptions": 100
+          },
+          "beforeFinalRelease": {
+            "sharedObservers": 1,
+            "subscriptions": 1
+          },
+          "final": {
+            "sharedObservers": 0,
+            "subscriptions": 0
+          },
+          "native": {
+            "constructed": 1,
+            "observe": 100,
+            "unobserve": 100,
+            "disconnect": 1,
+            "callbacks": 1
+          },
+          "deliveredTargets": 100
+        },
+        "mount": {
+          "iterations": 20,
+          "targetsPerMount": 100,
+          "targetLifecycles": 2000,
+          "mountMs": 6.300000071525574,
+          "unmountMs": 1.3999999165534973,
+          "elapsedMs": 7.699999988079071,
+          "targetLifecyclesPerSecond": 259740.2601423825,
+          "native": {
+            "constructed": 20,
+            "observe": 2000,
+            "unobserve": 2000,
+            "disconnect": 20,
+            "callbacks": 0
+          }
+        }
+      },
+      {
+        "index": 2,
+        "lazy": {
+          "proxyCount": 20,
+          "cachedReads": 2000,
+          "wrappersBeforeAccess": 0,
+          "wrappersAfterFirstAccess": 20,
+          "wrappersAfterCachedReads": 20,
+          "stableIdentity": true,
+          "createProxyMs": 0,
+          "firstAccessMs": 0,
+          "cachedAccessMs": 0
+        },
+        "observer": {
+          "targets": 100,
+          "subscribeMs": 0,
+          "nativeDeliveryWaitMs": 9,
+          "releaseMs": 0,
+          "active": {
+            "sharedObservers": 1,
+            "subscriptions": 100
+          },
+          "beforeFinalRelease": {
+            "sharedObservers": 1,
+            "subscriptions": 1
+          },
+          "final": {
+            "sharedObservers": 0,
+            "subscriptions": 0
+          },
+          "native": {
+            "constructed": 1,
+            "observe": 100,
+            "unobserve": 100,
+            "disconnect": 1,
+            "callbacks": 1
+          },
+          "deliveredTargets": 100
+        },
+        "mount": {
+          "iterations": 20,
+          "targetsPerMount": 100,
+          "targetLifecycles": 2000,
+          "mountMs": 6.200000107288361,
+          "unmountMs": 1.0999999046325684,
+          "elapsedMs": 7.300000011920929,
+          "targetLifecyclesPerSecond": 273972.6022923277,
+          "native": {
+            "constructed": 20,
+            "observe": 2000,
+            "unobserve": 2000,
+            "disconnect": 20,
+            "callbacks": 0
+          }
+        }
+      },
+      {
+        "index": 3,
+        "lazy": {
+          "proxyCount": 20,
+          "cachedReads": 2000,
+          "wrappersBeforeAccess": 0,
+          "wrappersAfterFirstAccess": 20,
+          "wrappersAfterCachedReads": 20,
+          "stableIdentity": true,
+          "createProxyMs": 0,
+          "firstAccessMs": 0.10000002384185791,
+          "cachedAccessMs": 0
+        },
+        "observer": {
+          "targets": 100,
+          "subscribeMs": 0.09999996423721313,
+          "nativeDeliveryWaitMs": 9,
+          "releaseMs": 0,
+          "active": {
+            "sharedObservers": 1,
+            "subscriptions": 100
+          },
+          "beforeFinalRelease": {
+            "sharedObservers": 1,
+            "subscriptions": 1
+          },
+          "final": {
+            "sharedObservers": 0,
+            "subscriptions": 0
+          },
+          "native": {
+            "constructed": 1,
+            "observe": 100,
+            "unobserve": 100,
+            "disconnect": 1,
+            "callbacks": 1
+          },
+          "deliveredTargets": 100
+        },
+        "mount": {
+          "iterations": 20,
+          "targetsPerMount": 100,
+          "targetLifecycles": 2000,
+          "mountMs": 5.300000011920929,
+          "unmountMs": 1.600000023841858,
+          "elapsedMs": 6.900000035762787,
+          "targetLifecyclesPerSecond": 289855.0709614456,
+          "native": {
+            "constructed": 20,
+            "observe": 2000,
+            "unobserve": 2000,
+            "disconnect": 20,
+            "callbacks": 0
+          }
+        }
+      },
+      {
+        "index": 4,
+        "lazy": {
+          "proxyCount": 20,
+          "cachedReads": 2000,
+          "wrappersBeforeAccess": 0,
+          "wrappersAfterFirstAccess": 20,
+          "wrappersAfterCachedReads": 20,
+          "stableIdentity": true,
+          "createProxyMs": 0,
+          "firstAccessMs": 0,
+          "cachedAccessMs": 0
+        },
+        "observer": {
+          "targets": 100,
+          "subscribeMs": 0.09999996423721313,
+          "nativeDeliveryWaitMs": 9.900000035762787,
+          "releaseMs": 0,
+          "active": {
+            "sharedObservers": 1,
+            "subscriptions": 100
+          },
+          "beforeFinalRelease": {
+            "sharedObservers": 1,
+            "subscriptions": 1
+          },
+          "final": {
+            "sharedObservers": 0,
+            "subscriptions": 0
+          },
+          "native": {
+            "constructed": 1,
+            "observe": 100,
+            "unobserve": 100,
+            "disconnect": 1,
+            "callbacks": 1
+          },
+          "deliveredTargets": 100
+        },
+        "mount": {
+          "iterations": 20,
+          "targetsPerMount": 100,
+          "targetLifecycles": 2000,
+          "mountMs": 6.099999964237213,
+          "unmountMs": 1.4000000357627869,
+          "elapsedMs": 7.5,
+          "targetLifecyclesPerSecond": 266666.6666666667,
+          "native": {
+            "constructed": 20,
+            "observe": 2000,
+            "unobserve": 2000,
+            "disconnect": 20,
+            "callbacks": 0
+          }
+        }
+      }
+    ]
+  },
+  "retention": {
+    "gc": "Chromium CDP HeapProfiler.collectGarbage",
+    "collectionsPerCheckpoint": 2,
+    "controlRetained": {
+      "targets": 0,
+      "payloads": 0,
+      "roots": 0,
+      "observers": 0,
+      "controlTargets": 100,
+      "controlPayloads": 100
+    },
+    "controlReleased": {
+      "targets": 0,
+      "payloads": 0,
+      "roots": 0,
+      "observers": 0,
+      "controlTargets": 0,
+      "controlPayloads": 0
+    }
+  },
+  "heapBytes": {
+    "value": null,
+    "reason": "No attributable retained-byte baseline; browser/React heaps and native DOM memory are not isolated."
+  },
+  "limits": [
+    "Single Chromium build, production React, local source bundled with Vite; not a packed consumer or cross-browser comparison.",
+    "Native observer methods execute unchanged; counting wrappers, React scheduling, and DOM operations contribute overhead.",
+    "Timings are observations, not CI thresholds, before/after baselines, or claimed speedups.",
+    "WeakRef survivors are observations after two forced collections, not proof of a leak or universal garbage-collection guarantees.",
+    "Lazy allocation counts count factory-returned wrapper objects, not bytes or total engine allocations."
+  ],
+  "resources": {
+    "browserClosed": true,
+    "serverClosed": true,
+    "buildWrittenToDisk": false
+  }
+}
