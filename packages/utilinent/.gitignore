@@ -8,6 +8,7 @@
 
 # testing
 /coverage
+/browser-results
 /pages/test.tsx
 
 # next.js

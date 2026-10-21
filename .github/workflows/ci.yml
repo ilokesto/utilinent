@@ -177,6 +177,12 @@ jobs:
       - name: Verify fetcher distribution
         run: pnpm --filter @ilokesto/fetcher test:dist
 
+      - name: Install utilinent browser
+        run: pnpm --filter @ilokesto/utilinent exec playwright install --with-deps chromium
+
+      - name: Test utilinent browser contracts
+        run: pnpm --filter @ilokesto/utilinent test:browser
+
   packages:
     name: Package (${{ matrix.package }})
     needs: plan
@@ -262,6 +268,14 @@ jobs:
       - name: Verify fetcher distribution
         if: matrix.package == '@ilokesto/fetcher'
         run: pnpm --filter @ilokesto/fetcher test:dist
+
+      - name: Install utilinent browser
+        if: matrix.package == '@ilokesto/utilinent'
+        run: pnpm --filter @ilokesto/utilinent exec playwright install --with-deps chromium
+
+      - name: Test utilinent browser contracts
+        if: matrix.package == '@ilokesto/utilinent'
+        run: pnpm --filter @ilokesto/utilinent test:browser
 
   verify:
     name: verify

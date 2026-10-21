@@ -7,6 +7,7 @@
     "test": "vitest run",
     "test:react18": "node scripts/test-react18.mjs",
     "typecheck": "tsc --noEmit -p test/tsconfig.json && pnpm typecheck:react19",
+    "test:browser": "tsc --noEmit -p e2e/tsconfig.json && playwright test",
     "typecheck:react19": "pnpm build && tsc --noEmit -p test/react19/tsconfig.json"
   },
   "repository": {
