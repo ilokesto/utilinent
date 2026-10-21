@@ -22,15 +22,20 @@ type NonPromiseNode<Node> = Node extends PromiseLike<unknown> ? never : Node;
 
 type MountChildren = Parameters<typeof Mount>[0]["children"];
 type ExpectedMountNode = NonPromiseNode<ReactNode>;
-type ExpectedMountChildren =
-  | ExpectedMountNode
-  | (() => ReactNode | Promise<ReactNode>);
+type ExpectedMountFactory = (signal: AbortSignal) => ReactNode | Promise<ReactNode>;
+type ExpectedMountChildren = ExpectedMountNode | ExpectedMountFactory;
 
 type MountChildrenRemainExact = Assert<Equal<MountChildren, ExpectedMountChildren>>;
 type DirectNodeIsAccepted = Assert<IsAssignable<ReactNode, MountChildren>>;
 type SyncFactoryIsAccepted = Assert<IsAssignable<() => ReactNode, MountChildren>>;
 type AsyncFactoryIsAccepted = Assert<
   IsAssignable<() => Promise<ReactNode>, MountChildren>
+>;
+type SyncSignalFactoryIsAccepted = Assert<
+  IsAssignable<(signal: AbortSignal) => ReactNode, MountChildren>
+>;
+type AsyncSignalFactoryIsAccepted = Assert<
+  IsAssignable<(signal: AbortSignal) => Promise<ReactNode>, MountChildren>
 >;
 type DirectElementPromiseIsRejected = Assert<
   Equal<IsAssignable<Promise<ReactElement>, MountChildren>, false>
@@ -124,6 +129,8 @@ export type MountTypeContract =
   | DirectNodeIsAccepted
   | SyncFactoryIsAccepted
   | AsyncFactoryIsAccepted
+  | SyncSignalFactoryIsAccepted
+  | AsyncSignalFactoryIsAccepted
   | DirectElementPromiseIsRejected
   | DirectStringPromiseIsRejected
   | DirectPromiseLikeValuesAreExcluded

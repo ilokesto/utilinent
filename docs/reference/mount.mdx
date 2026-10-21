@@ -19,7 +19,7 @@ import { Mount } from '@ilokesto/utilinent';
 
 | Prop | Type | Description |
 | --- | --- | --- |
-| `children` | `MountNode \| (() => ReactNode \| Promise<ReactNode>)` | Direct node or a synchronous/asynchronous node factory. `MountNode` is `ReactNode` without `PromiseLike` values. |
+| `children` | `MountNode \| ((signal: AbortSignal) => ReactNode \| Promise<ReactNode>)` | Direct node or a synchronous/asynchronous node factory. `MountNode` is `ReactNode` without `PromiseLike` values. The factory may ignore the signal; zero-argument factories are accepted unchanged. |
 | `fallback` | `ReactNode` | Initial output for a factory, retained while its Promise is pending and after an error. Defaults to `null`. |
 | `onError` | `(error: unknown) => void` | Receives the original error when the current factory throws or rejects. |
 
@@ -56,4 +56,64 @@ Do not start the operation during render and pass its Promise as `children`. Dir
 
 Changing `children` starts a newer call. Fulfillment or rejection from an older call is ignored: it cannot replace the current output and does not call `onError`. Settlements after unmount are ignored in the same way. Replacing pending async work with a direct node displays that node immediately.
 
-Keep the `children` and `onError` functions stable when possible so effects are not restarted unnecessarily.
+## Cancellation with AbortSignal
+
+The factory is invoked with the current attempt's `AbortSignal`. `Mount` aborts that signal when the attempt is superseded: when `children` or `onError` identity changes, when the component unmounts, or when StrictMode discards the first effect pass in development.
+
+```tsx lineNumbers
+<Mount fallback={<Spinner />} onError={reportError}>
+  {(signal) =>
+    fetch(`/api/preview/${id}`, { signal })
+      .then((res) => res.json())
+      .then((preview) => <Preview data={preview} />)
+  }
+</Mount>
+```
+
+- Zero-argument factories keep working unchanged: JavaScript ignores the extra argument, and the stale-result guards above still ignore late settlements.
+- Work that never reads the signal is not cancelled by `Mount`; it only stops affecting the UI.
+- An `AbortError` rejection from an attempt `Mount` already aborted is dropped silently: no `onError`, no console error, no extra work.
+- An `AbortError` that surfaces from the current, live attempt is reported like any other failure.
+
+## Function identity and re-runs
+
+`Mount` restarts the factory when the `children` or `onError` function identity changes — not when values captured in the closure change. An inline factory or inline `onError` is a new identity on every parent render, so every unrelated re-render starts the work again:
+
+```tsx lineNumbers
+export function PreviewPanel({ id }: { id: string }) {
+  const [ticks, setTicks] = useState(0);
+  return (
+    <div>
+      {/* New function identity every render: each parent re-render restarts the request. */}
+      <Mount fallback={<Spinner />}>
+        {() => fetchPreview(id).then((preview) => <Preview data={preview} />)}
+      </Mount>
+      <button type="button" onClick={() => setTicks((count) => count + 1)}>
+        unrelated state {ticks}
+      </button>
+    </div>
+  );
+}
+```
+
+Put the real inputs in the dependency list instead of memoizing everything blindly. A stable factory survives unrelated re-renders, and a changed input is the intended way to start a newer request:
+
+```tsx lineNumbers
+export function PreviewPanel({ id }: { id: string }) {
+  const [ticks, setTicks] = useState(0);
+  const loadPreview = useCallback(
+    () => fetchPreview(id).then((preview) => <Preview data={preview} />),
+    [id],
+  );
+  return (
+    <div>
+      <Mount fallback={<Spinner />} onError={reportError}>{loadPreview}</Mount>
+      <button type="button" onClick={() => setTicks((count) => count + 1)}>
+        unrelated state {ticks}
+      </button>
+    </div>
+  );
+}
+```
+
+In this version clicking the button does not re-run `loadPreview`, while changing `id` starts a new attempt and aborts the previous signal. A reference change is the deliberate update channel: create a new function when the inputs actually changed, keep the same one when they did not. Changing `onError` identity also restarts the current attempt, so keep it stable the same way when it is passed inline.

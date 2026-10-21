@@ -27,3 +27,35 @@ export function OrderList({ orders, loading }) {
 - Child render function에서 key를 반환하세요.
 - Semantic list markup이 중요하면 `For.ul` 또는 `For.ol`을 선호하세요.
 - `Repeat`는 dynamic array가 아니라 fixed count에만 사용하세요.
+
+## 큰 목록
+
+`For`는 array 전체를 map하므로 모든 item이 mount됩니다. 큰 array에서는 한계가 있는 slice를 render하고 명시적으로 늘리세요. Key와 semantic markup은 그대로 제어할 수 있습니다.
+
+```tsx lineNumbers
+import { useState } from 'react';
+import { For } from '@ilokesto/utilinent';
+
+const PAGE_SIZE = 25;
+
+export function ProductList({ products }: { products: Array<{ id: number; name: string }> }) {
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const visibleProducts = products.slice(0, visibleCount);
+  return (
+    <div>
+      <For.ul each={visibleProducts}>
+        {(product) => <li key={product.id}>{product.name}</li>}
+      </For.ul>
+      {visibleCount < products.length ? (
+        <button type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}>
+          더 보기
+        </button>
+      ) : null}
+    </div>
+  );
+}
+```
+
+- Pagination은 mount되는 row 수를 제한할 뿐, state가 보유한 data 크기를 줄이지 않습니다. 25개만 mount해도 500개 항목 array는 여전히 500개를 준비합니다.
+- Slice가 render 사이에 늘어날 수 있다면 array index가 아니라 `product.id` 같은 안정적인 item identity에 `key`를 두세요.
+- Virtualized windowing은 별개의 관심사입니다. `For`, `Repeat`, `Slacker`는 virtualization 도구가 아닙니다. 한 번에 수천 개 row를 보여야 한다면 이 pattern을 키우는 대신 전용 virtualization library를 사용하세요. Slice 방식의 특정 memory 절감률은 주장하지 않습니다. 직접 측정하세요.

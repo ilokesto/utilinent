@@ -25,7 +25,7 @@ import { Slacker } from '@ilokesto/utilinent';
 
 | Prop | 설명 |
 | --- | --- |
-| `loader` | data 또는 promise를 반환하는 필수 function입니다. |
+| `loader` | 현재 attempt의 `AbortSignal`과 함께 호출되는 필수 function입니다. Data 또는 promise를 반환하며 signal을 무시할 수 있습니다. |
 | `children` | loaded data를 받는 function입니다. |
 | `loadingFallback` | loader 실행 중 UI입니다. |
 | `errorFallback` | `{ isLoading, error, retry }`를 받는 node 또는 function입니다. |
@@ -39,6 +39,77 @@ import { Slacker } from '@ilokesto/utilinent';
 
 한 번에 하나의 attempt만 실행되므로 request가 진행 중일 때 반복해서 retry를 눌러도 하나로 합쳐집니다. 활성 상태에서 실패한 각 attempt는 `onError`를 한 번 호출합니다. Load가 성공하거나 `loader` reference가 바뀌거나 component가 unmount되면 예약된 retry가 취소되고 오래된 loader 결과는 무시됩니다.
 
+## AbortSignal로 취소하기
+
+모든 attempt는 각자 새로운 controller를 소유합니다. 최초 load, 각 automatic/manual retry, `loader` 교체 이후의 재시작 모두 포함되며, loader는 해당 attempt의 signal을 받습니다.
+
+```tsx lineNumbers
+<Slacker
+  loader={(signal) =>
+    fetch(`/api/recommendations?cursor=${cursor}`, { signal }).then((res) => res.json())
+  }
+  loadingFallback={<p>Loading recommendations...</p>}
+>
+  {(items) => <RecommendationList items={items} />}
+</Slacker>
+```
+
+Signal은 component가 unmount될 때, `loader` reference가 교체될 때, 실패한 attempt를 더 최신 attempt가 대체할 때 abort됩니다. Settle된 attempt의 signal은 그대로 둡니다. Load가 성공했다고 해서 해당 signal을 abort하지 않습니다.
+
+- 인자 없는 loader는 그대로 계속 동작합니다. JavaScript가 남는 인자를 무시하며, stale-result guard는 늦은 settlement를 계속 무시합니다.
+- Signal을 읽지 않는 loader는 취소되지 않습니다. UI에 영향을 주지 않게 될 뿐입니다.
+- `Slacker`가 이미 abort한 attempt에서 도착한 `AbortError` rejection은 조용히 버립니다. `onError`도, retry도, console error도 없으며 예약된 retry timer도 남지 않습니다.
+- 현재 진행 중인 attempt에서 발생한 `AbortError`는 다른 failure와 동일하게 취급되며 retry budget을 소비합니다.
+
+## Loader identity와 재실행
+
+`Slacker`는 loader의 reference가 바뀔 때 load를 다시 시작합니다. Closure가 capture한 값이 바뀔 때가 아니라 reference가 바뀔 때입니다. Inline loader는 부모가 render할 때마다 새 reference가 되므로, 관련 없는 re-render마다 현재 세대를 무효화하고 load를 다시 시작합니다.
+
+```tsx lineNumbers
+export function Recommendations({ cursor }: { cursor: string }) {
+  const [ticks, setTicks] = useState(0);
+  return (
+    <div>
+      {/* Render마다 새 reference: 부모가 re-render될 때마다 load가 재시작됩니다. */}
+      <Slacker
+        loader={() => fetch(`/api/recommendations?cursor=${cursor}`).then((res) => res.json())}
+        loadingFallback={<RecommendationsSkeleton />}
+      >
+        {(items) => <RecommendationList items={items} />}
+      </Slacker>
+      <button type="button" onClick={() => setTicks((count) => count + 1)}>
+        관련 없는 state {ticks}
+      </button>
+    </div>
+  );
+}
+```
+
+무조건 모두 memoize하지 말고 실제 입력을 dependency list에 넣으세요. 안정적인 loader는 관련 없는 re-render를 견디며, 입력이 바뀌는 것이 의도된 reload 방법입니다.
+
+```tsx lineNumbers
+export function Recommendations({ cursor }: { cursor: string }) {
+  const [ticks, setTicks] = useState(0);
+  const loadRecommendations = useCallback(
+    (signal: AbortSignal) =>
+      fetch(`/api/recommendations?cursor=${cursor}`, { signal }).then((res) => res.json()),
+    [cursor],
+  );
+  return (
+    <div>
+      <Slacker loader={loadRecommendations} loadingFallback={<RecommendationsSkeleton />}>
+        {(items) => <RecommendationList items={items} />}
+      </Slacker>
+      <button type="button" onClick={() => setTicks((count) => count + 1)}>
+        관련 없는 state {ticks}
+      </button>
+    </div>
+  );
+}
+```
+
+이 version에서는 button을 클릭해도 reload되지 않고, `cursor`가 바뀌면 새 세대가 시작되며 이전 attempt의 signal이 abort됩니다. Reference 변경이 의도된 update 경로입니다. 입력이 실제로 바뀌었을 때만 새 loader를 만들고, 그렇지 않을 때는 같은 loader를 유지하세요.
+
 ## 사용 지침
 
-Component 안에서 `loader`를 선언한다면 `useCallback`으로 안정적으로 유지하세요. Loader가 매번 바뀌면 작업이 다시 시작될 수 있습니다. Below-the-fold panel, 비싼 recommendation, visible해질 때까지 load하지 않아도 되는 optional UI에 적합합니다.
+Below-the-fold panel, 비싼 recommendation, visible해질 때까지 load하지 않아도 되는 optional UI에 적합합니다. `Slacker`는 load 시작 시점을 늦출 뿐, section이 viewport를 벗어난 뒤 content를 unmount하거나 data를 회수하지 않습니다. Lazy loading과 virtualization의 경계는 [지연 로딩 가이드](/ko/utilinent/guides/lazy-loading)를 보세요.

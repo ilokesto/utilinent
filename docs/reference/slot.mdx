@@ -23,6 +23,19 @@ function Button({ asChild, ...props }: React.ComponentProps<'button'> & { asChil
 - `className` strings are joined.
 - Refs are composed when possible.
 
+## Children contract
+
+`Slot` expects exactly one element child. Other inputs have defined results and warn in development so mistakes surface early; production builds stay silent.
+
+| Children | Result |
+| --- | --- |
+| Single element | Props merge onto the child. |
+| Multiple children | Only the first element receives the merged props; remaining children are dropped. Warns in development. |
+| Text or number child | Renders `null`. Warns in development. |
+| `null`, `undefined`, or `false` | Renders `null` without a warning, so conditional children such as `{open && <button />}` stay valid. |
+
+Dropping the remaining children is intentional: prop merging is defined for a single element, and `Slot` must keep returning that one element instead of introducing a wrapper. Render all children explicitly if you need them.
+
 ## Slottable
 
 Use `Slottable` when only one child inside a larger set should receive the merged props.
@@ -36,4 +49,10 @@ import { Slot, Slottable } from '@ilokesto/utilinent';
 </Slot>
 ```
 
-If the final slotted child is not a valid React element, `Slot` renders `null`.
+`Slottable` follows a sibling-preservation contract: the element inside `Slottable` receives the merged props while its siblings render unchanged. When the `Slottable` child is not a single valid element, the slottable position renders nothing, its siblings are still rendered, and development warns.
+
+## Ref behavior
+
+The forwarded ref and the child's own ref are composed into a single callback ref. The composed callback keeps its identity while both inputs keep theirs, so rerenders with stable refs do not detach and re-attach refs or re-run cleanup. When either ref changes, the previous ref detaches exactly once and the new ref attaches once. Callback refs returning a cleanup function (React 19) are supported, and the cleanup runs exactly once on unmount.
+
+Keep ref identities stable — for example with `useRef` or a memoized callback — so ref callbacks do not re-run on every render.

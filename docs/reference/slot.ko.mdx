@@ -23,6 +23,19 @@ function Button({ asChild, ...props }: React.ComponentProps<'button'> & { asChil
 - `className` string은 join됩니다.
 - 가능한 경우 ref가 compose됩니다.
 
+## Children 계약
+
+`Slot`은 정확히 하나의 element child를 기대합니다. 다른 입력도 아래처럼 정의된 결과를 가지며, 실수를 빨리 발견할 수 있도록 개발 모드에서 경고합니다. 프로덕션 빌드에서는 경고가 없습니다.
+
+| Children | 결과 |
+| --- | --- |
+| 단일 element | prop이 child에 병합됩니다. |
+| 여러 children | 첫 번째 element만 merged props를 받고 나머지 children은 렌더링되지 않습니다. 개발 모드에서 경고합니다. |
+| 문자열 또는 숫자 child | `null`을 렌더링합니다. 개발 모드에서 경고합니다. |
+| `null`, `undefined`, `false` | 경고 없이 `null`을 렌더링합니다. `{open && <button />}` 같은 조건부 children은 그대로 유효합니다. |
+
+나머지 children을 렌더링하지 않는 것은 의도된 동작입니다. prop 병합은 단일 element에 대해서만 정의되고, `Slot`은 wrapper를 만들지 않고 그 하나의 element를 계속 반환해야 하기 때문입니다. 모든 children이 필요하면 직접 명시해서 렌더링하세요.
+
 ## Slottable
 
 여러 child 중 특정 child 하나만 merged props를 받아야 한다면 `Slottable`을 사용하세요.
@@ -36,4 +49,10 @@ import { Slot, Slottable } from '@ilokesto/utilinent';
 </Slot>
 ```
 
-최종 slotted child가 valid React element가 아니면 `Slot`은 `null`을 렌더링합니다.
+`Slottable`은 sibling 보존 계약을 따릅니다. `Slottable` 내부의 element가 merged props를 받고 나머지 sibling은 그대로 렌더링됩니다. `Slottable`의 child가 단일 유효 element가 아니면 해당 위치만 렌더링되지 않고 sibling은 여전히 렌더링되며, 개발 모드에서 경고합니다.
+
+## Ref 동작
+
+전달된 ref와 child 자체의 ref는 하나의 callback ref로 합성됩니다. 두 입력의 참조가 유지되는 한 합성된 callback도 같은 참조를 유지하므로, 안정적인 ref로 rerender할 때 ref가 분리/재연결되거나 cleanup이 다시 실행되지 않습니다. ref 중 하나가 바뀌면 이전 ref는 정확히 한 번 분리되고 새 ref는 한 번 연결됩니다. cleanup 함수를 반환하는 callback ref(React 19)를 지원하며, cleanup은 unmount 때 정확히 한 번 실행됩니다.
+
+ref callback이 매 렌더마다 다시 실행되지 않게 하려면 참조를 안정적으로 유지하세요(예: `useRef` 또는 memoized callback).

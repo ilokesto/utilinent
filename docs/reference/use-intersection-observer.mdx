@@ -35,4 +35,20 @@ function AnalyticsSection() {
 
 ## Return value
 
-`ref` is a callback ref. Attach it to the element to observe. `isIntersecting` is the current boolean state. `entry` is the latest `IntersectionObserverEntry` when available.
+`ref` is a callback ref. Attach it to the element to observe. `isIntersecting` is the current boolean state. `entry` is the latest `IntersectionObserverEntry` when available. Every delivered record updates `entry`, including records that keep the boolean unchanged, so ratio and coordinate consumers keep receiving fresh values.
+
+## Threshold normalization
+
+Thresholds are compared by value set, not by array identity. `0.5`, `[0.5]`, `[0.5, 0]` and `[0, 0.5, 0.5]` are equivalent: values are deduplicated and sorted, matching how the native observer treats order and duplicates. An empty array falls back to `[0]`.
+
+Because of this, an inline array recreated on every render of the hook owner no longer recreates the observer — only an actual value change replaces the observation. Note that an inline `threshold={[0, 0.5]}` written in a parent's JSX is not recreated by a child-local rerender; the case this protects against is the hook-owning component building the array itself each render.
+
+## Shared native observers
+
+Subscriptions with the same root element identity, `rootMargin` and normalized threshold values share one native `IntersectionObserver`. Records are routed to the handler of the matching target, so each hook instance only receives its own element's entries.
+
+Freezing or unsubscribing one target releases only that target (`unobserve`); other targets on the shared observer keep observing. When the last subscriber releases, the native observer is disconnected and the registry entry is removed, so nothing holds a reference to an observed element after that.
+
+## freezeOnceVisible semantics
+
+Freezing is scoped to the observed target. When the element is removed, swapped for a new node, or reattached, the frozen state resets and the new target is observed again from scratch. Turning `freezeOnceVisible` off after a freeze also resumes observation. `onIntersect` fires on each `false → true` transition of the current target's lifetime, and the first intersecting record of a new target counts as such a transition.

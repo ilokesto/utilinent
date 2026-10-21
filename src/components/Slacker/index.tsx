@@ -15,6 +15,8 @@ const IDLE_STATE = { status: "idle" } as const;
  * Lazy-loads data via a `loader` function when the component enters the viewport.
  *
  * Manages loading, error, and success states with optional retry.
+ * The loader may consume its `AbortSignal` argument to cancel in-flight work;
+ * zero-argument loaders remain fully supported.
  * Shows `loadingFallback` while loading, `errorFallback` on error, and
  * invokes `children` with the resolved data on success.
  *
@@ -49,11 +51,20 @@ export function Slacker<T = any>({
   const inFlightRef = useRef(false);
   const retriesUsedRef = useRef(0);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const attemptControllerRef = useRef<AbortController | null>(null);
   const loaderRef = useRef(loader);
   const onErrorRef = useRef(onError);
   const maxRetriesRef = useRef(maxRetries);
   const retryDelayRef = useRef(retryDelay);
   const runAttemptRef = useRef<(() => void) | null>(null);
+
+  const abortAttempt = useCallback(() => {
+    // Aborting releases a superseded attempt's signal (unmount, loader
+    // replacement, or a StrictMode teardown); loaders that ignore it are
+    // unaffected and settled attempts keep their signal inert.
+    attemptControllerRef.current?.abort();
+    attemptControllerRef.current = null;
+  }, []);
 
   const invalidate = useCallback(() => {
     generationRef.current += 1;
@@ -92,9 +103,10 @@ export function Slacker<T = any>({
     activeRef.current = true;
     return () => {
       activeRef.current = false;
+      abortAttempt();
       invalidate();
     };
-  }, [invalidate]);
+  }, [abortAttempt, invalidate]);
 
   useEffect(() => {
     runAttemptRef.current = () => {
@@ -103,11 +115,16 @@ export function Slacker<T = any>({
       }
 
       const generation = generationRef.current;
+      // Each attempt owns a fresh controller; a retry therefore aborts the
+      // failed attempt's signal instead of reusing it.
+      attemptControllerRef.current?.abort();
+      const controller = new AbortController();
+      attemptControllerRef.current = controller;
       inFlightRef.current = true;
       setLoadState({ status: "loading" });
 
       Promise.resolve()
-        .then(() => loaderRef.current())
+        .then(() => loaderRef.current(controller.signal))
         .then((data) => {
           if (!activeRef.current || generation !== generationRef.current) {
             return;
@@ -155,6 +172,7 @@ export function Slacker<T = any>({
     }
 
     loaderRef.current = loader;
+    abortAttempt();
     invalidate();
     completedRef.current = false;
     retriesUsedRef.current = 0;
@@ -162,7 +180,7 @@ export function Slacker<T = any>({
     if (activatedRef.current) {
       runAttempt();
     }
-  }, [invalidate, loader, maxRetries, onError, retryDelay, runAttempt]);
+  }, [abortAttempt, invalidate, loader, maxRetries, onError, retryDelay, runAttempt]);
 
   const handleIntersect = useCallback(
     (isIntersecting: boolean) => {

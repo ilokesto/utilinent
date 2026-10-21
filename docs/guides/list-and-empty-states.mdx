@@ -27,3 +27,35 @@ export function OrderList({ orders, loading }) {
 - Return keys from the child render function.
 - Prefer `For.ul` or `For.ol` when semantic list markup matters.
 - Use `Repeat` only for fixed counts, not dynamic arrays.
+
+## Large lists
+
+`For` maps over the entire array, so every item is mounted. For large arrays, render a bounded slice and grow it explicitly — keys and semantic markup stay under your control:
+
+```tsx lineNumbers
+import { useState } from 'react';
+import { For } from '@ilokesto/utilinent';
+
+const PAGE_SIZE = 25;
+
+export function ProductList({ products }: { products: Array<{ id: number; name: string }> }) {
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const visibleProducts = products.slice(0, visibleCount);
+  return (
+    <div>
+      <For.ul each={visibleProducts}>
+        {(product) => <li key={product.id}>{product.name}</li>}
+      </For.ul>
+      {visibleCount < products.length ? (
+        <button type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}>
+          Load more
+        </button>
+      ) : null}
+    </div>
+  );
+}
+```
+
+- Pagination bounds the number of mounted rows, not the size of the data you hold in state. Initializing state and rendering a 500-item array still prepares 500 items even if only 25 are mounted.
+- Keep `key` on a stable item identity such as `product.id`, not the array index, when the slice can grow between renders.
+- Virtualized windowing is a separate concern: `For`, `Repeat`, and `Slacker` are not virtualization tools. When a list must show thousands of rows at once, use a dedicated virtualization library instead of growing this pattern. No specific memory saving is claimed for the slice approach — measure your own list.

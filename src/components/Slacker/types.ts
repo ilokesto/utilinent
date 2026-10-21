@@ -14,7 +14,8 @@ export type SlackerFallbackProps = {
  * loading, error, and success states with optional retry.
  *
  * `children` — render function receiving the resolved loader result.
- * `loader` — function returning `T | Promise<T>`; invoked on intersection.
+ * `loader` — function invoked with the attempt's `AbortSignal`; returns `T | Promise<T>`.
+ *   The loader may ignore the signal; zero-argument loaders are accepted unchanged.
  * `loadingFallback` — rendered while loading.
  * `errorFallback` — ReactNode or render-prop receiving {@link SlackerFallbackProps}.
  * `threshold` / `rootMargin` — IntersectionObserver options (default `0.1` / `"50px"`).
@@ -28,7 +29,7 @@ export type SlackerProps<T = any> = {
   loadingFallback?: React.ReactNode;
   threshold?: number | number[];
   rootMargin?: string;
-  loader: () => Promise<T> | T;
+  loader: (signal: AbortSignal) => Promise<T> | T;
   onError?: (error: Error) => void;
   maxRetries?: number;
   retryDelay?: number;
