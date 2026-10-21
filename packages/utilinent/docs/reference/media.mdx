@@ -22,3 +22,7 @@ import { Media } from '@ilokesto/utilinent';
 | `query` | `string` | A CSS media query string. |
 | `children` | `ReactNode \| (matches) => ReactNode` | Content or render prop. |
 | `fallback` | `ReactNode` | Rendered when the query does not match (non-render-prop usage). Defaults to `null`. |
+
+## SSR
+
+During server rendering and the client's first hydration render, `Media` renders the non-matching branch: `fallback` for non-render-prop usage, or the render-prop result for `false`. It switches to the matching branch synchronously before the first paint, so server and client markup hydrate without mismatches even when the media states differ.

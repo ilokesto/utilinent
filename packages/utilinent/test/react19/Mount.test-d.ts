@@ -35,6 +35,17 @@ type AsyncNodeFactoryIsAccepted = Assert<
 type AsyncStringFactoryIsAccepted = Assert<
   IsAssignable<() => Promise<string>, MountChildren>
 >;
+type AsyncSignalFactoryIsAccepted = Assert<
+  IsAssignable<(signal: AbortSignal) => Promise<ReactElement>, MountChildren>
+>;
+
+type SyncSignalFactoryIsAccepted = Assert<
+  IsAssignable<(signal: AbortSignal) => ReactNode, MountChildren>
+>;
+
+type ZeroArgFactoryRemainsAssignable = Assert<
+  IsAssignable<() => Promise<ReactElement>, MountChildren>
+>;
 
 export type MountReact19TypeContract =
   | React19IncludesElementPromise
@@ -43,4 +54,7 @@ export type MountReact19TypeContract =
   | DirectPromiseLikeValuesAreExcluded
   | AsyncElementFactoryIsAccepted
   | AsyncNodeFactoryIsAccepted
-  | AsyncStringFactoryIsAccepted;
+  | AsyncStringFactoryIsAccepted
+  | AsyncSignalFactoryIsAccepted
+  | SyncSignalFactoryIsAccepted
+  | ZeroArgFactoryRemainsAssignable;

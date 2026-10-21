@@ -1,7 +1,7 @@
-import { StrictMode, type ComponentProps } from "react";
+import { StrictMode, useCallback, useState, type ComponentProps } from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { Slacker } from "../src/index";
+import { For, Slacker } from "../src/index";
 import {
   enterViewport,
   installControlledIntersectionObserver,
@@ -27,6 +27,25 @@ type StringSlackerProps = Omit<ComponentProps<typeof Slacker<string>>, "children
 
 function stringSlacker(props: StringSlackerProps) {
   return <Slacker {...props}>{(value) => <p>{value}</p>}</Slacker>;
+}
+
+const PAGE_SIZE = 25;
+
+function PagedProductList({ items }: { items: Array<{ id: number }> }) {
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const visibleItems = items.slice(0, visibleCount);
+  return (
+    <div>
+      <For.ul each={visibleItems}>
+        {(item) => <li data-item-id={item.id}>item {item.id}</li>}
+      </For.ul>
+      {visibleCount < items.length ? (
+        <button type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}>
+          Load more
+        </button>
+      ) : null}
+    </div>
+  );
 }
 
 describe("Slacker retry lifecycle", () => {
@@ -263,5 +282,181 @@ describe("Slacker retry lifecycle", () => {
 
     expect(onError).not.toHaveBeenCalled();
     expect(loader).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("Slacker abort contract", () => {
+  beforeEach(() => {
+    installControlledIntersectionObserver();
+    vi.useFakeTimers();
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it("passes exactly one live AbortSignal to the loader", async () => {
+    const signals: AbortSignal[] = [];
+    const loader = vi.fn((signal: AbortSignal) => {
+      signals.push(signal);
+      return Promise.resolve("loaded");
+    });
+
+    render(stringSlacker({ loader }));
+    await enterViewport();
+
+    expect(loader).toHaveBeenCalledTimes(1);
+    expect(signals[0]).toBeInstanceOf(AbortSignal);
+    expect(signals[0]?.aborted).toBe(false);
+  });
+
+  it("aborts the replaced loader attempt and hands a live signal to the new loader", async () => {
+    const oldAttempt = createDeferred<string>();
+    const signals: AbortSignal[] = [];
+    const oldLoader = vi.fn((signal: AbortSignal) => {
+      signals.push(signal);
+      return oldAttempt.promise;
+    });
+    const newLoader = vi.fn((signal: AbortSignal) => {
+      signals.push(signal);
+      return Promise.resolve("new data");
+    });
+    const rendered = render(stringSlacker({ loader: oldLoader }));
+    await enterViewport();
+
+    rendered.rerender(stringSlacker({ loader: newLoader }));
+    await act(async () => Promise.resolve());
+
+    expect(signals[0]?.aborted).toBe(true);
+    expect(signals[1]?.aborted).toBe(false);
+    expect(screen.getByText("new data")).toBeInTheDocument();
+  });
+
+  it("aborts a pending signal-aware loader on unmount without retries or error noise", async () => {
+    const onError = vi.fn();
+    const loader = vi.fn((signal: AbortSignal) =>
+      new Promise<string>((_, reject) => {
+        signal.addEventListener(
+          "abort",
+          () => reject(new DOMException("The operation was aborted.", "AbortError")),
+          { once: true },
+        );
+      }),
+    );
+    const rendered = render(stringSlacker({ loader, maxRetries: 2, retryDelay: 100, onError }));
+    await enterViewport();
+
+    rendered.unmount();
+    await act(async () => Promise.resolve());
+    await advanceTimer(1000);
+
+    expect(loader).toHaveBeenCalledTimes(1);
+    expect(onError).not.toHaveBeenCalled();
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
+  it("gives every retry attempt a fresh non-aborted signal", async () => {
+    const signals: AbortSignal[] = [];
+    const loader = vi.fn((signal: AbortSignal) => {
+      signals.push(signal);
+      return Promise.reject(new Error("failure"));
+    });
+
+    render(stringSlacker({ loader, maxRetries: 1, retryDelay: 100 }));
+    await enterViewport();
+    await advanceTimer(100);
+
+    expect(loader).toHaveBeenCalledTimes(2);
+    expect(signals).toHaveLength(2);
+    expect(signals[0]).not.toBe(signals[1]);
+    expect(signals[0]?.aborted).toBe(true);
+    expect(signals[1]?.aborted).toBe(false);
+  });
+
+  it("counts an AbortError from the active attempt against the retry budget", async () => {
+    const loader = vi
+      .fn<(signal: AbortSignal) => Promise<string>>()
+      .mockRejectedValueOnce(new DOMException("The operation was aborted.", "AbortError"))
+      .mockResolvedValue("loaded");
+
+    render(stringSlacker({ loader, maxRetries: 1, retryDelay: 0 }));
+    await enterViewport();
+    await advanceTimer(0);
+
+    expect(loader).toHaveBeenCalledTimes(2);
+    expect(screen.getByText("loaded")).toBeInTheDocument();
+  });
+});
+
+describe("Slacker identity contract", () => {
+  beforeEach(() => {
+    installControlledIntersectionObserver();
+  });
+
+  it("does not restart a useCallback loader across unrelated parent re-renders", async () => {
+    const loads: string[] = [];
+    function StableLoaderParent({ id }: { id: string }) {
+      const [ticks, setTicks] = useState(0);
+      const loader = useCallback(() => {
+        loads.push(id);
+        return Promise.resolve(`data:${id}`);
+      }, [id]);
+      return (
+        <div>
+          <Slacker loader={loader}>
+            {(value) => <p>{value}</p>}
+          </Slacker>
+          <button type="button" onClick={() => setTicks((count) => count + 1)}>
+            rerender {ticks}
+          </button>
+        </div>
+      );
+    }
+    const rendered = render(<StableLoaderParent id="a" />);
+    await enterViewport();
+
+    fireEvent.click(screen.getByRole("button", { name: /rerender/ }));
+    fireEvent.click(screen.getByRole("button", { name: /rerender/ }));
+    expect(loads).toEqual(["a"]);
+
+    rendered.rerender(<StableLoaderParent id="b" />);
+    await act(async () => Promise.resolve());
+
+    expect(loads).toEqual(["a", "b"]);
+    expect(screen.getByText("data:b")).toBeInTheDocument();
+  });
+});
+
+describe("Slacker large-list contract", () => {
+  beforeEach(() => {
+    installControlledIntersectionObserver();
+  });
+
+  it("lazy-loading guide example: mounts only the current page of a large list", async () => {
+    const items = Array.from({ length: 500 }, (_, index) => ({ id: index }));
+    const loader = vi.fn(() => Promise.resolve(items));
+
+    render(
+      <Slacker loader={loader} loadingFallback={<p>loading</p>}>
+        {(loaded) => <PagedProductList items={loaded} />}
+      </Slacker>,
+    );
+
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
+    await enterViewport();
+
+    const list = screen.getByRole("list");
+    expect(list.children).toHaveLength(PAGE_SIZE);
+    expect(screen.getAllByRole("listitem")).toHaveLength(PAGE_SIZE);
+
+    fireEvent.click(screen.getByRole("button", { name: "Load more" }));
+
+    const renderedIds = screen
+      .getAllByRole("listitem")
+      .map((item) => item.dataset.itemId);
+    expect(renderedIds).toHaveLength(PAGE_SIZE * 2);
+    expect(new Set(renderedIds).size).toBe(PAGE_SIZE * 2);
   });
 });

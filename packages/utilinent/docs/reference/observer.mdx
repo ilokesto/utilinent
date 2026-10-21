@@ -5,7 +5,7 @@ description: "Render content when a div intersects the viewport."
 
 # Observer
 
-`Observer` uses `IntersectionObserver` through `useIntersectionObserver` and renders its children only when the observed div is intersecting.
+`Observer` uses the same observation core as `useIntersectionObserver` and renders its children only when the observed div is intersecting. It subscribes to the intersection boolean only: records that keep the boolean unchanged do not re-render `Observer`. Per-entry detail such as ratios or coordinates is not rendered here — use `useIntersectionObserver` directly when you need it.
 
 ```tsx lineNumbers
 import { Observer } from '@ilokesto/utilinent';
@@ -23,7 +23,7 @@ import { Observer } from '@ilokesto/utilinent';
 | `fallback` | `ReactNode` | Rendered while not intersecting. |
 | `threshold` | `number \| number[]` | Intersection threshold. Defaults to `0`. |
 | `rootMargin` | `string` | Observer root margin. Defaults to `"0%"`. |
-| `triggerOnce` | `boolean` | Stop observing after first intersection. |
+| `triggerOnce` | `boolean` | Stop observing after the first intersection of the current target. When the observed element unmounts or is swapped for a new node, the frozen state resets and the new target is observed again. |
 | `onIntersect` | `(isIntersecting, entry) => void` | Called when entering intersection after initial observation. |
 | `keepMeasurable` | `boolean` | Force a minimum 1×1px measurable box and `display: block` so the element can be observed even without content. Defaults to `false`. |
 

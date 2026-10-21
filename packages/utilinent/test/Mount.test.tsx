@@ -1,5 +1,5 @@
-import { StrictMode, createRef, type ReactNode } from "react";
-import { act, render, screen } from "@testing-library/react";
+import { StrictMode, createRef, useCallback, useState, type ReactNode } from "react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Mount } from "../src/index";
 
@@ -213,5 +213,184 @@ describe("Mount proxy contract", () => {
     expect(button).toBeInstanceOf(HTMLButtonElement);
     expect(button).toHaveAttribute("type", "submit");
     expect(ref.current).toBe(button);
+  });
+});
+
+describe("Mount abort contract", () => {
+  beforeEach(() => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("passes exactly one live AbortSignal to the factory", () => {
+    const factory = vi.fn((_signal: AbortSignal) => "sync result");
+
+    render(<Mount>{factory}</Mount>);
+
+    expect(factory).toHaveBeenCalledWith(expect.any(AbortSignal));
+    const [signal] = factory.mock.calls[0]!;
+    expect(signal.aborted).toBe(false);
+  });
+
+  it("aborts the replaced factory attempt and hands a live signal to the newer factory", async () => {
+    const stale = createDeferred<ReactNode>();
+    const current = createDeferred<ReactNode>();
+    const signals: AbortSignal[] = [];
+    const staleFactory = (signal: AbortSignal) => {
+      signals.push(signal);
+      return stale.promise;
+    };
+    const currentFactory = (signal: AbortSignal) => {
+      signals.push(signal);
+      return current.promise;
+    };
+    const rendered = render(<Mount fallback="loading">{staleFactory}</Mount>);
+
+    rendered.rerender(<Mount fallback="loading">{currentFactory}</Mount>);
+
+    expect(signals[0]?.aborted).toBe(true);
+    expect(signals[1]?.aborted).toBe(false);
+
+    await settle(() => stale.resolve("stale result"));
+    await settle(() => current.resolve("current result"));
+
+    expect(screen.getByText("current result")).toBeInTheDocument();
+    expect(screen.queryByText("stale result")).not.toBeInTheDocument();
+  });
+
+  it("aborts the pending factory attempt when unmounted without error noise", async () => {
+    const deferred = createDeferred<ReactNode>();
+    let observedSignal: AbortSignal | undefined;
+    const onError = vi.fn();
+    const rendered = render(
+      <Mount fallback="loading" onError={onError}>
+        {(signal: AbortSignal) => {
+          observedSignal = signal;
+          return deferred.promise;
+        }}
+      </Mount>,
+    );
+
+    rendered.unmount();
+
+    expect(observedSignal?.aborted).toBe(true);
+    await settle(() => deferred.reject(new Error("late failure")));
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
+  it("aborts the discarded StrictMode factory attempt", () => {
+    const signals: AbortSignal[] = [];
+    const factory = (signal: AbortSignal) => {
+      signals.push(signal);
+      return Promise.resolve<ReactNode>("result");
+    };
+
+    render(
+      <StrictMode>
+        <Mount fallback="loading">{factory}</Mount>
+      </StrictMode>,
+    );
+
+    expect(signals).toHaveLength(2);
+    expect(signals[0]?.aborted).toBe(true);
+    expect(signals[1]?.aborted).toBe(false);
+  });
+
+  it("forwards the abort event to a signal-aware factory and stays silent", async () => {
+    const onError = vi.fn();
+    const factory = (signal: AbortSignal) =>
+      new Promise<ReactNode>((_, reject) => {
+        signal.addEventListener(
+          "abort",
+          () => reject(new DOMException("The operation was aborted.", "AbortError")),
+          { once: true },
+        );
+      });
+    const rendered = render(
+      <Mount fallback="loading" onError={onError}>
+        {factory}
+      </Mount>,
+    );
+
+    rendered.unmount();
+    await settle(() => undefined);
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
+  it("treats an AbortError rejection from the current attempt as a normal failure", async () => {
+    const onError = vi.fn();
+
+    render(
+      <Mount fallback="failed" onError={onError}>
+        {() => Promise.reject(new DOMException("The operation was aborted.", "AbortError"))}
+      </Mount>,
+    );
+    await settle(() => undefined);
+
+    expect(onError).toHaveBeenCalledTimes(1);
+    expect(screen.getByText("failed")).toBeInTheDocument();
+  });
+});
+
+describe("Mount identity contract", () => {
+  it("does not restart a useCallback factory across unrelated parent re-renders", () => {
+    const loads: string[] = [];
+    function StableFactoryParent({ id }: { id: string }) {
+      const [ticks, setTicks] = useState(0);
+      const load = useCallback(() => {
+        loads.push(id);
+        return `result:${id}`;
+      }, [id]);
+      return (
+        <div>
+          <Mount fallback="loading">{load}</Mount>
+          <button type="button" onClick={() => setTicks((count) => count + 1)}>
+            rerender {ticks}
+          </button>
+        </div>
+      );
+    }
+    const rendered = render(<StableFactoryParent id="a" />);
+
+    fireEvent.click(screen.getByRole("button", { name: /rerender/ }));
+    fireEvent.click(screen.getByRole("button", { name: /rerender/ }));
+
+    expect(loads).toEqual(["a"]);
+    expect(screen.getByText("result:a")).toBeInTheDocument();
+
+    rendered.rerender(<StableFactoryParent id="b" />);
+
+    expect(loads).toEqual(["a", "b"]);
+    expect(screen.getByText("result:b")).toBeInTheDocument();
+  });
+
+  it("restarts the current factory when onError identity changes", () => {
+    const loads: number[] = [];
+    const load = () => {
+      loads.push(loads.length);
+      return `result:${loads.length}`;
+    };
+    const firstOnError = () => undefined;
+    const secondOnError = () => undefined;
+    const rendered = render(
+      <Mount fallback="loading" onError={firstOnError}>
+        {load}
+      </Mount>,
+    );
+
+    rendered.rerender(
+      <Mount fallback="loading" onError={secondOnError}>
+        {load}
+      </Mount>,
+    );
+
+    expect(loads).toEqual([0, 1]);
   });
 });

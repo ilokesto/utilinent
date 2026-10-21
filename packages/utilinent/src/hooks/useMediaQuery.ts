@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
-
-const getInitial = (query: string): boolean => {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
-    return false;
-  }
-  return window.matchMedia(query).matches;
-};
+import { useState } from "react";
+import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
 
 /**
  * Subscribes to a CSS media query and returns whether it currently matches.
  *
- * SSR-safe: returns `false` on the server and hydrates to the real value
- * on the client without a hydration mismatch warning.
+ * SSR-safe: the server render and the client's first hydration render share
+ * the same initial snapshot (`false`), so hydrated markup never mismatches.
+ * The actual match is applied synchronously before the first paint.
  *
  * @example
  * ```tsx
@@ -20,9 +15,11 @@ const getInitial = (query: string): boolean => {
  * ```
  */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(() => getInitial(query));
+  // Deterministic initial snapshot: the first client render (including
+  // hydration) always starts from `false`, matching the server output.
+  const [matches, setMatches] = useState(false);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
       return;
     }

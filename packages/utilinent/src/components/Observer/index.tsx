@@ -1,6 +1,6 @@
 import { forwardRef, useMemo } from "react";
 import type { ComponentPropsWithRef } from "react";
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import { useIntersectionObserverCore } from "../../hooks/useIntersectionObserverCore";
 import { Show } from "../Show";
 import { composeRefs } from "../../utils/composeRefs";
 import type { ObserverProps } from "./types";
@@ -12,6 +12,10 @@ import type { ObserverProps } from "./types";
  * Supports a render-prop callback that receives the current `isIntersecting` boolean.
  * Forwards `ref` to the underlying `div`.
  *
+ * Subscribes to the intersection boolean only: records that keep the boolean
+ * unchanged do not re-render Observer, while `useIntersectionObserver`
+ * remains the escape hatch for per-entry detail.
+ *
  * @example
  * ```tsx
  * <Observer fallback={<Placeholder />} rootMargin="100px">
@@ -19,7 +23,7 @@ import type { ObserverProps } from "./types";
  * </Observer>
  * ```
  */
-export const Observer = forwardRef<HTMLDivElement, ObserverProps & Omit<ComponentPropsWithRef<'div'>, 'ref'>>(
+export const Observer = forwardRef<HTMLDivElement, ObserverProps & Omit<ComponentPropsWithRef<'div'>, 'ref' | 'children'>>(
   function Observer(
     {
       children,
@@ -34,12 +38,18 @@ export const Observer = forwardRef<HTMLDivElement, ObserverProps & Omit<Componen
     },
     forwardedRef
   ) {
-    const { ref: observerRef, isIntersecting } = useIntersectionObserver({
-      threshold,
-      rootMargin,
-      freezeOnceVisible,
-      onIntersect: onChange,
-    });
+    // Boolean-only subscription (#140): Observer renders the intersection
+    // boolean and never consumes entry details, so same-boolean records must
+    // not commit. Entry detail stays available through useIntersectionObserver.
+    const { ref: observerRef, isIntersecting } = useIntersectionObserverCore(
+      {
+        threshold,
+        rootMargin,
+        freezeOnceVisible,
+        onIntersect: onChange,
+      },
+      false
+    );
 
     const mergedRef = useMemo(
       () => composeRefs(observerRef, forwardedRef),

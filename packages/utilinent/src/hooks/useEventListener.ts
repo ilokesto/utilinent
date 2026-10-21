@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Options for {@link useEventListener}.
@@ -19,7 +19,10 @@ type EventTargetLike = EventTarget | React.RefObject<EventTarget | null> | null;
 /**
  * Attaches an event listener to a window/document/element target, or a ref.
  *
- * The handler is kept in a ref so listeners update without re-binding.
+ * The handler is kept in a ref so listeners update without re-binding. When
+ * the target is a `RefObject`, the hook tracks the DOM node it references:
+ * nodes that mount later or get swapped re-bind the listener to the actual
+ * node and detach it from the previous one.
  * SSR-safe: effects do not run on the server.
  *
  * @example
@@ -37,10 +40,23 @@ export function useEventListener<E extends Event = Event>(
 ): void {
   const handlerRef = useRef(handler);
   const predicateRef = useRef(options.predicate);
+  const [observedTarget, setObservedTarget] = useState<EventTarget | null>(() =>
+    resolveTarget(target),
+  );
 
   useEffect(() => {
     handlerRef.current = handler;
     predicateRef.current = options.predicate;
+  });
+
+  // A RefObject keeps its identity while the node it references can mount,
+  // swap, or clear after commit. Re-resolve after every commit and record
+  // node changes so the subscription below follows the actual DOM node.
+  useEffect(() => {
+    setObservedTarget((previous) => {
+      const next = resolveTarget(target);
+      return previous === next ? previous : next;
+    });
   });
 
   useEffect(() => {
@@ -48,7 +64,7 @@ export function useEventListener<E extends Event = Event>(
       return;
     }
 
-    const node = resolveTarget(target);
+    const node = observedTarget;
     if (!node) {
       return;
     }
@@ -70,7 +86,7 @@ export function useEventListener<E extends Event = Event>(
         capture: options.capture,
       });
     };
-  }, [target, eventName, options.disabled, options.capture, options.passive]);
+  }, [observedTarget, eventName, options.disabled, options.capture, options.passive]);
 }
 
 function resolveTarget(target: EventTargetLike): EventTarget | null {

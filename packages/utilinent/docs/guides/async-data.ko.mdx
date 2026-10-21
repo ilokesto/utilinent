@@ -35,3 +35,9 @@ export function Products({ data, loading, error }) {
 ## Mount 또는 Slacker를 쓰는 경우
 
 Component 자체가 node-producing function을 resolve해야 한다면 `Mount`를 사용하세요. Section이 visible해질 때까지 loading을 시작하지 않아야 한다면 `Slacker`를 사용하세요.
+
+## Function identity가 비동기 작업의 재시작을 결정합니다
+
+`Mount`와 `Slacker` 모두 비동기 작업의 기준을 function이 capture한 값이 아니라 function identity로 삼습니다. Inline `() => fetchX(id)`나 inline `onError`는 부모가 render할 때마다 새 function이 되므로 관련 없는 re-render가 작업을 다시 시작합니다. 실제 입력을 `useCallback` dependency에 넣으세요. `useCallback(() => fetchX(id), [id])`는 관련 없는 re-render를 견디고, `id`가 바뀌는 것이 의도된 재시작입니다. `onError`의 identity 변경도 `Mount`의 현재 attempt를 다시 시작합니다.
+
+두 component 모두 현재 attempt의 `AbortSignal`을 factory와 loader에 전달하므로, 교체되거나 unmount된 attempt는 underlying request를 취소할 수 있습니다. 검증된 예제와 함께 전체 취소·identity 계약은 [`Mount` 레퍼런스](/ko/utilinent/reference/mount)와 [`Slacker` 레퍼런스](/ko/utilinent/reference/slacker)를 보세요.

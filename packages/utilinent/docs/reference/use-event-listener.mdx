@@ -26,3 +26,13 @@ function WindowSize() {
 | `predicate` | Optional filter invoked before the handler. |
 
 The target may be `window`, `document`, an `EventTarget`, or a `React.RefObject`. SSR-safe: effects do not run on the server.
+
+## Ref targets
+
+When `target` is a `React.RefObject`, the hook follows the DOM node the ref currently points to:
+
+- If the node mounts after the initial render, the listener attaches once the node appears.
+- If the ref is swapped to a different node, the listener moves to the new node and the previous node's listener is removed.
+- If the ref is cleared to `null`, the listener is detached from the previous node.
+
+Handler updates never re-bind the listener; the latest handler is always invoked. Changing `capture`, `passive`, or `disabled` re-binds the listener with the new options and cleans up the previous target.

@@ -27,15 +27,19 @@ function BaseMount({ children, fallback = null, onError }: MountProps) {
       };
     }
 
+    // One controller per factory attempt: cleanup (replacement, unmount, or a
+    // StrictMode replay) aborts the signal handed to the superseded attempt.
+    const controller = new AbortController();
     let result: ReactNode | Promise<ReactNode>;
     try {
-      result = children();
+      result = children(controller.signal);
     } catch (error) {
       setStatus("fallback");
       console.error("Mount children threw:", error);
       onError?.(error);
       return () => {
         canceled = true;
+        controller.abort();
       };
     }
 
@@ -59,6 +63,7 @@ function BaseMount({ children, fallback = null, onError }: MountProps) {
         });
       return () => {
         canceled = true;
+        controller.abort();
       };
     }
 
@@ -66,6 +71,7 @@ function BaseMount({ children, fallback = null, onError }: MountProps) {
     setStatus("resolved");
     return () => {
       canceled = true;
+      controller.abort();
     };
   }, [children, onError]);
 
@@ -82,6 +88,8 @@ const renderForTag = createTagRenderer(
  * Resolves and renders children that may be synchronous or asynchronous.
  *
  * Accepts a factory function returning `ReactNode | Promise<ReactNode>`.
+ * The factory may consume its `AbortSignal` argument to cancel in-flight work;
+ * zero-argument factories remain fully supported.
  * Shows `fallback` while the factory is pending or on error.
  * Polymorphic: access typed HTML tag variants via `Mount.div`, etc.
  *
