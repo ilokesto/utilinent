@@ -8,10 +8,11 @@
     "noEmit": true,
     "paths": {
       "@ilokesto/utilinent": ["dist/index.d.ts"],
+      "@ilokesto/utilinent/hooks": ["dist/hooks/index.d.ts"],
       "react": ["node_modules/@types/react19"],
       "react/*": ["node_modules/@types/react19/*"]
     },
     "types": ["@types/react19"]
   },
-  "include": ["./Mount.test-d.ts"]
+  "include": ["./*.test-d.ts", "./*.test-d.tsx"]
 }
