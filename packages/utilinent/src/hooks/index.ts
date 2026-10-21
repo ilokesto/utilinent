@@ -3,6 +3,7 @@ export * from "./useDebounce";
 export * from "./useEventListener";
 export * from "./useHover";
 export * from "./useIntersectionObserver";
+export * from "./useInfiniteSentinel";
 export * from "./useIsomorphicLayoutEffect";
 export * from "./useKey";
 export * from "./useMediaQuery";
