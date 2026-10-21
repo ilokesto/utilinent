@@ -16,10 +16,10 @@ import { LoadMore } from '@ilokesto/utilinent';
   busy={isFetchingNextPage}
   rootMargin="200px"
 >
-  {({ isLoading, error, retry }) => (
+  {({ isLoading, isError, retry }) => (
     <>
       {isLoading ? <span role="status">Loading...</span> : null}
-      {error ? <button type="button" onClick={retry}>Retry</button> : null}
+      {isError ? <button type="button" onClick={retry}>Retry</button> : null}
     </>
   )}
 </LoadMore>
@@ -29,7 +29,9 @@ import { LoadMore } from '@ilokesto/utilinent';
 
 All [hook options](./use-infinite-sentinel) are accepted: required `onLoadMore` and `hasMore`, plus `busy`, `disabled`, `onError`, `root`, `rootMargin`, and `threshold`.
 
-`children` accepts a React node or a render function receiving `{ isIntersecting, isLoading, error, retry }`. It always renders, including while hidden, disabled, or exhausted. Use it to expose a loading announcement, error message, or manual control. No fallback, status announcement, or button behavior is added implicitly.
+`children` accepts a React node or a render function receiving `{ isIntersecting, isLoading, isError, error, retry }`. It always renders, including while hidden, disabled, or exhausted. Use it to expose a loading announcement, error message, or manual control. No fallback, status announcement, or button behavior is added implicitly.
+
+Use `isError` to show failure UI, not the truthiness of `error`. The flag starts as `false` and becomes `true` for every thrown or rejected load, including `undefined`, `null`, `""`, `false`, and `0`. `error` preserves the original `unknown` reason. Both reset when an eligible new attempt starts; blocked retries leave the failure visible.
 
 `busy` and `hasMore` are controlled by the caller. A `busy: true` to `false` cycle requests another page if the sentinel remains visible. Returned promises prevent overlapping calls but do not themselves trigger the next page. Thrown/rejected loads stop automatic loading until explicit retry or a new entry; see the hook reference for the full failure and cleanup policy.
 

@@ -2,7 +2,7 @@ import { act, render, screen } from "@testing-library/react";
 import { createRef, forwardRef, StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { LoadMore, PluginManager } from "../src";
+import { LoadMore, PluginManager, type LoadMoreState } from "../src";
 import {
   emitIntersectionForTarget, installControlledIntersectionObserver,
   intersectionObserverMetrics,
@@ -10,6 +10,37 @@ import {
 
 beforeEach(installControlledIntersectionObserver);
 afterEach(() => PluginManager.unregister("loadMore", "SentinelLink"));
+
+it.each([undefined, null, "", false, 0])(
+  "LoadMore: rejects with %s -> render state offers retry without inspecting the reason",
+  async (reason) => {
+    const onLoadMore = vi.fn<() => Promise<unknown>>()
+      .mockRejectedValueOnce(reason)
+      .mockResolvedValueOnce(undefined);
+    const onError = vi.fn();
+    const children = vi.fn(({ isError, retry }: LoadMoreState) => (
+      isError ? <button type="button" onClick={retry}>Retry</button> : null
+    ));
+    render(
+      <LoadMore.section onLoadMore={onLoadMore} onError={onError} hasMore data-testid="sentinel">
+        {children}
+      </LoadMore.section>,
+    );
+    const sentinel = screen.getByTestId("sentinel");
+
+    await emitIntersectionForTarget(sentinel, true);
+
+    expect(children.mock.lastCall?.[0].error).toBe(reason);
+    expect(onError).toHaveBeenCalledExactlyOnceWith(reason);
+    expect(children.mock.lastCall?.[0].isError).toBe(true);
+    expect(sentinel).not.toHaveAttribute("isError");
+    await act(async () => screen.getByRole("button", { name: "Retry" }).click());
+    expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
+    expect(children.mock.lastCall?.[0].isError).toBe(false);
+    expect(children.mock.lastCall?.[0].error).toBeUndefined();
+    expect(onLoadMore).toHaveBeenCalledTimes(2);
+  },
+);
 
 it("LoadMore: empty default sentinel -> remains measurable and forwards ref and DOM props", () => {
   const ref = createRef<HTMLDivElement>();
