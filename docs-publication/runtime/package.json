@@ -1,0 +1,17 @@
+{
+  "name": "@ilokesto/utilinent-docs-runtime",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./utilinent-demo": "./.generated/utilinent/utilinent-demo.tsx"
+  },
+  "dependencies": {
+    "@ilokesto/released-utilinent": "npm:@ilokesto/utilinent@1.2.0",
+    "react": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4"
+  }
+}

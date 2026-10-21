@@ -2,6 +2,10 @@
 
 **English** | [한국어](./README.ko.md)
 
+This repository is the standalone source for `@ilokesto/utilinent`. The package is
+published independently; this repository contains its source, tests, and official
+English and Korean documentation.
+
 [![Build Size](https://img.shields.io/bundlephobia/minzip/@ilokesto/utilinent?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=@ilokesto/utilinent)
 [![Version](https://img.shields.io/npm/v/@ilokesto/utilinent?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
 [![Downloads](https://img.shields.io/npm/dt/@ilokesto/utilinent.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
@@ -9,7 +13,7 @@
 ## Documentation
 
 - Full docs: [English](https://ilokesto.ayden94.com/en/utilinent) · [한국어](https://ilokesto.ayden94.com/ko/utilinent)
-- Source: [packages/utilinent](https://github.com/ilokesto/ilokesto/tree/main/packages/utilinent)
+- Source: [utilinent repository](https://github.com/ilokesto/utilinent)
 - npm: [@ilokesto/utilinent](https://www.npmjs.com/package/@ilokesto/utilinent)
 
 As React apps grow, JSX often becomes cluttered with nested ternary operators and bloated map callbacks, which rapidly degrades readability. utilinent was created to solve these recurring UI patterns by providing small, declarative components.
@@ -113,6 +117,4 @@ Direct `Promise` and `PromiseLike` children are intentionally rejected. A factor
 ## Custom proxy components
 
 If you want to build your own `Show`-style component (for example, `Clickable`),
-there is a short guide in the repo:
-
-- `CUSTOM_CLICKABLE.md`
+see the [custom proxy components guide](./docs/guides/custom-proxy-components.mdx).

@@ -1,0 +1,35 @@
+---
+title: "OptionalWrapper"
+description: "조건이 truthy일 때만 children을 감쌉니다."
+---
+
+# OptionalWrapper
+
+`OptionalWrapper`는 `children`을 조건부로 감쌉니다. `when`이 truthy이면 `wrapper(children)`를 반환하고, 아니면 `elseWrapper(children)` 또는 원래 children을 반환합니다. (`fallback`은 `elseWrapper`의 deprecated alias로 남아 있습니다.)
+
+```tsx lineNumbers
+import { OptionalWrapper } from '@ilokesto/utilinent';
+
+<OptionalWrapper
+  when={href}
+  wrapper={(children) => <a href={href}>{children}</a>}
+>
+  Read more
+</OptionalWrapper>
+```
+
+Content는 그대로 두고 container만 바뀌어야 할 때 사용하세요. Optional link, tooltip, feature-flag wrapper, tracking wrapper에 적합합니다.
+
+## 반대 조건 변환 함수
+
+```tsx lineNumbers
+<OptionalWrapper
+  when={enabled}
+  wrapper={(children) => <FeatureShell>{children}</FeatureShell>}
+  elseWrapper={(children) => <DisabledShell>{children}</DisabledShell>}
+>
+  <FeatureContent />
+</OptionalWrapper>
+```
+
+`fallback`은 `elseWrapper`의 backward-compatible alias로 유지됩니다.

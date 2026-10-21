@@ -2,6 +2,9 @@
 
 [English](./README.md) | **한국어**
 
+이 저장소는 `@ilokesto/utilinent`의 독립 소스 저장소입니다. 패키지는 독립적으로
+배포되며, 소스 코드와 테스트, 한국어 및 영어 공식 문서를 포함합니다.
+
 [![Build Size](https://img.shields.io/bundlephobia/minzip/@ilokesto/utilinent?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=@ilokesto/utilinent)
 [![Version](https://img.shields.io/npm/v/@ilokesto/utilinent?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
 [![Downloads](https://img.shields.io/npm/dt/@ilokesto/utilinent.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
@@ -9,7 +12,7 @@
 ## 문서
 
 - 전체 문서: [English](https://ilokesto.ayden94.com/en/utilinent) · [한국어](https://ilokesto.ayden94.com/ko/utilinent)
-- 소스: [packages/utilinent](https://github.com/ilokesto/ilokesto/tree/main/packages/utilinent)
+- 소스: [Utilinent 저장소](https://github.com/ilokesto/utilinent)
 - npm: [@ilokesto/utilinent](https://www.npmjs.com/package/@ilokesto/utilinent)
 
 React 앱이 커질수록 JSX는 중첩 삼항 연산자와 비대해진 map 콜백으로 금방 어수선해지고, 가독성이 빠르게 떨어집니다. utilinent는 이런 반복적인 UI 패턴을 작고 선언적인 컴포넌트로 풀어내기 위해 만들어졌습니다.
@@ -106,4 +109,4 @@ import { Mount } from '@ilokesto/utilinent';
 
 `Show` 스타일의 컴포넌트(예: `Clickable`)를 직접 만들고 싶다면, 저장소에 짧은 가이드가 있습니다:
 
-- [`CUSTOM_CLICKABLE.md`](./CUSTOM_CLICKABLE.md)
+- [커스텀 프록시 컴포넌트 가이드](./docs/guides/custom-proxy-components.ko.mdx)

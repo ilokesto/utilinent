@@ -1,0 +1,3094 @@
+{
+  "schemaVersion": 1,
+  "package": {
+    "name": "@ilokesto/utilinent",
+    "version": "1.2.0",
+    "channel": "latest",
+    "revision": 1,
+    "releaseCommit": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "docsCommit": "fc8bd4755137b75767284dbe84a0774185dfbdde",
+    "snapshot": "docs-publication/releases/utilinent/1.2.0/r1"
+  },
+  "releaseSource": {
+    "commit": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "packageTree": "a9eee28729fc13136d9d8e70094640f184e9da21",
+    "docsTree": "c71af0b0bb71c214a76f4fef0efee90f6d1e2a1c",
+    "files": [
+      {
+        "path": "packages/utilinent/README.ko.md",
+        "mode": "100644",
+        "blob": "e6b0d6aa0e22d7657029fc6ea20e7cec322425bf"
+      },
+      {
+        "path": "packages/utilinent/README.md",
+        "mode": "100644",
+        "blob": "1040690ad5cbd6b3c16d6c7d6feeba575b0c9ec9"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/meta.json",
+        "mode": "100644",
+        "blob": "f6064ea0cd2e52520476d52742fb3f10f1fb1733"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/proxy-registry.ko.mdx",
+        "mode": "100644",
+        "blob": "f67ccd00678bf5c157f3673ca81935be805e358d"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/proxy-registry.mdx",
+        "mode": "100644",
+        "blob": "26818b72cad959210d0e319e126f0e1e5ae9ef67"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/ssr.ko.mdx",
+        "mode": "100644",
+        "blob": "49efb5f2af6143b71d9d883ebdf6e40274311a84"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/ssr.mdx",
+        "mode": "100644",
+        "blob": "ad75ab3df0e917c0afc6a7dba16fca15494d319a"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/truthiness.ko.mdx",
+        "mode": "100644",
+        "blob": "a793742237489412090b1ace91b889a5585bc456"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/truthiness.mdx",
+        "mode": "100644",
+        "blob": "34a56df76e94385eedbb857d14cbd7916f064997"
+      },
+      {
+        "path": "packages/utilinent/docs/core-concepts.ko.mdx",
+        "mode": "100644",
+        "blob": "f02b993f54b0cdccfa1a273996ef51031d21f953"
+      },
+      {
+        "path": "packages/utilinent/docs/core-concepts.mdx",
+        "mode": "100644",
+        "blob": "271730a437efd89769257a505bdea51fd6e7a6b6"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/async-data.ko.mdx",
+        "mode": "100644",
+        "blob": "d008e02c04be5691f86ee8d29ebd9b18f5d1da79"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/async-data.mdx",
+        "mode": "100644",
+        "blob": "b99a9dc2294a7497216c3b4304191fdf5180966d"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/custom-proxy-components.ko.mdx",
+        "mode": "100644",
+        "blob": "41cbbc132e3f3c27ce70524b1246ccab6940675b"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/custom-proxy-components.mdx",
+        "mode": "100644",
+        "blob": "8515cbf2ae364ab21952d628a4e94e6999cf3b7b"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/lazy-loading.ko.mdx",
+        "mode": "100644",
+        "blob": "970d612291c053630f9d8b2b27a9867a0da56961"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/lazy-loading.mdx",
+        "mode": "100644",
+        "blob": "ba4d5a6874fe058624d011290ad94fd04558b1ff"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/list-and-empty-states.ko.mdx",
+        "mode": "100644",
+        "blob": "ff036ae53b6f48efda2a41db856fef2ab3395d40"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/list-and-empty-states.mdx",
+        "mode": "100644",
+        "blob": "8eeb11d6bcc95b553279da6171d271f1a5029325"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/meta.json",
+        "mode": "100644",
+        "blob": "781d29b6d19bd8662f2d6fd2a87590565f4755b0"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/polymorphic-tags.ko.mdx",
+        "mode": "100644",
+        "blob": "57268feea8b38e25d0ab29155568d779ce0f4322"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/polymorphic-tags.mdx",
+        "mode": "100644",
+        "blob": "b027540939a6f4807a40292b8b109552fea47270"
+      },
+      {
+        "path": "packages/utilinent/docs/index.ko.mdx",
+        "mode": "100644",
+        "blob": "dbc948f6393a7c1062250fa21db870be14f57457"
+      },
+      {
+        "path": "packages/utilinent/docs/index.mdx",
+        "mode": "100644",
+        "blob": "4453ea3eb31f130a6866a7105e8e96a4033dff4e"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/meta.json",
+        "mode": "100644",
+        "blob": "4eb66c07d52791462e8a18754a3dfc60247c0527"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/nextjs.ko.mdx",
+        "mode": "100644",
+        "blob": "d92a3ae565d6cee0a6f7c834be76a4d7963f0412"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/nextjs.mdx",
+        "mode": "100644",
+        "blob": "4f4df6a744af6b8f349e50ba3bf0525c4aacb241"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/react.ko.mdx",
+        "mode": "100644",
+        "blob": "86563e6dd577a1ab874636e442bf5103d1177604"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/react.mdx",
+        "mode": "100644",
+        "blob": "612b707ef5f29535f508d040055f49e7d8d41c80"
+      },
+      {
+        "path": "packages/utilinent/docs/meta.json",
+        "mode": "100644",
+        "blob": "b6e52aa7e6f690451d16c642b0563e9784026761"
+      },
+      {
+        "path": "packages/utilinent/docs/quick-start.ko.mdx",
+        "mode": "100644",
+        "blob": "270736d6e45101269289efd4d6ef761374300419"
+      },
+      {
+        "path": "packages/utilinent/docs/quick-start.mdx",
+        "mode": "100644",
+        "blob": "88464e424c506c81a0fa52a30ad0acf2e6e46dae"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/click-away.ko.mdx",
+        "mode": "100644",
+        "blob": "60292ada702b517469bad0fb2241c2166bcd279b"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/click-away.mdx",
+        "mode": "100644",
+        "blob": "e14d73fe9931ceccfdfed1cc1c63b11bbc46af85"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/client-only.ko.mdx",
+        "mode": "100644",
+        "blob": "264f9fde14d4f9b28162a8c80a5f4b85b334c816"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/client-only.mdx",
+        "mode": "100644",
+        "blob": "7152c07611271bddc7c6627a76760d5c91f9cdf0"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/error-boundary.ko.mdx",
+        "mode": "100644",
+        "blob": "65f9d1766a3ffd2fecd443d23657e2e50de14574"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/error-boundary.mdx",
+        "mode": "100644",
+        "blob": "42323d908ce9cdc17dab300e094e65bed664306e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/for.ko.mdx",
+        "mode": "100644",
+        "blob": "0e4b64cad1e549bedb466b15694b90632cdbe9d7"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/for.mdx",
+        "mode": "100644",
+        "blob": "bd79b6e9402da1d93db5a5b01faf0e325bf0257b"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/hotkey.ko.mdx",
+        "mode": "100644",
+        "blob": "ed9465f694d48c403eb397cea92bb36bbe3e4470"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/hotkey.mdx",
+        "mode": "100644",
+        "blob": "aba59941a92d7e01337e41e8565c4ecc6995f7ed"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/hoverable.ko.mdx",
+        "mode": "100644",
+        "blob": "acbdbdc61f70c0a550ffc6f1aaed39c129df13bd"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/hoverable.mdx",
+        "mode": "100644",
+        "blob": "256a9d4a1191cd0f46ad891d68e5c5aac9143064"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/measure.ko.mdx",
+        "mode": "100644",
+        "blob": "b815699fb7889dade69b618cbb359b28d0d2241d"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/measure.mdx",
+        "mode": "100644",
+        "blob": "63d5a9cad45f4897c1320b967d0ac41b62c9ba91"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/media.ko.mdx",
+        "mode": "100644",
+        "blob": "ce26cf4bb566e24e1db92b5262ecc9f6448171ff"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/media.mdx",
+        "mode": "100644",
+        "blob": "ec73bf4728e9129a88813cdb31def035ba843764"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/meta.json",
+        "mode": "100644",
+        "blob": "f70de1328311d30985c8997b7a458c1370173f3e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/mount.ko.mdx",
+        "mode": "100644",
+        "blob": "5484f5bbc6a49dcb187cd6340efa1c34462e2cb1"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/mount.mdx",
+        "mode": "100644",
+        "blob": "df8f060a9e9a56ea5b5f027f12d8f221feb3f654"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/observer.ko.mdx",
+        "mode": "100644",
+        "blob": "925b45d9f32fbda96bc0240a9bf869be7bc945cb"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/observer.mdx",
+        "mode": "100644",
+        "blob": "e473f938655618519228547c9200254cd8bcd4b5"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/optional-wrapper.ko.mdx",
+        "mode": "100644",
+        "blob": "69eadcc3f49dffb07010cda2b3ea689b6dc2c7b2"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/optional-wrapper.mdx",
+        "mode": "100644",
+        "blob": "a3c9aaf1029ee9bc3206871efdd489a46567d27d"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/plugin-manager.ko.mdx",
+        "mode": "100644",
+        "blob": "c80b04b7f75f4c6b1b07591c42bcda610673e584"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/plugin-manager.mdx",
+        "mode": "100644",
+        "blob": "a08be2d36ba640b6e6e3efd7ab5837f25a96aa57"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/proxy-types.ko.mdx",
+        "mode": "100644",
+        "blob": "e593053cbee96608b9c436c9cb8e38ec86607517"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/proxy-types.mdx",
+        "mode": "100644",
+        "blob": "40c3399a251945d63f28fc04410364923b75bba4"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/repeat.ko.mdx",
+        "mode": "100644",
+        "blob": "0546f9e8f635350d06c31fcc4e0eac19a74aff58"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/repeat.mdx",
+        "mode": "100644",
+        "blob": "071c23356f8aac28cd39a33c93b905730b34d5a4"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/show.ko.mdx",
+        "mode": "100644",
+        "blob": "3d56812bae64bfd432621fb377d481470754b255"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/show.mdx",
+        "mode": "100644",
+        "blob": "a218f0033e24c6401bba0caad50191d683f3daa0"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/slacker.ko.mdx",
+        "mode": "100644",
+        "blob": "bf48b9d6043141c77027a40cb8818d586006460e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/slacker.mdx",
+        "mode": "100644",
+        "blob": "460ccc62864ed5261e9c63f91fb7af925fe7925f"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/slot.ko.mdx",
+        "mode": "100644",
+        "blob": "b9758e8ed5360a0395303106a4e8d7332d445d71"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/slot.mdx",
+        "mode": "100644",
+        "blob": "b636c8c2a071286be62e413a74015f1141a39513"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/switch-match.ko.mdx",
+        "mode": "100644",
+        "blob": "3790ba4495022680c3539ad211be40bc61c4f238"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/switch-match.mdx",
+        "mode": "100644",
+        "blob": "1fa33858d4a7a4de2f63763d5dedbcc1f0d5f994"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-click-away.ko.mdx",
+        "mode": "100644",
+        "blob": "bc8820c7dbdada2ef7e7fa1ef60dbbf7a446c2c1"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-click-away.mdx",
+        "mode": "100644",
+        "blob": "fa52562665749138f336ceb0642471470a8dbfa8"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-debounce.ko.mdx",
+        "mode": "100644",
+        "blob": "0d1a2eae52009e22db4fa7d07c898a6ece35badb"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-debounce.mdx",
+        "mode": "100644",
+        "blob": "b9da164a3b5f2ebd22d960fb64143176a77ac97e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-event-listener.ko.mdx",
+        "mode": "100644",
+        "blob": "8321f2ad1549746cbe11c66ccde7e0dc729a8c10"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-event-listener.mdx",
+        "mode": "100644",
+        "blob": "1604fabb9d460f3d70e0a70e2a850a69a4b86ee4"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-hover.ko.mdx",
+        "mode": "100644",
+        "blob": "b8d5292c7ae23f73295257c66795d62b9ce38a3c"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-hover.mdx",
+        "mode": "100644",
+        "blob": "594ef7742a7267bf124da88b7037ae5874301b79"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-intersection-observer.ko.mdx",
+        "mode": "100644",
+        "blob": "6e21d1022238262e8f751f7207a317392eedc887"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-intersection-observer.mdx",
+        "mode": "100644",
+        "blob": "e8ce9122f4dce3a3287530cadb56b872dcb03bf6"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-isomorphic-layout-effect.ko.mdx",
+        "mode": "100644",
+        "blob": "1d0dea5f1818356faa96204d1d3043aeb47fb2a8"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-isomorphic-layout-effect.mdx",
+        "mode": "100644",
+        "blob": "430da6c683d926d045f64e9200cc2278be366e87"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-key.ko.mdx",
+        "mode": "100644",
+        "blob": "344ed1729fc7c6a7f3e18c611694c8d66b8d61d7"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-key.mdx",
+        "mode": "100644",
+        "blob": "6ccc3de8e150c04ec3819ef251c772347da68e75"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-media-query.ko.mdx",
+        "mode": "100644",
+        "blob": "faccfcd520e1f64ed68c616b746960538e67989f"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-media-query.mdx",
+        "mode": "100644",
+        "blob": "1156ebc76381d779483b55dfa0e172c22b54ca4f"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-resize-observer.ko.mdx",
+        "mode": "100644",
+        "blob": "dcf59e094df485f7e7a2a155cf4123a6298dbfd4"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-resize-observer.mdx",
+        "mode": "100644",
+        "blob": "c144e6e25253053aaf84634603c9c4d20a07f004"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-throttle.ko.mdx",
+        "mode": "100644",
+        "blob": "23fd6de98f3211d46417d8f1695c380d01fc757e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-throttle.mdx",
+        "mode": "100644",
+        "blob": "9cedd095e5889add3e4e594e886162c9706f4df6"
+      },
+      {
+        "path": "packages/utilinent/docs/troubleshooting.ko.mdx",
+        "mode": "100644",
+        "blob": "c948db6519aa8a92553722417f1433d18b4f224c"
+      },
+      {
+        "path": "packages/utilinent/docs/troubleshooting.mdx",
+        "mode": "100644",
+        "blob": "d0ab759ae4278572bed4bb33f8f9f5906f34d5b4"
+      }
+    ]
+  },
+  "docsRevision": {
+    "commit": "fc8bd4755137b75767284dbe84a0774185dfbdde",
+    "packageTree": "a9eee28729fc13136d9d8e70094640f184e9da21",
+    "docsTree": "c71af0b0bb71c214a76f4fef0efee90f6d1e2a1c",
+    "files": [
+      {
+        "path": "packages/utilinent/README.ko.md",
+        "mode": "100644",
+        "blob": "e6b0d6aa0e22d7657029fc6ea20e7cec322425bf"
+      },
+      {
+        "path": "packages/utilinent/README.md",
+        "mode": "100644",
+        "blob": "1040690ad5cbd6b3c16d6c7d6feeba575b0c9ec9"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/meta.json",
+        "mode": "100644",
+        "blob": "f6064ea0cd2e52520476d52742fb3f10f1fb1733"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/proxy-registry.ko.mdx",
+        "mode": "100644",
+        "blob": "f67ccd00678bf5c157f3673ca81935be805e358d"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/proxy-registry.mdx",
+        "mode": "100644",
+        "blob": "26818b72cad959210d0e319e126f0e1e5ae9ef67"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/ssr.ko.mdx",
+        "mode": "100644",
+        "blob": "49efb5f2af6143b71d9d883ebdf6e40274311a84"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/ssr.mdx",
+        "mode": "100644",
+        "blob": "ad75ab3df0e917c0afc6a7dba16fca15494d319a"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/truthiness.ko.mdx",
+        "mode": "100644",
+        "blob": "a793742237489412090b1ace91b889a5585bc456"
+      },
+      {
+        "path": "packages/utilinent/docs/advanced/truthiness.mdx",
+        "mode": "100644",
+        "blob": "34a56df76e94385eedbb857d14cbd7916f064997"
+      },
+      {
+        "path": "packages/utilinent/docs/core-concepts.ko.mdx",
+        "mode": "100644",
+        "blob": "f02b993f54b0cdccfa1a273996ef51031d21f953"
+      },
+      {
+        "path": "packages/utilinent/docs/core-concepts.mdx",
+        "mode": "100644",
+        "blob": "271730a437efd89769257a505bdea51fd6e7a6b6"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/async-data.ko.mdx",
+        "mode": "100644",
+        "blob": "d008e02c04be5691f86ee8d29ebd9b18f5d1da79"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/async-data.mdx",
+        "mode": "100644",
+        "blob": "b99a9dc2294a7497216c3b4304191fdf5180966d"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/custom-proxy-components.ko.mdx",
+        "mode": "100644",
+        "blob": "41cbbc132e3f3c27ce70524b1246ccab6940675b"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/custom-proxy-components.mdx",
+        "mode": "100644",
+        "blob": "8515cbf2ae364ab21952d628a4e94e6999cf3b7b"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/lazy-loading.ko.mdx",
+        "mode": "100644",
+        "blob": "970d612291c053630f9d8b2b27a9867a0da56961"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/lazy-loading.mdx",
+        "mode": "100644",
+        "blob": "ba4d5a6874fe058624d011290ad94fd04558b1ff"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/list-and-empty-states.ko.mdx",
+        "mode": "100644",
+        "blob": "ff036ae53b6f48efda2a41db856fef2ab3395d40"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/list-and-empty-states.mdx",
+        "mode": "100644",
+        "blob": "8eeb11d6bcc95b553279da6171d271f1a5029325"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/meta.json",
+        "mode": "100644",
+        "blob": "781d29b6d19bd8662f2d6fd2a87590565f4755b0"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/polymorphic-tags.ko.mdx",
+        "mode": "100644",
+        "blob": "57268feea8b38e25d0ab29155568d779ce0f4322"
+      },
+      {
+        "path": "packages/utilinent/docs/guides/polymorphic-tags.mdx",
+        "mode": "100644",
+        "blob": "b027540939a6f4807a40292b8b109552fea47270"
+      },
+      {
+        "path": "packages/utilinent/docs/index.ko.mdx",
+        "mode": "100644",
+        "blob": "dbc948f6393a7c1062250fa21db870be14f57457"
+      },
+      {
+        "path": "packages/utilinent/docs/index.mdx",
+        "mode": "100644",
+        "blob": "4453ea3eb31f130a6866a7105e8e96a4033dff4e"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/meta.json",
+        "mode": "100644",
+        "blob": "4eb66c07d52791462e8a18754a3dfc60247c0527"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/nextjs.ko.mdx",
+        "mode": "100644",
+        "blob": "d92a3ae565d6cee0a6f7c834be76a4d7963f0412"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/nextjs.mdx",
+        "mode": "100644",
+        "blob": "4f4df6a744af6b8f349e50ba3bf0525c4aacb241"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/react.ko.mdx",
+        "mode": "100644",
+        "blob": "86563e6dd577a1ab874636e442bf5103d1177604"
+      },
+      {
+        "path": "packages/utilinent/docs/integrations/react.mdx",
+        "mode": "100644",
+        "blob": "612b707ef5f29535f508d040055f49e7d8d41c80"
+      },
+      {
+        "path": "packages/utilinent/docs/meta.json",
+        "mode": "100644",
+        "blob": "b6e52aa7e6f690451d16c642b0563e9784026761"
+      },
+      {
+        "path": "packages/utilinent/docs/quick-start.ko.mdx",
+        "mode": "100644",
+        "blob": "270736d6e45101269289efd4d6ef761374300419"
+      },
+      {
+        "path": "packages/utilinent/docs/quick-start.mdx",
+        "mode": "100644",
+        "blob": "88464e424c506c81a0fa52a30ad0acf2e6e46dae"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/click-away.ko.mdx",
+        "mode": "100644",
+        "blob": "60292ada702b517469bad0fb2241c2166bcd279b"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/click-away.mdx",
+        "mode": "100644",
+        "blob": "e14d73fe9931ceccfdfed1cc1c63b11bbc46af85"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/client-only.ko.mdx",
+        "mode": "100644",
+        "blob": "264f9fde14d4f9b28162a8c80a5f4b85b334c816"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/client-only.mdx",
+        "mode": "100644",
+        "blob": "7152c07611271bddc7c6627a76760d5c91f9cdf0"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/error-boundary.ko.mdx",
+        "mode": "100644",
+        "blob": "65f9d1766a3ffd2fecd443d23657e2e50de14574"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/error-boundary.mdx",
+        "mode": "100644",
+        "blob": "42323d908ce9cdc17dab300e094e65bed664306e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/for.ko.mdx",
+        "mode": "100644",
+        "blob": "0e4b64cad1e549bedb466b15694b90632cdbe9d7"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/for.mdx",
+        "mode": "100644",
+        "blob": "bd79b6e9402da1d93db5a5b01faf0e325bf0257b"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/hotkey.ko.mdx",
+        "mode": "100644",
+        "blob": "ed9465f694d48c403eb397cea92bb36bbe3e4470"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/hotkey.mdx",
+        "mode": "100644",
+        "blob": "aba59941a92d7e01337e41e8565c4ecc6995f7ed"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/hoverable.ko.mdx",
+        "mode": "100644",
+        "blob": "acbdbdc61f70c0a550ffc6f1aaed39c129df13bd"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/hoverable.mdx",
+        "mode": "100644",
+        "blob": "256a9d4a1191cd0f46ad891d68e5c5aac9143064"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/measure.ko.mdx",
+        "mode": "100644",
+        "blob": "b815699fb7889dade69b618cbb359b28d0d2241d"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/measure.mdx",
+        "mode": "100644",
+        "blob": "63d5a9cad45f4897c1320b967d0ac41b62c9ba91"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/media.ko.mdx",
+        "mode": "100644",
+        "blob": "ce26cf4bb566e24e1db92b5262ecc9f6448171ff"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/media.mdx",
+        "mode": "100644",
+        "blob": "ec73bf4728e9129a88813cdb31def035ba843764"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/meta.json",
+        "mode": "100644",
+        "blob": "f70de1328311d30985c8997b7a458c1370173f3e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/mount.ko.mdx",
+        "mode": "100644",
+        "blob": "5484f5bbc6a49dcb187cd6340efa1c34462e2cb1"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/mount.mdx",
+        "mode": "100644",
+        "blob": "df8f060a9e9a56ea5b5f027f12d8f221feb3f654"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/observer.ko.mdx",
+        "mode": "100644",
+        "blob": "925b45d9f32fbda96bc0240a9bf869be7bc945cb"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/observer.mdx",
+        "mode": "100644",
+        "blob": "e473f938655618519228547c9200254cd8bcd4b5"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/optional-wrapper.ko.mdx",
+        "mode": "100644",
+        "blob": "69eadcc3f49dffb07010cda2b3ea689b6dc2c7b2"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/optional-wrapper.mdx",
+        "mode": "100644",
+        "blob": "a3c9aaf1029ee9bc3206871efdd489a46567d27d"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/plugin-manager.ko.mdx",
+        "mode": "100644",
+        "blob": "c80b04b7f75f4c6b1b07591c42bcda610673e584"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/plugin-manager.mdx",
+        "mode": "100644",
+        "blob": "a08be2d36ba640b6e6e3efd7ab5837f25a96aa57"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/proxy-types.ko.mdx",
+        "mode": "100644",
+        "blob": "e593053cbee96608b9c436c9cb8e38ec86607517"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/proxy-types.mdx",
+        "mode": "100644",
+        "blob": "40c3399a251945d63f28fc04410364923b75bba4"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/repeat.ko.mdx",
+        "mode": "100644",
+        "blob": "0546f9e8f635350d06c31fcc4e0eac19a74aff58"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/repeat.mdx",
+        "mode": "100644",
+        "blob": "071c23356f8aac28cd39a33c93b905730b34d5a4"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/show.ko.mdx",
+        "mode": "100644",
+        "blob": "3d56812bae64bfd432621fb377d481470754b255"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/show.mdx",
+        "mode": "100644",
+        "blob": "a218f0033e24c6401bba0caad50191d683f3daa0"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/slacker.ko.mdx",
+        "mode": "100644",
+        "blob": "bf48b9d6043141c77027a40cb8818d586006460e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/slacker.mdx",
+        "mode": "100644",
+        "blob": "460ccc62864ed5261e9c63f91fb7af925fe7925f"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/slot.ko.mdx",
+        "mode": "100644",
+        "blob": "b9758e8ed5360a0395303106a4e8d7332d445d71"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/slot.mdx",
+        "mode": "100644",
+        "blob": "b636c8c2a071286be62e413a74015f1141a39513"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/switch-match.ko.mdx",
+        "mode": "100644",
+        "blob": "3790ba4495022680c3539ad211be40bc61c4f238"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/switch-match.mdx",
+        "mode": "100644",
+        "blob": "1fa33858d4a7a4de2f63763d5dedbcc1f0d5f994"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-click-away.ko.mdx",
+        "mode": "100644",
+        "blob": "bc8820c7dbdada2ef7e7fa1ef60dbbf7a446c2c1"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-click-away.mdx",
+        "mode": "100644",
+        "blob": "fa52562665749138f336ceb0642471470a8dbfa8"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-debounce.ko.mdx",
+        "mode": "100644",
+        "blob": "0d1a2eae52009e22db4fa7d07c898a6ece35badb"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-debounce.mdx",
+        "mode": "100644",
+        "blob": "b9da164a3b5f2ebd22d960fb64143176a77ac97e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-event-listener.ko.mdx",
+        "mode": "100644",
+        "blob": "8321f2ad1549746cbe11c66ccde7e0dc729a8c10"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-event-listener.mdx",
+        "mode": "100644",
+        "blob": "1604fabb9d460f3d70e0a70e2a850a69a4b86ee4"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-hover.ko.mdx",
+        "mode": "100644",
+        "blob": "b8d5292c7ae23f73295257c66795d62b9ce38a3c"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-hover.mdx",
+        "mode": "100644",
+        "blob": "594ef7742a7267bf124da88b7037ae5874301b79"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-intersection-observer.ko.mdx",
+        "mode": "100644",
+        "blob": "6e21d1022238262e8f751f7207a317392eedc887"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-intersection-observer.mdx",
+        "mode": "100644",
+        "blob": "e8ce9122f4dce3a3287530cadb56b872dcb03bf6"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-isomorphic-layout-effect.ko.mdx",
+        "mode": "100644",
+        "blob": "1d0dea5f1818356faa96204d1d3043aeb47fb2a8"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-isomorphic-layout-effect.mdx",
+        "mode": "100644",
+        "blob": "430da6c683d926d045f64e9200cc2278be366e87"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-key.ko.mdx",
+        "mode": "100644",
+        "blob": "344ed1729fc7c6a7f3e18c611694c8d66b8d61d7"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-key.mdx",
+        "mode": "100644",
+        "blob": "6ccc3de8e150c04ec3819ef251c772347da68e75"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-media-query.ko.mdx",
+        "mode": "100644",
+        "blob": "faccfcd520e1f64ed68c616b746960538e67989f"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-media-query.mdx",
+        "mode": "100644",
+        "blob": "1156ebc76381d779483b55dfa0e172c22b54ca4f"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-resize-observer.ko.mdx",
+        "mode": "100644",
+        "blob": "dcf59e094df485f7e7a2a155cf4123a6298dbfd4"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-resize-observer.mdx",
+        "mode": "100644",
+        "blob": "c144e6e25253053aaf84634603c9c4d20a07f004"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-throttle.ko.mdx",
+        "mode": "100644",
+        "blob": "23fd6de98f3211d46417d8f1695c380d01fc757e"
+      },
+      {
+        "path": "packages/utilinent/docs/reference/use-throttle.mdx",
+        "mode": "100644",
+        "blob": "9cedd095e5889add3e4e594e886162c9706f4df6"
+      },
+      {
+        "path": "packages/utilinent/docs/troubleshooting.ko.mdx",
+        "mode": "100644",
+        "blob": "c948db6519aa8a92553722417f1433d18b4f224c"
+      },
+      {
+        "path": "packages/utilinent/docs/troubleshooting.mdx",
+        "mode": "100644",
+        "blob": "d0ab759ae4278572bed4bb33f8f9f5906f34d5b4"
+      }
+    ]
+  },
+  "runtimeSource": {
+    "commit": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "files": [
+      {
+        "path": "packages/utilinent/.gitignore",
+        "bytes": 419,
+        "sha256": "6de50fc7b6bb9db7beeb527303f17c2282d467d1a5cb6fe9c6bdc5703f3702fa",
+        "blob": "3a913ee81e30005c04e6678b2fba92766811ad19",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/.npmignore",
+        "bytes": 80,
+        "sha256": "430499d8f5fcb55dfcab31d3959e78582e8b3c72a2d447f600154eb6fa97f59e",
+        "blob": "39bf94bb28eefd711e1cc213965430dff9d39c3c",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/AGENTS.md",
+        "bytes": 935,
+        "sha256": "454f22fdb0ddf5216f9b0e0f498219b45b1467b59ebf9fba33b2fdf1c4c4ccdc",
+        "blob": "8b4e19ae5fc8a1d4c0e294a7ec6bfc41c102e3cc",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/CHANGELOG.md",
+        "bytes": 3721,
+        "sha256": "92962a2ea3efdb796e0e50a65a81f2c2640f1bfb509476f6d229896f8a514fe7",
+        "blob": "b5f8cdfada243fc6dd919ff89b3106f97b8bddc4",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/package.json",
+        "bytes": 1689,
+        "sha256": "a624f064f19415f158f19ad91d392731029be6d8213fa8f5593deae8b8833fe2",
+        "blob": "66b90edf20116931c6f706d2ad30a7c11ca7c5c2",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/ClickAway/index.tsx",
+        "bytes": 933,
+        "sha256": "50f295ad4d532d9d35215729bdefcfa53600bdc335aea1d8e467c2e5688a5e89",
+        "blob": "46ebf58339b9cc61d3ce2f617daa8f8d1a5c2d28",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/ClickAway/types.ts",
+        "bytes": 597,
+        "sha256": "85874d11a318be73db1027cf64bee463242f18ca950600c13019121639cb0797",
+        "blob": "b87c4b3ac35a032dff5cf6459ed215ca783a6ccb",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/ClientOnly/index.tsx",
+        "bytes": 838,
+        "sha256": "4676645230037a8219719492aab957108ef785b54ab493e024421165af0f7b0e",
+        "blob": "eb58102086f37b268294df8565efabef29418f7b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/ErrorBoundary/index.tsx",
+        "bytes": 1905,
+        "sha256": "d5145a97a94664bd5ac43b6bb38a8f80a7dde9cd9118150d4afc2493a64dd1b7",
+        "blob": "bc799e1ba887c42c75b4705ca280ffa7a8ff7860",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/For/index.tsx",
+        "bytes": 876,
+        "sha256": "a4f3445c3792116b269a1714c8f8ecd2054ddc9016b8890df1bf2480cabce8f3",
+        "blob": "1b5fb4063f5c91e5645d0296736bac67ad91e13c",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/For/types.ts",
+        "bytes": 765,
+        "sha256": "036ccd6a1c6665f74a9aa426d732faf20220590bbea442f6f47d3a809796343f",
+        "blob": "b095edb2840cb2091792ab7981c3cd01a3ab1d61",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Hotkey/index.tsx",
+        "bytes": 407,
+        "sha256": "3359648188889af09da4c082b24991dc76d8910e7076b3f9e40ec8686e4815f7",
+        "blob": "e10a973aa0b89e28985dff3d646c2c63eb586761",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Hotkey/types.ts",
+        "bytes": 362,
+        "sha256": "48ec2bc61a7a5b777d9ebf1bb98ef08e01ebf70f2328d899fb79a107de850628",
+        "blob": "007c30977f84340e47a800c4ffd073fad09278c6",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Hoverable/index.tsx",
+        "bytes": 864,
+        "sha256": "116abce4fae33197ac2dd8e72bb245ad0b28442c6086cf573d78cc3a86d588d9",
+        "blob": "c872218730ced9b62274baf0d688816fe6e09234",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Hoverable/types.ts",
+        "bytes": 361,
+        "sha256": "37ae2bf746211f5d3116ddf9d68422991808dc1b727f325f57c9bf4ab077ec8f",
+        "blob": "9afa8cbe60a75060916d62e21c0722b74365bf01",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Measure/index.tsx",
+        "bytes": 966,
+        "sha256": "4b0b8efb2c34a48a4ea9d15fe59638377e8132c54e04d1bb8a5753d685860749",
+        "blob": "6978084ec398ef030b7fb424b3f89f5a4c74f3bb",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Measure/types.ts",
+        "bytes": 568,
+        "sha256": "b579e3dfc3123b603329654c318718c542e0267abc6d661acfe1c5a3262305a2",
+        "blob": "800b36b490e3670575ef33903b208e5f509ef78b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Media/index.tsx",
+        "bytes": 775,
+        "sha256": "d6f4263afac2d8f947a5eae71b9c001418b0f69281bb38a911c125f015cadbf3",
+        "blob": "643cceb42378664c732ac8f3847b9b061e25fe08",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Media/types.ts",
+        "bytes": 499,
+        "sha256": "5f894e551f8b258a0d00710347addf987efb989d436e1b0c2f40a0c915b3a9e4",
+        "blob": "3c82bcbb38007d1d473b93644760befc5580412b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Mount/index.tsx",
+        "bytes": 2784,
+        "sha256": "4d71b91e1f6de7a7f42a68a07321eb0a20c7ced96c1487ec44b701e8ec77f677",
+        "blob": "e207e682e9055ff422c8cb2b04243a3306a414b1",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Mount/types.ts",
+        "bytes": 956,
+        "sha256": "e1250f909a1399384555badf24dbf893e5e2bc9826443dde6ab2d34c539ab743",
+        "blob": "21259fe7425624fb7d9cc31ba8a5ddc886853c3b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Observer/index.tsx",
+        "bytes": 1999,
+        "sha256": "47ee5e3c2f4457c78e110e8c2e8466e7a01bb41386aa48b4d2a78b0e9a14aaae",
+        "blob": "dd69d0c49b35b3396024872bc0a149e573a5c3cd",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Observer/types.ts",
+        "bytes": 785,
+        "sha256": "423ec7b5634350c4c75d6fe2dc949ae414e0f5019042ccab213debfac54f1e59",
+        "blob": "da0162df76ef48aefc2c4dff33fbad1fd71c95b0",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/OptionalWrapper/index.tsx",
+        "bytes": 791,
+        "sha256": "4203224664d2f7b0bb51eae42478bf385bf6185e4688191684c9f12e599c4521",
+        "blob": "154e03620b340b12f3bd779c2784b26db1ed0dbe",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/OptionalWrapper/types.ts",
+        "bytes": 751,
+        "sha256": "514b986c7534dc6b08171221f3a8a8d8fbc4c96c38fa7924d820a58279947cdf",
+        "blob": "04a3536f2d6a4dda0bb19672886da03f72bdeadc",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Repeat/index.tsx",
+        "bytes": 1004,
+        "sha256": "4518c50fff00537955f9e27a936fad0a8d99e9672512303860c6ea5d58fe650c",
+        "blob": "e48ef587329331a95856e19b5fc9c87a5e792d36",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Repeat/types.ts",
+        "bytes": 727,
+        "sha256": "0241ebd90d646aec08cf2d3d50139816e321345f1c657e5697e676693454eb9e",
+        "blob": "560d1f88921b9aaca5049373379dcc006ddbd40f",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Show/index.tsx",
+        "bytes": 1200,
+        "sha256": "3830c9dbe6e9c75f3de890b5d2026a4e9568e11e1e4d6705967580e77743c058",
+        "blob": "f59c3f2852c76451559deb2e926ba3ee1b9c3ba7",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Show/types.ts",
+        "bytes": 1241,
+        "sha256": "3f3e2f700978e0179a7ee1332752f609c2d7a6586fb494c65873a8cca1f826e7",
+        "blob": "04f92f60f822b745fb2502ea61b40cfbab995127",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Slacker/index.tsx",
+        "bytes": 5916,
+        "sha256": "ec52253fc7428dec6a73e1c6990738c68ee89125efdd8cfed9b541cde48b359d",
+        "blob": "ee7db74303f00279dfa5a68136061b03ea85f907",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Slacker/types.ts",
+        "bytes": 1307,
+        "sha256": "902efa23e29c9386fbd8a5f20334dbd265d229fcb7ac2c2a7925a1de99dc4652",
+        "blob": "181aec35a8f942a3f288349dd8a5375ffdbd5175",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Slot/Slot.tsx",
+        "bytes": 1788,
+        "sha256": "0280b39e203be5537936a918d85b092180c972ed335df5a45e7a62c8d65b97fc",
+        "blob": "ce234f36c07d7da1ae2fc75f84b03dd7b4216b54",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Slot/Slottable.tsx",
+        "bytes": 506,
+        "sha256": "dd4ff065115d5f6ba671dea91e7986bfa63f850f1e34ac8ef8ef6b902b0aea34",
+        "blob": "20b7be69bc80c0a64ba405b1e8cec44e304e6641",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Slot/index.ts",
+        "bytes": 72,
+        "sha256": "abade8a77f83c35da74de0764bccdd9ecae5efd53f267c3a3ce4588b6fc9db7e",
+        "blob": "6e16491fa1b576436e7029e2a3d0a07576cb7284",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Slot/mergeProps.ts",
+        "bytes": 903,
+        "sha256": "4e68c62869488404ba72b513d09b2a9e17d2b53c4d0fa0fa6566686a8012f6b5",
+        "blob": "9c0ee071c676191a5e5790017374f3b6036123ca",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Slot/types.ts",
+        "bytes": 114,
+        "sha256": "0807a55d59cee072953b817d402b43b712099584f4ced792a6e8ebd6126b479d",
+        "blob": "665b2f51de0fb1a8d402be472045d5ea79cec634",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Switch/Match.tsx",
+        "bytes": 1333,
+        "sha256": "64697467f089e6c1c55636d923a3b72d1d0a5d718589fc02a3254f7f2a822f38",
+        "blob": "ed0226de71f71b69c00fdca680cbdfec68ff4b4a",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Switch/Switch.tsx",
+        "bytes": 1370,
+        "sha256": "ade50e5d000986b606165bcb137d983973563766f2be7e19ef6a0d49eb0a086b",
+        "blob": "8e7483cf5bb6dc713a2f689dfcfc1ea540357282",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Switch/flattenChildren.ts",
+        "bytes": 330,
+        "sha256": "a143fbb5bee24da60bb597ac6b7604f9511ee9e93f397241a82634bcb5bb6b64",
+        "blob": "ca4e10d9dab220b9ae87ce56d88efe27aea000eb",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Switch/index.ts",
+        "bytes": 68,
+        "sha256": "e9ebf10f5f924ad5c3ef456d3b826a3ee6b3d3161792dd8805c3dee61276bee2",
+        "blob": "976f1ae84af0e2f1ead458d2a34cca379517e014",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/components/Switch/types.ts",
+        "bytes": 1277,
+        "sha256": "53f0bacb711eb229c0e369fb9913589c960a28c3d94b2415a21f7b06edf12955",
+        "blob": "75737d8bfcd4628796f6f58b8bae6efbe42d7724",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/constants/htmlTags.ts",
+        "bytes": 1580,
+        "sha256": "96e6de4a4e809fa66129acaf3e84f2686043aa9d0ece58d56a2e31c8127c3b83",
+        "blob": "7c47ff8db60071ee2ca4d4c86c6b04b4bf4034c3",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/core/PluginManager.ts",
+        "bytes": 2568,
+        "sha256": "061736d33b4368c02e188bfca51fe3268cab879f5da8fc6c210c5562f45ffbe1",
+        "blob": "ff8582bdb912d7f1284715b3b8d79ee1160b7c60",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/core/createProxy.ts",
+        "bytes": 1932,
+        "sha256": "26106b168b0d92d7ee1bbd851b5c7a7439ca07849fe6456ad7c29eacc732cf00",
+        "blob": "3b6e5d9e4c671e6cb9a9bb656cc2b7a5dc147c7a",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/core/createTagRenderer.ts",
+        "bytes": 1175,
+        "sha256": "94d62beab0f14ea78f1146158a2992fd2aea37765249d058d98faccc307e6e3e",
+        "blob": "1fef516d186c4e94a9192f1e19e3e5875285483b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/index.ts",
+        "bytes": 341,
+        "sha256": "da38a17af5856eb5ed21c87336d6371406b768b015db2011be3e077acb58cbbe",
+        "blob": "cef000ee628f6c6d37dd9255f85b7bed11727af9",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useClickAway.ts",
+        "bytes": 1913,
+        "sha256": "d311d788569f96f7b14448b6b8d960be830d76bbd5c3cda12533ce574f412871",
+        "blob": "1ddd75c3e4769a61a339b9132f172956a62156c6",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useDebounce.ts",
+        "bytes": 654,
+        "sha256": "8e2f089302865876cb7cbdc265ba1cfae1e870204e9c8a76fbdcde940bd7b439",
+        "blob": "006b6cf6ec7752d53d1aace564257780d01162a4",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useEventListener.ts",
+        "bytes": 2271,
+        "sha256": "39edf333f9c10d701dc9ed3746318325583d87a498df3bfa0cf37cd5245aed63",
+        "blob": "5db54cb254c26c3fda68dc6f333f0f6dce9501d8",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useHover.ts",
+        "bytes": 1437,
+        "sha256": "5ad1a41db00df4c67e4f72c28cb1359ae52347d2b466a0f28c0557cbc2ce39f2",
+        "blob": "1ad525d37dd48fbc9489954aa09e5630c5a94dff",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useIntersectionObserver.ts",
+        "bytes": 4801,
+        "sha256": "0ab4b9f84a57eff405b5fe11114463ed7d09ae050fc8a4ebe1432e77b5d713dd",
+        "blob": "fc012d614f526239924016b9738474f4daf02bd7",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useIsomorphicLayoutEffect.ts",
+        "bytes": 299,
+        "sha256": "8809b362539487d63c76bc473821530bb1ae9760c3e87bb4ff1c28f71e606f3e",
+        "blob": "6e62a6dfe6afe6b9f218d915ff593a3e3fd0d5c8",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useKey.ts",
+        "bytes": 1681,
+        "sha256": "e5b02a80e963e613da5449e06fb061fc6cc0d03084c411b8e34f92d000dd05a4",
+        "blob": "c71cfa32b3f92dc889e46fe5275718069acd7b26",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useMediaQuery.ts",
+        "bytes": 1226,
+        "sha256": "cd4fb8da8226a26c2f853b9224e8e7f3e59ae3597ee341839fbfeda1a2d06c86",
+        "blob": "831c796de387c9439607a4625b4bd1a0bbb968d6",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useResizeObserver.ts",
+        "bytes": 1960,
+        "sha256": "8b6abb363e3e3ff088457c57de40e3f252b18eb8337d3d57fd2f47383ff647f6",
+        "blob": "34ff81c25adbc63ebe7d0f474c34d537c5b8902b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/hooks/useThrottle.ts",
+        "bytes": 1334,
+        "sha256": "b4e4303210bc2ab0b123bfabc00f2b7cc8d0455a65e0ead7689e5b85514e8c72",
+        "blob": "259ee9607c754779ee45c56557c3c9de351437aa",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/index.ts",
+        "bytes": 1019,
+        "sha256": "04f6ec06693fd4b1ed633b6dc22f1058ab74d052cf7cfb7d99f03a1fd5627e69",
+        "blob": "6907a9c6ce2aa4e4e92fb1c0d87bae7592731dd5",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/types/RegistryCategory.ts",
+        "bytes": 504,
+        "sha256": "92417f8798c3bcb8b8b683777078c9578d999f21d9c628c2ffc2ac158e98eb4c",
+        "blob": "846a432cd86f2511027e0486aee5b886ab5dbbe1",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/types/index.ts",
+        "bytes": 119,
+        "sha256": "4867acced19cae3437e0569c18e75dc8377eeec9269717ebe74bb9430f817aca",
+        "blob": "672fce0c9c23c003fdab7ce5ab1e2d227c926d30",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/types/register.ts",
+        "bytes": 558,
+        "sha256": "42c21d93013951a345ca85877627f5c0513beec7bd66b7f113300bb47c91e48b",
+        "blob": "519d4c9f3497aefb6a28d0a998344e39cefb5516",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/types/tagHelper.ts",
+        "bytes": 1752,
+        "sha256": "f723037d0772810c38c3f2bee4148d41b9f155f7a3e0c2e4603baf10da41bd44",
+        "blob": "258505225a0a488461fa6b2835c0f9e7aa95b934",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/types/utils.ts",
+        "bytes": 365,
+        "sha256": "54e97aa884219746602ac6d11c9b612735a71be99efb7011c76fe52baf975dbd",
+        "blob": "bd287a727dd02c5a310247264b67304f53ac91a8",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/utils/composeRefs.ts",
+        "bytes": 1241,
+        "sha256": "cc07f2a7f0ae0fb9ca2f8c854ae560e153c6106ed654b4491a55c81416a72380",
+        "blob": "74cbff9dfa0e630c36d479747c2f9931de0232cb",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/utils/isPromiseLike.ts",
+        "bytes": 345,
+        "sha256": "573cd9ad67fd7d179fb03015f4b4c9dc322072085a19bb0df5c4c03d252a5d46",
+        "blob": "b858addcb27ffba8af237c2ef9022182c5e56aef",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/src/utils/resolveWhen.ts",
+        "bytes": 533,
+        "sha256": "9decb3be2f5b00593d3585a01decaa18a582510124bf7c65ad99a68d2443bafc",
+        "blob": "9c745f74ec7fccf22c752c24b64b2117da0e2484",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/Mount.test.tsx",
+        "bytes": 7268,
+        "sha256": "3202f814099779888d29638027174a65c1da56f09bde18ec79fec6efb95c7f2d",
+        "blob": "c84b7dcf945df8b2f96a2bedc0850ab9d6abd906",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/Refs.test.tsx",
+        "bytes": 1970,
+        "sha256": "fc8ee3175aa8f8a3c107103f03458cbb522a10dda3ad83492e87c0e07a0aea0d",
+        "blob": "fd78faa19e54e5e3742778429fd6ff8edd6791c7",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/Show.test.tsx",
+        "bytes": 615,
+        "sha256": "a668413073facbcc32ec36615d21bab61a35dd308720cff93e9c55dc3deafe93",
+        "blob": "a6a9d5d9ae835b6f8fba25529c9699d27b79ca62",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/Slacker.test.tsx",
+        "bytes": 8993,
+        "sha256": "0fe0866bbca6c4878c3e9b365e8b480add1bc8ddb2440557b6f724e01d728931",
+        "blob": "a2b8fef45e7bf05e99f8da53156b84095b9802bc",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/controlledIntersectionObserver.ts",
+        "bytes": 2267,
+        "sha256": "fa5dce6f63dde2d62cb0f94ccf37957bd4c868dbfd340bc02f9aaeb4472e1c3d",
+        "blob": "ab7f1232cd82ea365f66ddc2d56059639d1fb1d0",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/core-fixes.test.tsx",
+        "bytes": 2626,
+        "sha256": "c92897976a4e23cf09e5aa75495837c623c78150eb652219eb2c7f9c0dc010e8",
+        "blob": "ba359b84b7a1ecbb2fea7aec5cfcd2dafc7d012b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/new-components.test.tsx",
+        "bytes": 6260,
+        "sha256": "0430027df7ae572dc1c1fada332b800c23b59c0586b8dea2576e2700c8857bab",
+        "blob": "7077621a19c096582314b2ca18ffc7c37f265825",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/new-hooks.test.tsx",
+        "bytes": 7800,
+        "sha256": "e702e93f8a23f2436a5104c4cc77d9af26855c99a90b78e5c788609f08a39afd",
+        "blob": "7f9eda6eac8c22143befd98c59a7dd08101f3e49",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/react19/Mount.test-d.ts",
+        "bytes": 1574,
+        "sha256": "733bc822728692c2585f882cd8197f311468f4d0079948bd2a01023e6730fa5a",
+        "blob": "490bca8e5ca163f96aa8f4e44bca5305d14f551f",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/react19/tsconfig.json",
+        "bytes": 429,
+        "sha256": "8c4ad51208e67904ea49ba3007e0f68b0fca10c7edc52dc131100d090cc5e082",
+        "blob": "4a4c519d0d0b145537e2d88f158e2b01956eb2e4",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/setup.ts",
+        "bytes": 150,
+        "sha256": "c2ccf2417a8183a91935356b3d91c9aefc75b23abe2e72e335e671c12654f65d",
+        "blob": "bb32bff73b8136394328a7044519f30071ae1e48",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/tsconfig.json",
+        "bytes": 242,
+        "sha256": "b0899326226d330ec458f7aa4bb3d587f641606300c73375ef0a72ff0b00f49f",
+        "blob": "647c357c31d073f130bdc7b7ed4b12ce0ec4c796",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/types/Mount.test-d.tsx",
+        "bytes": 3687,
+        "sha256": "498829df5bbcc5f2af0c25015a5acc08a43fa5d0c807d4e8f3c6bd77ad452b47",
+        "blob": "c4c8e76cb76eb64ed9e71530e562ca5fe3b67ce6",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/test/useIntersectionObserver.test.tsx",
+        "bytes": 2451,
+        "sha256": "ad59264aa83626e61408f539091bde472c1ec75376c092e9562dc859b2cef1d9",
+        "blob": "8ca3d9d30825ab798ab3677b29df5fcded7b9375",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/tsconfig.json",
+        "bytes": 398,
+        "sha256": "277edbe1dda77948a915a947fa0dc79ff07ffec7be4dfd97599b55248a481b08",
+        "blob": "ef53ec65b42f15b411dd7f6bb458c26ef38953d9",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/vite.config.ts",
+        "bytes": 690,
+        "sha256": "f84c0a4031d4c90b36698d9134fc2a927b3fa5b241b3905f3f949d5790e345f9",
+        "blob": "af0982ad4dc2d9a6448a785d93497329c108f740",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/utilinent/vitest.config.ts",
+        "bytes": 196,
+        "sha256": "aaa646320889c9e813573e3d43b50551b1597750d5000cb402ad4f8ea270a316",
+        "blob": "c8591dc9f747de23e7364f0c0caee7f5e896adc6",
+        "mode": "100644"
+      }
+    ]
+  },
+  "exampleSource": {
+    "commit": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "files": [
+      {
+        "path": "apps/docs/components/demos/utilinent-demo.tsx",
+        "mode": "100644",
+        "blob": "7d0377064e349e99a67de2df9df5901e59847dd1"
+      }
+    ]
+  },
+  "registry": {
+    "tarball": "https://registry.npmjs.org/@ilokesto/utilinent/-/utilinent-1.2.0.tgz",
+    "integrity": "sha512-qyiB9JvHFqX/eIYz3CXEI5BNJ87dGTMWTAxsnkfOGn9bX5l3QsKKa40ZMqOxCel3lPn1bbU0iFbdLNS4OmXI7A==",
+    "shasum": "8d33965d65ed0126e8e12289209a6a06d56fb3c0",
+    "gitHead": null,
+    "attestations": null,
+    "files": [
+      {
+        "path": "README.ko.md",
+        "bytes": 4390,
+        "sha256": "c346a91793e7303f9fbd4a767231cf2f053a01518a05f6009749a7385501e2dc"
+      },
+      {
+        "path": "README.md",
+        "bytes": 4069,
+        "sha256": "3a4d3cef0c3d9f0501a6913b52ab2fd17baf5068593d99fbb4947e16958cc72c"
+      },
+      {
+        "path": "dist/components/ClickAway/index.d.ts",
+        "bytes": 424,
+        "sha256": "69e5586a944e0697f9b737c6762abfd5f6fe620aab4e5281f6838beca093c7e0"
+      },
+      {
+        "path": "dist/components/ClickAway/index.js",
+        "bytes": 866,
+        "sha256": "cdcc96b0caffd02b8126acdd7b925bd7f4deb09fdc083cee9c3f0a06a413ab7b"
+      },
+      {
+        "path": "dist/components/ClickAway/types.d.ts",
+        "bytes": 605,
+        "sha256": "c2317193ebf239d2d1ba8dfb538b459c66b3c835304176d7578cae3b5513b5d0"
+      },
+      {
+        "path": "dist/components/ClickAway/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/ClientOnly/index.d.ts",
+        "bytes": 585,
+        "sha256": "33dfbebdbf2c7a5148e3e68b9a07197db982c2b19409f0f594bfffb8e8f83c09"
+      },
+      {
+        "path": "dist/components/ClientOnly/index.js",
+        "bytes": 639,
+        "sha256": "ef587234fc33cc333ca7ba3823cc78160e3dc403f5504275e8fcd611371bee11"
+      },
+      {
+        "path": "dist/components/ErrorBoundary/index.d.ts",
+        "bytes": 1422,
+        "sha256": "ae1f8bd88bce31c0a21bc31c852ebf29ebc5e8d28f840b220e9bedb360efe7ac"
+      },
+      {
+        "path": "dist/components/ErrorBoundary/index.js",
+        "bytes": 1233,
+        "sha256": "e18a4c0813c5cec95f85ec2686285f03fb7eb8e606ef66d02b2372e61b91a758"
+      },
+      {
+        "path": "dist/components/For/index.d.ts",
+        "bytes": 391,
+        "sha256": "16b7297144ac1eb3c3e046c2253e7763cc7cbb09e3af53bb6c156624af031018"
+      },
+      {
+        "path": "dist/components/For/index.js",
+        "bytes": 728,
+        "sha256": "ba7bbf92561d242ea9633d899c684933a3b4e681cce3f1b2f69203783ef0d5c4"
+      },
+      {
+        "path": "dist/components/For/types.d.ts",
+        "bytes": 781,
+        "sha256": "77eef69e2b9602e7bbbe70cc5a3b11ab61648e566d7d4e70ecae1469f26a14fe"
+      },
+      {
+        "path": "dist/components/For/types.js",
+        "bytes": 13,
+        "sha256": "279ddeeab07e233ba0703c7409adddfa6b8dc840ebb0ac9de218afc9b9ae74c2"
+      },
+      {
+        "path": "dist/components/Hotkey/index.d.ts",
+        "bytes": 317,
+        "sha256": "1bb48c4714c1918346b2747fa9de1ea2c16a0dfb7c694000b6126c2a1b7b3ee1"
+      },
+      {
+        "path": "dist/components/Hotkey/index.js",
+        "bytes": 348,
+        "sha256": "0d94873f35bf352eb105ff85485e247770261be4e1fabbc297ee1bd585a67513"
+      },
+      {
+        "path": "dist/components/Hotkey/types.d.ts",
+        "bytes": 366,
+        "sha256": "f1db7f46f67abac7d33ffa31cc11d23a77459b48963ced292c703f7b41bdffc2"
+      },
+      {
+        "path": "dist/components/Hotkey/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Hoverable/index.d.ts",
+        "bytes": 414,
+        "sha256": "8d212092e57377037357864cf4f32f480c187622cd3f6a4f45e2d6b7eaf71371"
+      },
+      {
+        "path": "dist/components/Hoverable/index.js",
+        "bytes": 811,
+        "sha256": "92b0956c5ae81d96ad471bd6d4259129545723189b8156a2a9ed667aac45976e"
+      },
+      {
+        "path": "dist/components/Hoverable/types.d.ts",
+        "bytes": 363,
+        "sha256": "5fd02764e772ad6a8baf05b467fde8f5c7ffecfa05970dad44f8646a7146dc88"
+      },
+      {
+        "path": "dist/components/Hoverable/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Measure/index.d.ts",
+        "bytes": 437,
+        "sha256": "2d226b6245c8154f320104e6b67f2b565fd482cf4d14333c7624904af29df2a2"
+      },
+      {
+        "path": "dist/components/Measure/index.js",
+        "bytes": 917,
+        "sha256": "dbe1ef3f25f3bd76c134d38f8c0e0bbd4ecba5e29c0c9efffb13a1a10894aa30"
+      },
+      {
+        "path": "dist/components/Measure/types.d.ts",
+        "bytes": 550,
+        "sha256": "e7b20b2dcb3015eecebe7e374356bb03d9f28e3e14f69588b598e96f696b7455"
+      },
+      {
+        "path": "dist/components/Measure/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Media/index.d.ts",
+        "bytes": 558,
+        "sha256": "58d0472ef2d6b28e88270973d0466abfdca7983902019de3038e68a990ccc06d"
+      },
+      {
+        "path": "dist/components/Media/index.js",
+        "bytes": 713,
+        "sha256": "44f5be4314bfd400f019e20aa9deaf832d31d15c4b0cdd89719b8ee8b960a452"
+      },
+      {
+        "path": "dist/components/Media/types.d.ts",
+        "bytes": 503,
+        "sha256": "b580e87bd34812d1fa6db2fa4cbeb08a1b2699c9665681c68a5a8881980278d8"
+      },
+      {
+        "path": "dist/components/Media/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Mount/index.d.ts",
+        "bytes": 509,
+        "sha256": "b83e0439c27d623976619e7108252bfed6af264ef8bdc7d376363c4d0fe06a39"
+      },
+      {
+        "path": "dist/components/Mount/index.js",
+        "bytes": 2830,
+        "sha256": "2d06408870de458ba8cfb8a3b8fd79377d275406081da369eeab6165326616ee"
+      },
+      {
+        "path": "dist/components/Mount/types.d.ts",
+        "bytes": 971,
+        "sha256": "c7a5b0538b565d2fb2213dd28b1c23f33d80eab3eb79da960a5bcaf7474fbbf7"
+      },
+      {
+        "path": "dist/components/Mount/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Observer/index.d.ts",
+        "bytes": 1061,
+        "sha256": "bd8229113aa970392168c90938603a0cb4e51f5d71a107a2864e08345ac3ff44"
+      },
+      {
+        "path": "dist/components/Observer/index.js",
+        "bytes": 1695,
+        "sha256": "2b6c9551ba5ddefa637a64f16a8aac0f72505268231c6def50c0ca58aaf4c458"
+      },
+      {
+        "path": "dist/components/Observer/types.d.ts",
+        "bytes": 804,
+        "sha256": "530d8fe86f3b2adec674f39da8b59098ebfb0ca74fc63447f04c283081e9df8c"
+      },
+      {
+        "path": "dist/components/Observer/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/OptionalWrapper/index.d.ts",
+        "bytes": 587,
+        "sha256": "3b847ab627da024494bb508d14c84f21b0ead0dc6d9b873551d252ffc507f73d"
+      },
+      {
+        "path": "dist/components/OptionalWrapper/index.js",
+        "bytes": 727,
+        "sha256": "de0e0bc1c092f4ba6285e0fb5a1e67f82efccbd34ed614511ef1aadd4fb5ad20"
+      },
+      {
+        "path": "dist/components/OptionalWrapper/types.d.ts",
+        "bytes": 764,
+        "sha256": "aa2bbabd6fd6356695a6958a95823040f107fd6b05c99000dc228ba7301e50c6"
+      },
+      {
+        "path": "dist/components/OptionalWrapper/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Repeat/index.d.ts",
+        "bytes": 420,
+        "sha256": "fb9aed6d07590601046f6d322eaded4f2dad6092428201dbbd796c74b8d64d48"
+      },
+      {
+        "path": "dist/components/Repeat/index.js",
+        "bytes": 976,
+        "sha256": "346998f1028f9e985ac3aaa704775390a21ff624b6b4c7ea25c1c9ba2d83b778"
+      },
+      {
+        "path": "dist/components/Repeat/types.d.ts",
+        "bytes": 743,
+        "sha256": "fb203cb4923bba26aa301696df30559ad20b0875b5b73c543553c47a154af69b"
+      },
+      {
+        "path": "dist/components/Repeat/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Show/index.d.ts",
+        "bytes": 535,
+        "sha256": "7ab919f14e80cec3f0ccc27dc6204dfb0fba7de59831cc9c425605a083755794"
+      },
+      {
+        "path": "dist/components/Show/index.js",
+        "bytes": 1046,
+        "sha256": "bc48e7385af6449fe369f5d09c389301feabe910ec340bfb7365d910c8899bf0"
+      },
+      {
+        "path": "dist/components/Show/types.d.ts",
+        "bytes": 1263,
+        "sha256": "7bf582ce79e6484dac17cd784e101bcd630d5f54690858d7464d25b114311ece"
+      },
+      {
+        "path": "dist/components/Show/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Slacker/index.d.ts",
+        "bytes": 822,
+        "sha256": "1560f46c47da48faf9020a72b3b9e9d27aae2dcf5960434bf83acb050f7de507"
+      },
+      {
+        "path": "dist/components/Slacker/index.js",
+        "bytes": 6045,
+        "sha256": "a937d406aaa2f8424d2812e761ed57bcad4da7efc7c7fbf7a198974dda9a01de"
+      },
+      {
+        "path": "dist/components/Slacker/types.d.ts",
+        "bytes": 1330,
+        "sha256": "3408a8b36a25e67733de7077c04eead5d3fc04318098516f4fb8d396e343c013"
+      },
+      {
+        "path": "dist/components/Slacker/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Slot/Slot.d.ts",
+        "bytes": 548,
+        "sha256": "6553f36810c32b85c0d6654aef4d35b99334e4ee12c12361c3f577ad21e2ec18"
+      },
+      {
+        "path": "dist/components/Slot/Slot.js",
+        "bytes": 1837,
+        "sha256": "00f2defb17b78bbb4b809deb9b9d15554977202773c0916e866e2f15f90a8379"
+      },
+      {
+        "path": "dist/components/Slot/Slottable.d.ts",
+        "bytes": 419,
+        "sha256": "40e885c0b96fc77e2816c38ee9fffafd3709771a9e16f6280b25e7c1e35b809c"
+      },
+      {
+        "path": "dist/components/Slot/Slottable.js",
+        "bytes": 527,
+        "sha256": "55dc54d16882051ee36a68379be9fb646ff9ff1ea4fd9c10e5458da1ae6dd6bd"
+      },
+      {
+        "path": "dist/components/Slot/index.d.ts",
+        "bytes": 72,
+        "sha256": "abade8a77f83c35da74de0764bccdd9ecae5efd53f267c3a3ce4588b6fc9db7e"
+      },
+      {
+        "path": "dist/components/Slot/index.js",
+        "bytes": 72,
+        "sha256": "abade8a77f83c35da74de0764bccdd9ecae5efd53f267c3a3ce4588b6fc9db7e"
+      },
+      {
+        "path": "dist/components/Slot/mergeProps.d.ts",
+        "bytes": 113,
+        "sha256": "850e06485aa8447d66892bf8ccc1ca76275e1bfe60c816cf1e452d0a732ca6b4"
+      },
+      {
+        "path": "dist/components/Slot/mergeProps.js",
+        "bytes": 943,
+        "sha256": "4ac1fef8a0b9af7566b429b27a129ae45acbbae95e6d5fdc9c0598fd604c2b98"
+      },
+      {
+        "path": "dist/components/Slot/types.d.ts",
+        "bytes": 115,
+        "sha256": "3103de2f7c60d6979ab63d1b5b8a7dd165c77cecaf7166054a6bd944003a0883"
+      },
+      {
+        "path": "dist/components/Slot/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/components/Switch/Match.d.ts",
+        "bytes": 727,
+        "sha256": "70f8c11c3b4bb1b5791f6e6a0736199cc721ddf64ee3371bd382e441f6092193"
+      },
+      {
+        "path": "dist/components/Switch/Match.js",
+        "bytes": 373,
+        "sha256": "73958c2a87ada9c14a77f0d922da51c089423f17978acbf3cc8b0a701bb39285"
+      },
+      {
+        "path": "dist/components/Switch/Switch.d.ts",
+        "bytes": 562,
+        "sha256": "f938ec9c8ec518bdc87faa21ce9aed393dc6f0d7beb0f6340f19339f1bf2a89e"
+      },
+      {
+        "path": "dist/components/Switch/Switch.js",
+        "bytes": 1283,
+        "sha256": "d7ca62a29aac31428435a543c693f395fa32b2078186e560b7a693475244a2d6"
+      },
+      {
+        "path": "dist/components/Switch/flattenChildren.d.ts",
+        "bytes": 85,
+        "sha256": "a32bf17f12ae217b052c014556b5670363c0ad90012ac495e18dca1ec690570a"
+      },
+      {
+        "path": "dist/components/Switch/flattenChildren.js",
+        "bytes": 291,
+        "sha256": "cc05399740bf717938ebd44844102afa51a4a17706841f2aa7b9eb2038c5aac3"
+      },
+      {
+        "path": "dist/components/Switch/index.d.ts",
+        "bytes": 68,
+        "sha256": "e9ebf10f5f924ad5c3ef456d3b826a3ee6b3d3161792dd8805c3dee61276bee2"
+      },
+      {
+        "path": "dist/components/Switch/index.js",
+        "bytes": 68,
+        "sha256": "e9ebf10f5f924ad5c3ef456d3b826a3ee6b3d3161792dd8805c3dee61276bee2"
+      },
+      {
+        "path": "dist/components/Switch/types.d.ts",
+        "bytes": 1297,
+        "sha256": "e1222da17ca5d166c4c853d93bf70fdbbff06c2815a97f857133ecd590ef596b"
+      },
+      {
+        "path": "dist/components/Switch/types.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/constants/htmlTags.d.ts",
+        "bytes": 2516,
+        "sha256": "368ac954be14cbf3258ea2a7d0b0ffd24ed96a4a65ee9e4e1b2f68e1034467a5"
+      },
+      {
+        "path": "dist/constants/htmlTags.js",
+        "bytes": 1702,
+        "sha256": "38aea0b56856f1a790d3db2bdbed237e5bfb7309b7bf389cdec79dfbce162190"
+      },
+      {
+        "path": "dist/core/PluginManager.d.ts",
+        "bytes": 1378,
+        "sha256": "eb65809310b8f87c253100379b0aad9bed021c5ee1674c075478be9cbc0e26b3"
+      },
+      {
+        "path": "dist/core/PluginManager.js",
+        "bytes": 2248,
+        "sha256": "d5883bce8548614e541b2a89923dafa0954e75ea9b793743366ea485789e98b4"
+      },
+      {
+        "path": "dist/core/createProxy.d.ts",
+        "bytes": 842,
+        "sha256": "7762c73ab00677ce378c6bb33ba443fb0142ed6ad9823df187949a7247cc603b"
+      },
+      {
+        "path": "dist/core/createProxy.js",
+        "bytes": 1774,
+        "sha256": "78e7c3f261c30d54b91a9d67b126a6f39c4ea6e2444bae94c07fef70e02393bb"
+      },
+      {
+        "path": "dist/core/createTagRenderer.d.ts",
+        "bytes": 539,
+        "sha256": "676ce61a421bdcbb507685d038105573e8a6cf8f0e1329fbc427dc6988109e19"
+      },
+      {
+        "path": "dist/core/createTagRenderer.js",
+        "bytes": 1003,
+        "sha256": "6965a55000a41e0f1914b260effc076953942a00ae47bf2ff4931074d7115601"
+      },
+      {
+        "path": "dist/hooks/index.d.ts",
+        "bytes": 342,
+        "sha256": "feeab13bb6291e8630937f4095e98706abc10d746c318d841bf4b7cba218fb78"
+      },
+      {
+        "path": "dist/hooks/index.js",
+        "bytes": 342,
+        "sha256": "feeab13bb6291e8630937f4095e98706abc10d746c318d841bf4b7cba218fb78"
+      },
+      {
+        "path": "dist/hooks/useClickAway.d.ts",
+        "bytes": 847,
+        "sha256": "facc2e8ad8410b89e0e4033a2e31d241e81e7405ceb44ccdde1b626a199867b1"
+      },
+      {
+        "path": "dist/hooks/useClickAway.js",
+        "bytes": 1528,
+        "sha256": "ecc0330d384df65c5a01a4d19ca9075828a8722efc6f4add93ebb7f4fdc1079f"
+      },
+      {
+        "path": "dist/hooks/useDebounce.d.ts",
+        "bytes": 364,
+        "sha256": "f48b3ed0dbc43a7396205f9cb7507d5498944d1693188ec7c71a0e3e92fbeb24"
+      },
+      {
+        "path": "dist/hooks/useDebounce.js",
+        "bytes": 670,
+        "sha256": "c249647ead732843eb8c83a2e11569f6d6b98c45f6bd7ec28d5b1fb58b2ea3dd"
+      },
+      {
+        "path": "dist/hooks/useEventListener.d.ts",
+        "bytes": 1127,
+        "sha256": "231eabcd701c7fa6c1fe5238cd403442c9ba657a367b697cc8b7f6e3102555f5"
+      },
+      {
+        "path": "dist/hooks/useEventListener.js",
+        "bytes": 1713,
+        "sha256": "ce934a2648defe1937f915e49fb85c27e57d7321300d8e33f70c583c30fd64d4"
+      },
+      {
+        "path": "dist/hooks/useHover.d.ts",
+        "bytes": 784,
+        "sha256": "9ce1a4dd5c0559b8840c197518ece2e0f231f5e2456f157025488a1db5a7ad34"
+      },
+      {
+        "path": "dist/hooks/useHover.js",
+        "bytes": 1204,
+        "sha256": "f150af1aa4902676e153ddc75bc5e34fc938bc32a818ee2343a0cbc461ec4494"
+      },
+      {
+        "path": "dist/hooks/useIntersectionObserver.d.ts",
+        "bytes": 1881,
+        "sha256": "1c640cec807b49e1afe3fb5e7e4d4ecddff63ac06d5fc0eb1e8bdc6800f268a8"
+      },
+      {
+        "path": "dist/hooks/useIntersectionObserver.js",
+        "bytes": 3965,
+        "sha256": "e17c531c60483aa243baa599de6062e9df3fcfceb75925dda79fd4e8fb4ff48d"
+      },
+      {
+        "path": "dist/hooks/useIsomorphicLayoutEffect.d.ts",
+        "bytes": 244,
+        "sha256": "f5fb1b328d3375adae5f6ed7353d21c42074f93cd081b348d6e72ba7e0f5f0e8"
+      },
+      {
+        "path": "dist/hooks/useIsomorphicLayoutEffect.js",
+        "bytes": 297,
+        "sha256": "46655a1192ec4b47dd97f04ec29bc623bdd372fdd40b4dab06330256a22fc8ce"
+      },
+      {
+        "path": "dist/hooks/useKey.d.ts",
+        "bytes": 764,
+        "sha256": "5601dd91a512cef04db7d3ee70e44cf1598e0d0e9cf131b88e72fca226cbbc63"
+      },
+      {
+        "path": "dist/hooks/useKey.js",
+        "bytes": 1293,
+        "sha256": "72c7d1747052f48058fe24793ff9e2b4bb4eef30a026ad6e62294a0fa6d4b798"
+      },
+      {
+        "path": "dist/hooks/useMediaQuery.d.ts",
+        "bytes": 424,
+        "sha256": "f470748f6c3c1f1ce2271d143c38f320be65e56338ceb5fca1d8863ff4ce93f7"
+      },
+      {
+        "path": "dist/hooks/useMediaQuery.js",
+        "bytes": 1237,
+        "sha256": "bc96117f219d27af558af08b6ce8c3e5867ee2f7ca2bfdc649333988d34f45b6"
+      },
+      {
+        "path": "dist/hooks/useResizeObserver.d.ts",
+        "bytes": 991,
+        "sha256": "0e0936b0d753c310d7db2154f51832bdf883f8ddad3d448bab2db1628077eb0b"
+      },
+      {
+        "path": "dist/hooks/useResizeObserver.js",
+        "bytes": 1406,
+        "sha256": "2a8f5faf0e2169a938b2956ef4f75e5beee0f65b1c8109085dfc8c7f9c43e50a"
+      },
+      {
+        "path": "dist/hooks/useThrottle.d.ts",
+        "bytes": 403,
+        "sha256": "975ae7e429536cbb617ca80918627a1abadaf4639f0d1f0624d12e9c3a7567a0"
+      },
+      {
+        "path": "dist/hooks/useThrottle.js",
+        "bytes": 1427,
+        "sha256": "f4d3235a8279b334ec280bd32eff85829ab9f43f17935272e7b64d44986f5fd4"
+      },
+      {
+        "path": "dist/index.d.ts",
+        "bytes": 817,
+        "sha256": "1d4eb2d98210f6771def95f212d09aaa78694494bde5ce2dbaf7808e03c45877"
+      },
+      {
+        "path": "dist/index.js",
+        "bytes": 915,
+        "sha256": "2a1df1fd192c50c04f54ed5af97f23cd4b8c725d85d0a9f258f2ea5a09cb0a1d"
+      },
+      {
+        "path": "dist/types/RegistryCategory.d.ts",
+        "bytes": 490,
+        "sha256": "846ef9ffe60e79601d2484b1440a42286a1b6b5b51aa98a9775018104d50466b"
+      },
+      {
+        "path": "dist/types/RegistryCategory.js",
+        "bytes": 283,
+        "sha256": "88ecc221816aa1752c6d03d0164d762e2c4eb8ae5067d9078f074d7d52832a05"
+      },
+      {
+        "path": "dist/types/index.d.ts",
+        "bytes": 118,
+        "sha256": "073d22fe7a7d2bcb73c9ceeba1464ff99141bf984884e233c99ebe528cb3ed18"
+      },
+      {
+        "path": "dist/types/index.js",
+        "bytes": 118,
+        "sha256": "073d22fe7a7d2bcb73c9ceeba1464ff99141bf984884e233c99ebe528cb3ed18"
+      },
+      {
+        "path": "dist/types/register.d.ts",
+        "bytes": 561,
+        "sha256": "7f0d9197453c211e0a979caa19b559a46c07b0d54b31fdca4596688cf1d99da1"
+      },
+      {
+        "path": "dist/types/register.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/types/tagHelper.d.ts",
+        "bytes": 1750,
+        "sha256": "d22b35f4ded14d90a2b60383968363b9bd65a2ce0cf22c500dff3e8a038c76ea"
+      },
+      {
+        "path": "dist/types/tagHelper.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/types/utils.d.ts",
+        "bytes": 369,
+        "sha256": "37cd415dc26ddde75d1fc1771dec63489686e50c103ced5cd54fad5e1af4c90f"
+      },
+      {
+        "path": "dist/types/utils.js",
+        "bytes": 11,
+        "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+      },
+      {
+        "path": "dist/utils/composeRefs.d.ts",
+        "bytes": 508,
+        "sha256": "c19205b1aed8d3dfab5862658e7695c2d31233eb7b16629c27019391597e6c88"
+      },
+      {
+        "path": "dist/utils/composeRefs.js",
+        "bytes": 1123,
+        "sha256": "2743599d270118d7e0549c6ac8480605fd87c6b70e107620fb2ba766ca8d9277"
+      },
+      {
+        "path": "dist/utils/isPromiseLike.d.ts",
+        "bytes": 181,
+        "sha256": "0b5d6b9c948d234b6f8aa54f8b00dddc18902b0683e6b8dba8f81502cefc2f23"
+      },
+      {
+        "path": "dist/utils/isPromiseLike.js",
+        "bytes": 272,
+        "sha256": "1e50a56786d80dff62b57edf9581a9ea6850b048140c8cf602fe1ecc2316bb68"
+      },
+      {
+        "path": "dist/utils/resolveWhen.d.ts",
+        "bytes": 416,
+        "sha256": "60359439f5d2b64fd0a31a56fd2ef356019ea7c4d5b43962b08cb7079ee16832"
+      },
+      {
+        "path": "dist/utils/resolveWhen.js",
+        "bytes": 125,
+        "sha256": "871d051003f818e909b194f1c8ca0136896f8a696c04d261cfc10fbad49ea497"
+      },
+      {
+        "path": "package.json",
+        "bytes": 1688,
+        "sha256": "f50cb4685a52355c9fa375d26829a724847f8e2bcd87e2ff38c9d81940cbccaa"
+      }
+    ]
+  },
+  "provenance": {
+    "kind": "operational-evidence-not-cryptographic-source-provenance",
+    "report": "release-provenance.md",
+    "observedAt": "2026-09-27",
+    "publishRun": "https://github.com/ilokesto/ilokesto/actions/runs/36302267041",
+    "publishCheckout": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "npmGitHead": null,
+    "npmAttestations": null,
+    "evidence": [
+      "The successful workflow checked out this commit; all eight annotated release tags peel to it.",
+      "Both shipped READMEs match source blobs; packed manifests differ only by workspace protocol rewrites.",
+      "The audit compared all published dist bytes with matching builds, including a fresh Fetcher build."
+    ],
+    "limitation": "npm exposes neither gitHead nor source provenance attestations for these versions. Workflow, tags, and byte comparisons support the source association but do not cryptographically prove it.",
+    "reportSha256": "374af7f4df1dd24d2e34aefb96656f779dbbbae0f6890cc817239b975fb29343",
+    "tag": "@ilokesto/utilinent@1.2.0",
+    "tagTarget": "ecd9709b76d1976ec86865314e85b916f220c818"
+  },
+  "files": [
+    {
+      "path": "examples/apps/docs/components/demos/utilinent-demo.tsx",
+      "bytes": 5923,
+      "sha256": "27ad45d7d2d0c57dc54637d8f7dea649dafca81735d25a94805f692ae2698be9"
+    },
+    {
+      "path": "npm/package.tgz",
+      "bytes": 30469,
+      "sha256": "4bc0dde0f120d2bc1ddcf2900fa05c143bbe01bb27de7c7a7673b4809aada15a"
+    },
+    {
+      "path": "provenance/release-provenance.md",
+      "bytes": 21178,
+      "sha256": "374af7f4df1dd24d2e34aefb96656f779dbbbae0f6890cc817239b975fb29343"
+    },
+    {
+      "path": "release/README.ko.md",
+      "bytes": 4390,
+      "sha256": "c346a91793e7303f9fbd4a767231cf2f053a01518a05f6009749a7385501e2dc"
+    },
+    {
+      "path": "release/README.md",
+      "bytes": 4069,
+      "sha256": "3a4d3cef0c3d9f0501a6913b52ab2fd17baf5068593d99fbb4947e16958cc72c"
+    },
+    {
+      "path": "release/docs/advanced/meta.json",
+      "bytes": 101,
+      "sha256": "8af3099b040cc5a1d57fa899100e62749389c5cb8ceb57bfb6ca844255d49990"
+    },
+    {
+      "path": "release/docs/advanced/proxy-registry.ko.mdx",
+      "bytes": 777,
+      "sha256": "a862f52ee0ca8b008f3ce97d54d308da2282905eadd52168a030ef883627f693"
+    },
+    {
+      "path": "release/docs/advanced/proxy-registry.mdx",
+      "bytes": 712,
+      "sha256": "899961175507b962f5e7a6b5f0670fcb88f3a3c4ae7e9bb17b00c59c2ca75cb1"
+    },
+    {
+      "path": "release/docs/advanced/ssr.ko.mdx",
+      "bytes": 862,
+      "sha256": "eeb6d073d08d5fbb27fe587996c32baac5305b257d5a27621816d282757ca5c4"
+    },
+    {
+      "path": "release/docs/advanced/ssr.mdx",
+      "bytes": 742,
+      "sha256": "ee0026bd1e585563ca420af16c29af381081b850da2ace3df76a1471dcd9dba7"
+    },
+    {
+      "path": "release/docs/advanced/truthiness.ko.mdx",
+      "bytes": 810,
+      "sha256": "216daa3a72a594c4985d500307e7d89d445dab38e3871dd18de6541ca0411c9c"
+    },
+    {
+      "path": "release/docs/advanced/truthiness.mdx",
+      "bytes": 664,
+      "sha256": "7406dda969c80f9b96a22c72a9093860c0a3397513b6e277419cc82cb0480ff7"
+    },
+    {
+      "path": "release/docs/core-concepts.ko.mdx",
+      "bytes": 3937,
+      "sha256": "c04a98219ab2f332fe347a24b85d265cbfad71ec222ac02614f9ee99746e0924"
+    },
+    {
+      "path": "release/docs/core-concepts.mdx",
+      "bytes": 3531,
+      "sha256": "c46e34eaf315afd8ca1671f669efefd856f760ec1303904f7ebc885d0f43fa6e"
+    },
+    {
+      "path": "release/docs/guides/async-data.ko.mdx",
+      "bytes": 1428,
+      "sha256": "1160b0e6ed8c259eaf739dc88048b2f31757df7733cef2e1ee51ce35f33b81b7"
+    },
+    {
+      "path": "release/docs/guides/async-data.mdx",
+      "bytes": 1208,
+      "sha256": "df3d064c288ab7954f027a6d967540b732fc91eb38fc35ccf1604cad35f150c3"
+    },
+    {
+      "path": "release/docs/guides/custom-proxy-components.ko.mdx",
+      "bytes": 909,
+      "sha256": "294eefc40be88232cf855eb37f7dd9dafbd378d3cdf283149126dc3f605cce35"
+    },
+    {
+      "path": "release/docs/guides/custom-proxy-components.mdx",
+      "bytes": 840,
+      "sha256": "6a9cec8d8b00dc452c83b25461bc5ca1678bbabebe85f65f832e8746955ab57d"
+    },
+    {
+      "path": "release/docs/guides/lazy-loading.ko.mdx",
+      "bytes": 981,
+      "sha256": "a8fc6d675901daaf3f978d9801d954c694b458607d248b15a46fbb214eff0412"
+    },
+    {
+      "path": "release/docs/guides/lazy-loading.mdx",
+      "bytes": 852,
+      "sha256": "d60a303fc9e40cc63394a3729237fe282164159776a83f7e6798919159452484"
+    },
+    {
+      "path": "release/docs/guides/list-and-empty-states.ko.mdx",
+      "bytes": 994,
+      "sha256": "986541cebe98a4bf01e3045f0f6b496764ab1e11822b380cdc9d9ed756108e8e"
+    },
+    {
+      "path": "release/docs/guides/list-and-empty-states.mdx",
+      "bytes": 892,
+      "sha256": "4838f5e7a01ea415e89e12ed69b94eb0c6f2db0b90d4f39473c8144675fb63a6"
+    },
+    {
+      "path": "release/docs/guides/meta.json",
+      "bytes": 186,
+      "sha256": "1474c8e23dd46470b58bb069615de598731aaa2b4b1c4d162b9cb55036160bc3"
+    },
+    {
+      "path": "release/docs/guides/polymorphic-tags.ko.mdx",
+      "bytes": 946,
+      "sha256": "082008cec67fd6585eba56e051501119eb403844df0930806c4d0961ccec32ab"
+    },
+    {
+      "path": "release/docs/guides/polymorphic-tags.mdx",
+      "bytes": 864,
+      "sha256": "8ad89fd36e28e131c0b48768b4866880a370647718ffafa5a94a47bb23f076eb"
+    },
+    {
+      "path": "release/docs/index.ko.mdx",
+      "bytes": 3172,
+      "sha256": "f261c4f40b32b1faf18574de3f73c809d645de062c44ba9c24855e1858024f3e"
+    },
+    {
+      "path": "release/docs/index.mdx",
+      "bytes": 3067,
+      "sha256": "98fc989159bcb4907f607ca7bd574b55c1cadf195bbf8202a8bedab31186db3b"
+    },
+    {
+      "path": "release/docs/integrations/meta.json",
+      "bytes": 85,
+      "sha256": "4e0762a2fa398865bd45f062c32930a0eefac7fc85a016546d829c5197f7f566"
+    },
+    {
+      "path": "release/docs/integrations/nextjs.ko.mdx",
+      "bytes": 1088,
+      "sha256": "bb527086f9e421a2a5e7b499cf4bab3ec58d6b1ed2325de032bdcc6d2c4fc42e"
+    },
+    {
+      "path": "release/docs/integrations/nextjs.mdx",
+      "bytes": 1028,
+      "sha256": "b501c94f5da1002e1b9bd7e90d990ea3432e652e8499624705c937bb878021f8"
+    },
+    {
+      "path": "release/docs/integrations/react.ko.mdx",
+      "bytes": 1003,
+      "sha256": "695c887a265b597fed177b0c4e276a3f1d2b504acec5efe5d6726d5f498b8f12"
+    },
+    {
+      "path": "release/docs/integrations/react.mdx",
+      "bytes": 874,
+      "sha256": "39ca537ce0bb1a1392d870f03f9ff8742acca223a56b498d8e603b1dbb86c7ce"
+    },
+    {
+      "path": "release/docs/meta.json",
+      "bytes": 335,
+      "sha256": "42cd5102f9e35425bf7ad155256533df555a0f92871f8bda337b61dd26c5c535"
+    },
+    {
+      "path": "release/docs/quick-start.ko.mdx",
+      "bytes": 3746,
+      "sha256": "670f7e4e0a6bbfa04cad8d304dd4f4fe8519e7c30fa8c76825e3498e59b7630c"
+    },
+    {
+      "path": "release/docs/quick-start.mdx",
+      "bytes": 3407,
+      "sha256": "fe9a5e706106a52e7bf45863cd86fc2460f255e9cc3fa9028e28fd55b9671fda"
+    },
+    {
+      "path": "release/docs/reference/click-away.ko.mdx",
+      "bytes": 886,
+      "sha256": "8a1ca5b4d99073542bfc46d86f9e56fdc0fb91869a869c0999692a183ca1dd42"
+    },
+    {
+      "path": "release/docs/reference/click-away.mdx",
+      "bytes": 800,
+      "sha256": "c1817dd7443576a3a0faee42b1aeb7d758b8851d2d082e0d6cfbecb8b0038957"
+    },
+    {
+      "path": "release/docs/reference/client-only.ko.mdx",
+      "bytes": 718,
+      "sha256": "eec9f32658fa81d9691788650460cc2bbdd1f6ada0f69d8f61261eef5f285d17"
+    },
+    {
+      "path": "release/docs/reference/client-only.mdx",
+      "bytes": 620,
+      "sha256": "dc83208a0b098f3b12131e71aa2e94cfdbf65d2caf3659320a6dd21ddf8b0a17"
+    },
+    {
+      "path": "release/docs/reference/error-boundary.ko.mdx",
+      "bytes": 1085,
+      "sha256": "e81b4502177ca75409334e591524ca83118018c6a6b17566b9347b7074d87b6b"
+    },
+    {
+      "path": "release/docs/reference/error-boundary.mdx",
+      "bytes": 994,
+      "sha256": "c2895edce3c4d7a17f9cc5639c97116399665e00aff69fa41abfeb18f195b029"
+    },
+    {
+      "path": "release/docs/reference/for.ko.mdx",
+      "bytes": 1371,
+      "sha256": "d41fd9635c94a87726a45a3ac0957d678531cf99b1f452310d2297a19945649a"
+    },
+    {
+      "path": "release/docs/reference/for.mdx",
+      "bytes": 1210,
+      "sha256": "8521f190b3e341ace11fd909b0447ad6865bf17d3397fcbc8bdbe57b307c2726"
+    },
+    {
+      "path": "release/docs/reference/hotkey.ko.mdx",
+      "bytes": 921,
+      "sha256": "ad5f4395f2a792fff97dab30c47f2a898faf952ac76b936ca74b444e0e9c1fb8"
+    },
+    {
+      "path": "release/docs/reference/hotkey.mdx",
+      "bytes": 805,
+      "sha256": "670acdcadc9e31beb676ca09ae984a379e02f769eee9f840a49afd4359833ec3"
+    },
+    {
+      "path": "release/docs/reference/hoverable.ko.mdx",
+      "bytes": 730,
+      "sha256": "db5868425496bb767d914e28eeb12be7d39620002ee10db01396cbced3a5ae4b"
+    },
+    {
+      "path": "release/docs/reference/hoverable.mdx",
+      "bytes": 670,
+      "sha256": "607f8d4ac19cb9a5a17d6406e6ca5d3267ce129704ae120a145f5e2ae97d2823"
+    },
+    {
+      "path": "release/docs/reference/measure.ko.mdx",
+      "bytes": 894,
+      "sha256": "a65b2e024c0321cdc860c5eaef418660b26a874a4bf660964b322718dcec39b4"
+    },
+    {
+      "path": "release/docs/reference/measure.mdx",
+      "bytes": 831,
+      "sha256": "2b15e23b142afe4de33dfd51d1a84b179509f77138548fc49c6fd26503561e8b"
+    },
+    {
+      "path": "release/docs/reference/media.ko.mdx",
+      "bytes": 926,
+      "sha256": "f68580548c287f10d5c6a103fed46f1cacf63d8a430732e97aa415c2c44d48b3"
+    },
+    {
+      "path": "release/docs/reference/media.mdx",
+      "bytes": 852,
+      "sha256": "e08ab897aa72f87922448b32d6cccb3f5923c01b8daca7a094b52d739f17fcb2"
+    },
+    {
+      "path": "release/docs/reference/meta.json",
+      "bytes": 601,
+      "sha256": "231a13064a8d78fb019743ff3f91c7c09c248b8eda025fd73a1b30c54ffd6432"
+    },
+    {
+      "path": "release/docs/reference/mount.ko.mdx",
+      "bytes": 3137,
+      "sha256": "b232bc85438280f263d5765446b73bdbd0d590ee37113f0505eeaa92705ff926"
+    },
+    {
+      "path": "release/docs/reference/mount.mdx",
+      "bytes": 2755,
+      "sha256": "eb6ddfdc84c9b8d62eb54760f9057d7178f7ad79f791dc643d2d20350ff1ca5a"
+    },
+    {
+      "path": "release/docs/reference/observer.ko.mdx",
+      "bytes": 1426,
+      "sha256": "6e9333bbe8b8322c8d99738d4b4cb5bedbe8d2fb85fbd158d7833ec54bd7cbbc"
+    },
+    {
+      "path": "release/docs/reference/observer.mdx",
+      "bytes": 1272,
+      "sha256": "ee4f71e6dc2cf2aeb4c3debf943fd99def19382e87475aa566e5b0df88043bdb"
+    },
+    {
+      "path": "release/docs/reference/optional-wrapper.ko.mdx",
+      "bytes": 1105,
+      "sha256": "631be1c837aa25f9c13248ad72f1ec1610cf8b30889fb3db783a8ecb850a536b"
+    },
+    {
+      "path": "release/docs/reference/optional-wrapper.mdx",
+      "bytes": 1043,
+      "sha256": "a6101b63d7a3cd8bd8f2a19ff3de367098822930717ce7662c7521dd652648bc"
+    },
+    {
+      "path": "release/docs/reference/plugin-manager.ko.mdx",
+      "bytes": 1487,
+      "sha256": "c476e41b080a207237e102509cd22750ac84a655f158567913403cfbfc85dc6d"
+    },
+    {
+      "path": "release/docs/reference/plugin-manager.mdx",
+      "bytes": 1371,
+      "sha256": "d5d9ad99719667294ef8c2aad27760080868e1c8746bbe130ed2418bca8bf80f"
+    },
+    {
+      "path": "release/docs/reference/proxy-types.ko.mdx",
+      "bytes": 1155,
+      "sha256": "1e9c7d81db58b2b64293dac461c113a70b5926ab0fca73a4937a92d63625fc7d"
+    },
+    {
+      "path": "release/docs/reference/proxy-types.mdx",
+      "bytes": 998,
+      "sha256": "03132f2281347b19796b0fe07d32cafeac474c24f0a0f01c757a509676afb5ed"
+    },
+    {
+      "path": "release/docs/reference/repeat.ko.mdx",
+      "bytes": 991,
+      "sha256": "832ced84ae9dfa1036a8fe60114b84c379fc9a67664ae70ad436a933bbf61949"
+    },
+    {
+      "path": "release/docs/reference/repeat.mdx",
+      "bytes": 918,
+      "sha256": "4669a96ceed77507e99791e1a0a8a9b856ca28386021d1cd66482ccbd9f088ac"
+    },
+    {
+      "path": "release/docs/reference/show.ko.mdx",
+      "bytes": 1626,
+      "sha256": "f89bd94800db0f71fcba2a4cc745cc8884816c0866112c309ac37826e94bcbb2"
+    },
+    {
+      "path": "release/docs/reference/show.mdx",
+      "bytes": 1454,
+      "sha256": "36b60fffd6bfd5047a3faeaca3166c98d223a4158d3f3328b26f6b9d015fb5f9"
+    },
+    {
+      "path": "release/docs/reference/slacker.ko.mdx",
+      "bytes": 2375,
+      "sha256": "2d1f9e7be28159a3d86c82b43be3dec07b0cbc8c4e54deee6c21ac731fab44bb"
+    },
+    {
+      "path": "release/docs/reference/slacker.mdx",
+      "bytes": 2064,
+      "sha256": "d5f06414a70c6dac5f1f94d9e0bee25a7425b66f83e595a1806f15fabe46c7b5"
+    },
+    {
+      "path": "release/docs/reference/slot.ko.mdx",
+      "bytes": 1300,
+      "sha256": "4dc8e12ff8e94fb3a2fb1306d63c4d9ee2768ffb3cc8ae0f00645ae6f0519643"
+    },
+    {
+      "path": "release/docs/reference/slot.mdx",
+      "bytes": 1183,
+      "sha256": "c832f837107a73842abfb1aad93114f9c8a1c58ab296711d16ba7651b9c3e5a5"
+    },
+    {
+      "path": "release/docs/reference/switch-match.ko.mdx",
+      "bytes": 1290,
+      "sha256": "e1fc44a74b6062a7fec151b66a2489825390f5e2756778300fa9af7374e6b630"
+    },
+    {
+      "path": "release/docs/reference/switch-match.mdx",
+      "bytes": 1215,
+      "sha256": "b11d6579639adf973d7f70fb680e26400deb23bd3e8c23832f9b03d09a456939"
+    },
+    {
+      "path": "release/docs/reference/use-click-away.ko.mdx",
+      "bytes": 895,
+      "sha256": "375a89a3a4232eebe8f3e58a7c4ad0072a69b4be3c417b7023c47e5151244e0f"
+    },
+    {
+      "path": "release/docs/reference/use-click-away.mdx",
+      "bytes": 833,
+      "sha256": "1c729927306b76dab6fd91e01025366403af8cf87d8b07b5393540047f384767"
+    },
+    {
+      "path": "release/docs/reference/use-debounce.ko.mdx",
+      "bytes": 651,
+      "sha256": "6c1da05e35f2ea3d87ee3a6a40ecfdfaacedda810ac11833a59b7eeb25680757"
+    },
+    {
+      "path": "release/docs/reference/use-debounce.mdx",
+      "bytes": 650,
+      "sha256": "2d51027643de99513b600af203fc8bb4b0c68e3d3e45a47116c37a9bcd36859d"
+    },
+    {
+      "path": "release/docs/reference/use-event-listener.ko.mdx",
+      "bytes": 984,
+      "sha256": "ba010886458b972858955cf5b8dba7fdee70215eb5c2b69e0a22839a8206a1f9"
+    },
+    {
+      "path": "release/docs/reference/use-event-listener.mdx",
+      "bytes": 879,
+      "sha256": "56d07a3c0be70ccf9240a561be7ef0db426905a36af75589b5219397cc388e56"
+    },
+    {
+      "path": "release/docs/reference/use-hover.ko.mdx",
+      "bytes": 528,
+      "sha256": "a441a7bab70c75aee9110a1ad5a973b2f75f45dc142033b24f92d63e047fa272"
+    },
+    {
+      "path": "release/docs/reference/use-hover.mdx",
+      "bytes": 508,
+      "sha256": "25fdbf35bb388ff0ee9bcfd69ad07a8f811f6497dd70f6828a0677a09f6b36e0"
+    },
+    {
+      "path": "release/docs/reference/use-intersection-observer.ko.mdx",
+      "bytes": 1496,
+      "sha256": "83317a03004332e41e42a17f567890f75405d77bb8d31a5a4298178bade7f656"
+    },
+    {
+      "path": "release/docs/reference/use-intersection-observer.mdx",
+      "bytes": 1363,
+      "sha256": "c923c0f2fcec0779bf5e826ab05417ae768e190c52e5de13b111cfdef1b07396"
+    },
+    {
+      "path": "release/docs/reference/use-isomorphic-layout-effect.ko.mdx",
+      "bytes": 542,
+      "sha256": "1b16a6e23ea97704e0e541cd75a0c2e18894b1d60311e190719eea8796b49643"
+    },
+    {
+      "path": "release/docs/reference/use-isomorphic-layout-effect.mdx",
+      "bytes": 499,
+      "sha256": "9d454dd1c65fde2938060bcc0de7572a190d02332bf9a902f1f204a517b07f53"
+    },
+    {
+      "path": "release/docs/reference/use-key.ko.mdx",
+      "bytes": 756,
+      "sha256": "f2d4db6dd43a1775399f8cc574e5325cf44702e4813f444fc64a493a9c69b5a2"
+    },
+    {
+      "path": "release/docs/reference/use-key.mdx",
+      "bytes": 671,
+      "sha256": "19dd37956dd07bb07a207045dfe85d90c1cabf3749a2936b344313d3ad0a6f5c"
+    },
+    {
+      "path": "release/docs/reference/use-media-query.ko.mdx",
+      "bytes": 601,
+      "sha256": "83a0da6a67a700d507af8f363bdf478b98f65ca97f582820e583f1dc5c8cd0b2"
+    },
+    {
+      "path": "release/docs/reference/use-media-query.mdx",
+      "bytes": 554,
+      "sha256": "e7d87402faec0ef581cd2f315dc89cbc77635feeafe0717e4d5d5f794968a189"
+    },
+    {
+      "path": "release/docs/reference/use-resize-observer.ko.mdx",
+      "bytes": 917,
+      "sha256": "5d7977deda41ab0e0308019a99d515d9d5fff497c5ce1ec3669a729b836ab2a7"
+    },
+    {
+      "path": "release/docs/reference/use-resize-observer.mdx",
+      "bytes": 860,
+      "sha256": "9b6fb794e995ba49bd03711654d5c054770b113f7f9fd64b37b724b741c6950c"
+    },
+    {
+      "path": "release/docs/reference/use-throttle.ko.mdx",
+      "bytes": 566,
+      "sha256": "4340368613087915e6663cd1c857396e36eb744dee9c6c4407a328db80413728"
+    },
+    {
+      "path": "release/docs/reference/use-throttle.mdx",
+      "bytes": 553,
+      "sha256": "7f4d98a3d9d3e60253bf95fbdac1039b9e11b0b452bc3303f34ace0708b4cbb0"
+    },
+    {
+      "path": "release/docs/troubleshooting.ko.mdx",
+      "bytes": 1191,
+      "sha256": "4d2e0d8151b1e13b646663f9acf4d6f27839c8f4976635cc6eddcbbd3337ce57"
+    },
+    {
+      "path": "release/docs/troubleshooting.mdx",
+      "bytes": 1012,
+      "sha256": "c7a496e38ad852c606b9c7d39f75af49ac52222003ce0e2587213c60b01449b8"
+    },
+    {
+      "path": "revision/README.ko.md",
+      "bytes": 4390,
+      "sha256": "c346a91793e7303f9fbd4a767231cf2f053a01518a05f6009749a7385501e2dc"
+    },
+    {
+      "path": "revision/README.md",
+      "bytes": 4069,
+      "sha256": "3a4d3cef0c3d9f0501a6913b52ab2fd17baf5068593d99fbb4947e16958cc72c"
+    },
+    {
+      "path": "revision/docs/advanced/meta.json",
+      "bytes": 101,
+      "sha256": "8af3099b040cc5a1d57fa899100e62749389c5cb8ceb57bfb6ca844255d49990"
+    },
+    {
+      "path": "revision/docs/advanced/proxy-registry.ko.mdx",
+      "bytes": 777,
+      "sha256": "a862f52ee0ca8b008f3ce97d54d308da2282905eadd52168a030ef883627f693"
+    },
+    {
+      "path": "revision/docs/advanced/proxy-registry.mdx",
+      "bytes": 712,
+      "sha256": "899961175507b962f5e7a6b5f0670fcb88f3a3c4ae7e9bb17b00c59c2ca75cb1"
+    },
+    {
+      "path": "revision/docs/advanced/ssr.ko.mdx",
+      "bytes": 862,
+      "sha256": "eeb6d073d08d5fbb27fe587996c32baac5305b257d5a27621816d282757ca5c4"
+    },
+    {
+      "path": "revision/docs/advanced/ssr.mdx",
+      "bytes": 742,
+      "sha256": "ee0026bd1e585563ca420af16c29af381081b850da2ace3df76a1471dcd9dba7"
+    },
+    {
+      "path": "revision/docs/advanced/truthiness.ko.mdx",
+      "bytes": 810,
+      "sha256": "216daa3a72a594c4985d500307e7d89d445dab38e3871dd18de6541ca0411c9c"
+    },
+    {
+      "path": "revision/docs/advanced/truthiness.mdx",
+      "bytes": 664,
+      "sha256": "7406dda969c80f9b96a22c72a9093860c0a3397513b6e277419cc82cb0480ff7"
+    },
+    {
+      "path": "revision/docs/core-concepts.ko.mdx",
+      "bytes": 3937,
+      "sha256": "c04a98219ab2f332fe347a24b85d265cbfad71ec222ac02614f9ee99746e0924"
+    },
+    {
+      "path": "revision/docs/core-concepts.mdx",
+      "bytes": 3531,
+      "sha256": "c46e34eaf315afd8ca1671f669efefd856f760ec1303904f7ebc885d0f43fa6e"
+    },
+    {
+      "path": "revision/docs/guides/async-data.ko.mdx",
+      "bytes": 1428,
+      "sha256": "1160b0e6ed8c259eaf739dc88048b2f31757df7733cef2e1ee51ce35f33b81b7"
+    },
+    {
+      "path": "revision/docs/guides/async-data.mdx",
+      "bytes": 1208,
+      "sha256": "df3d064c288ab7954f027a6d967540b732fc91eb38fc35ccf1604cad35f150c3"
+    },
+    {
+      "path": "revision/docs/guides/custom-proxy-components.ko.mdx",
+      "bytes": 909,
+      "sha256": "294eefc40be88232cf855eb37f7dd9dafbd378d3cdf283149126dc3f605cce35"
+    },
+    {
+      "path": "revision/docs/guides/custom-proxy-components.mdx",
+      "bytes": 840,
+      "sha256": "6a9cec8d8b00dc452c83b25461bc5ca1678bbabebe85f65f832e8746955ab57d"
+    },
+    {
+      "path": "revision/docs/guides/lazy-loading.ko.mdx",
+      "bytes": 981,
+      "sha256": "a8fc6d675901daaf3f978d9801d954c694b458607d248b15a46fbb214eff0412"
+    },
+    {
+      "path": "revision/docs/guides/lazy-loading.mdx",
+      "bytes": 852,
+      "sha256": "d60a303fc9e40cc63394a3729237fe282164159776a83f7e6798919159452484"
+    },
+    {
+      "path": "revision/docs/guides/list-and-empty-states.ko.mdx",
+      "bytes": 994,
+      "sha256": "986541cebe98a4bf01e3045f0f6b496764ab1e11822b380cdc9d9ed756108e8e"
+    },
+    {
+      "path": "revision/docs/guides/list-and-empty-states.mdx",
+      "bytes": 892,
+      "sha256": "4838f5e7a01ea415e89e12ed69b94eb0c6f2db0b90d4f39473c8144675fb63a6"
+    },
+    {
+      "path": "revision/docs/guides/meta.json",
+      "bytes": 186,
+      "sha256": "1474c8e23dd46470b58bb069615de598731aaa2b4b1c4d162b9cb55036160bc3"
+    },
+    {
+      "path": "revision/docs/guides/polymorphic-tags.ko.mdx",
+      "bytes": 946,
+      "sha256": "082008cec67fd6585eba56e051501119eb403844df0930806c4d0961ccec32ab"
+    },
+    {
+      "path": "revision/docs/guides/polymorphic-tags.mdx",
+      "bytes": 864,
+      "sha256": "8ad89fd36e28e131c0b48768b4866880a370647718ffafa5a94a47bb23f076eb"
+    },
+    {
+      "path": "revision/docs/index.ko.mdx",
+      "bytes": 3172,
+      "sha256": "f261c4f40b32b1faf18574de3f73c809d645de062c44ba9c24855e1858024f3e"
+    },
+    {
+      "path": "revision/docs/index.mdx",
+      "bytes": 3067,
+      "sha256": "98fc989159bcb4907f607ca7bd574b55c1cadf195bbf8202a8bedab31186db3b"
+    },
+    {
+      "path": "revision/docs/integrations/meta.json",
+      "bytes": 85,
+      "sha256": "4e0762a2fa398865bd45f062c32930a0eefac7fc85a016546d829c5197f7f566"
+    },
+    {
+      "path": "revision/docs/integrations/nextjs.ko.mdx",
+      "bytes": 1088,
+      "sha256": "bb527086f9e421a2a5e7b499cf4bab3ec58d6b1ed2325de032bdcc6d2c4fc42e"
+    },
+    {
+      "path": "revision/docs/integrations/nextjs.mdx",
+      "bytes": 1028,
+      "sha256": "b501c94f5da1002e1b9bd7e90d990ea3432e652e8499624705c937bb878021f8"
+    },
+    {
+      "path": "revision/docs/integrations/react.ko.mdx",
+      "bytes": 1003,
+      "sha256": "695c887a265b597fed177b0c4e276a3f1d2b504acec5efe5d6726d5f498b8f12"
+    },
+    {
+      "path": "revision/docs/integrations/react.mdx",
+      "bytes": 874,
+      "sha256": "39ca537ce0bb1a1392d870f03f9ff8742acca223a56b498d8e603b1dbb86c7ce"
+    },
+    {
+      "path": "revision/docs/meta.json",
+      "bytes": 335,
+      "sha256": "42cd5102f9e35425bf7ad155256533df555a0f92871f8bda337b61dd26c5c535"
+    },
+    {
+      "path": "revision/docs/quick-start.ko.mdx",
+      "bytes": 3746,
+      "sha256": "670f7e4e0a6bbfa04cad8d304dd4f4fe8519e7c30fa8c76825e3498e59b7630c"
+    },
+    {
+      "path": "revision/docs/quick-start.mdx",
+      "bytes": 3407,
+      "sha256": "fe9a5e706106a52e7bf45863cd86fc2460f255e9cc3fa9028e28fd55b9671fda"
+    },
+    {
+      "path": "revision/docs/reference/click-away.ko.mdx",
+      "bytes": 886,
+      "sha256": "8a1ca5b4d99073542bfc46d86f9e56fdc0fb91869a869c0999692a183ca1dd42"
+    },
+    {
+      "path": "revision/docs/reference/click-away.mdx",
+      "bytes": 800,
+      "sha256": "c1817dd7443576a3a0faee42b1aeb7d758b8851d2d082e0d6cfbecb8b0038957"
+    },
+    {
+      "path": "revision/docs/reference/client-only.ko.mdx",
+      "bytes": 718,
+      "sha256": "eec9f32658fa81d9691788650460cc2bbdd1f6ada0f69d8f61261eef5f285d17"
+    },
+    {
+      "path": "revision/docs/reference/client-only.mdx",
+      "bytes": 620,
+      "sha256": "dc83208a0b098f3b12131e71aa2e94cfdbf65d2caf3659320a6dd21ddf8b0a17"
+    },
+    {
+      "path": "revision/docs/reference/error-boundary.ko.mdx",
+      "bytes": 1085,
+      "sha256": "e81b4502177ca75409334e591524ca83118018c6a6b17566b9347b7074d87b6b"
+    },
+    {
+      "path": "revision/docs/reference/error-boundary.mdx",
+      "bytes": 994,
+      "sha256": "c2895edce3c4d7a17f9cc5639c97116399665e00aff69fa41abfeb18f195b029"
+    },
+    {
+      "path": "revision/docs/reference/for.ko.mdx",
+      "bytes": 1371,
+      "sha256": "d41fd9635c94a87726a45a3ac0957d678531cf99b1f452310d2297a19945649a"
+    },
+    {
+      "path": "revision/docs/reference/for.mdx",
+      "bytes": 1210,
+      "sha256": "8521f190b3e341ace11fd909b0447ad6865bf17d3397fcbc8bdbe57b307c2726"
+    },
+    {
+      "path": "revision/docs/reference/hotkey.ko.mdx",
+      "bytes": 921,
+      "sha256": "ad5f4395f2a792fff97dab30c47f2a898faf952ac76b936ca74b444e0e9c1fb8"
+    },
+    {
+      "path": "revision/docs/reference/hotkey.mdx",
+      "bytes": 805,
+      "sha256": "670acdcadc9e31beb676ca09ae984a379e02f769eee9f840a49afd4359833ec3"
+    },
+    {
+      "path": "revision/docs/reference/hoverable.ko.mdx",
+      "bytes": 730,
+      "sha256": "db5868425496bb767d914e28eeb12be7d39620002ee10db01396cbced3a5ae4b"
+    },
+    {
+      "path": "revision/docs/reference/hoverable.mdx",
+      "bytes": 670,
+      "sha256": "607f8d4ac19cb9a5a17d6406e6ca5d3267ce129704ae120a145f5e2ae97d2823"
+    },
+    {
+      "path": "revision/docs/reference/measure.ko.mdx",
+      "bytes": 894,
+      "sha256": "a65b2e024c0321cdc860c5eaef418660b26a874a4bf660964b322718dcec39b4"
+    },
+    {
+      "path": "revision/docs/reference/measure.mdx",
+      "bytes": 831,
+      "sha256": "2b15e23b142afe4de33dfd51d1a84b179509f77138548fc49c6fd26503561e8b"
+    },
+    {
+      "path": "revision/docs/reference/media.ko.mdx",
+      "bytes": 926,
+      "sha256": "f68580548c287f10d5c6a103fed46f1cacf63d8a430732e97aa415c2c44d48b3"
+    },
+    {
+      "path": "revision/docs/reference/media.mdx",
+      "bytes": 852,
+      "sha256": "e08ab897aa72f87922448b32d6cccb3f5923c01b8daca7a094b52d739f17fcb2"
+    },
+    {
+      "path": "revision/docs/reference/meta.json",
+      "bytes": 601,
+      "sha256": "231a13064a8d78fb019743ff3f91c7c09c248b8eda025fd73a1b30c54ffd6432"
+    },
+    {
+      "path": "revision/docs/reference/mount.ko.mdx",
+      "bytes": 3137,
+      "sha256": "b232bc85438280f263d5765446b73bdbd0d590ee37113f0505eeaa92705ff926"
+    },
+    {
+      "path": "revision/docs/reference/mount.mdx",
+      "bytes": 2755,
+      "sha256": "eb6ddfdc84c9b8d62eb54760f9057d7178f7ad79f791dc643d2d20350ff1ca5a"
+    },
+    {
+      "path": "revision/docs/reference/observer.ko.mdx",
+      "bytes": 1426,
+      "sha256": "6e9333bbe8b8322c8d99738d4b4cb5bedbe8d2fb85fbd158d7833ec54bd7cbbc"
+    },
+    {
+      "path": "revision/docs/reference/observer.mdx",
+      "bytes": 1272,
+      "sha256": "ee4f71e6dc2cf2aeb4c3debf943fd99def19382e87475aa566e5b0df88043bdb"
+    },
+    {
+      "path": "revision/docs/reference/optional-wrapper.ko.mdx",
+      "bytes": 1105,
+      "sha256": "631be1c837aa25f9c13248ad72f1ec1610cf8b30889fb3db783a8ecb850a536b"
+    },
+    {
+      "path": "revision/docs/reference/optional-wrapper.mdx",
+      "bytes": 1043,
+      "sha256": "a6101b63d7a3cd8bd8f2a19ff3de367098822930717ce7662c7521dd652648bc"
+    },
+    {
+      "path": "revision/docs/reference/plugin-manager.ko.mdx",
+      "bytes": 1487,
+      "sha256": "c476e41b080a207237e102509cd22750ac84a655f158567913403cfbfc85dc6d"
+    },
+    {
+      "path": "revision/docs/reference/plugin-manager.mdx",
+      "bytes": 1371,
+      "sha256": "d5d9ad99719667294ef8c2aad27760080868e1c8746bbe130ed2418bca8bf80f"
+    },
+    {
+      "path": "revision/docs/reference/proxy-types.ko.mdx",
+      "bytes": 1155,
+      "sha256": "1e9c7d81db58b2b64293dac461c113a70b5926ab0fca73a4937a92d63625fc7d"
+    },
+    {
+      "path": "revision/docs/reference/proxy-types.mdx",
+      "bytes": 998,
+      "sha256": "03132f2281347b19796b0fe07d32cafeac474c24f0a0f01c757a509676afb5ed"
+    },
+    {
+      "path": "revision/docs/reference/repeat.ko.mdx",
+      "bytes": 991,
+      "sha256": "832ced84ae9dfa1036a8fe60114b84c379fc9a67664ae70ad436a933bbf61949"
+    },
+    {
+      "path": "revision/docs/reference/repeat.mdx",
+      "bytes": 918,
+      "sha256": "4669a96ceed77507e99791e1a0a8a9b856ca28386021d1cd66482ccbd9f088ac"
+    },
+    {
+      "path": "revision/docs/reference/show.ko.mdx",
+      "bytes": 1626,
+      "sha256": "f89bd94800db0f71fcba2a4cc745cc8884816c0866112c309ac37826e94bcbb2"
+    },
+    {
+      "path": "revision/docs/reference/show.mdx",
+      "bytes": 1454,
+      "sha256": "36b60fffd6bfd5047a3faeaca3166c98d223a4158d3f3328b26f6b9d015fb5f9"
+    },
+    {
+      "path": "revision/docs/reference/slacker.ko.mdx",
+      "bytes": 2375,
+      "sha256": "2d1f9e7be28159a3d86c82b43be3dec07b0cbc8c4e54deee6c21ac731fab44bb"
+    },
+    {
+      "path": "revision/docs/reference/slacker.mdx",
+      "bytes": 2064,
+      "sha256": "d5f06414a70c6dac5f1f94d9e0bee25a7425b66f83e595a1806f15fabe46c7b5"
+    },
+    {
+      "path": "revision/docs/reference/slot.ko.mdx",
+      "bytes": 1300,
+      "sha256": "4dc8e12ff8e94fb3a2fb1306d63c4d9ee2768ffb3cc8ae0f00645ae6f0519643"
+    },
+    {
+      "path": "revision/docs/reference/slot.mdx",
+      "bytes": 1183,
+      "sha256": "c832f837107a73842abfb1aad93114f9c8a1c58ab296711d16ba7651b9c3e5a5"
+    },
+    {
+      "path": "revision/docs/reference/switch-match.ko.mdx",
+      "bytes": 1290,
+      "sha256": "e1fc44a74b6062a7fec151b66a2489825390f5e2756778300fa9af7374e6b630"
+    },
+    {
+      "path": "revision/docs/reference/switch-match.mdx",
+      "bytes": 1215,
+      "sha256": "b11d6579639adf973d7f70fb680e26400deb23bd3e8c23832f9b03d09a456939"
+    },
+    {
+      "path": "revision/docs/reference/use-click-away.ko.mdx",
+      "bytes": 895,
+      "sha256": "375a89a3a4232eebe8f3e58a7c4ad0072a69b4be3c417b7023c47e5151244e0f"
+    },
+    {
+      "path": "revision/docs/reference/use-click-away.mdx",
+      "bytes": 833,
+      "sha256": "1c729927306b76dab6fd91e01025366403af8cf87d8b07b5393540047f384767"
+    },
+    {
+      "path": "revision/docs/reference/use-debounce.ko.mdx",
+      "bytes": 651,
+      "sha256": "6c1da05e35f2ea3d87ee3a6a40ecfdfaacedda810ac11833a59b7eeb25680757"
+    },
+    {
+      "path": "revision/docs/reference/use-debounce.mdx",
+      "bytes": 650,
+      "sha256": "2d51027643de99513b600af203fc8bb4b0c68e3d3e45a47116c37a9bcd36859d"
+    },
+    {
+      "path": "revision/docs/reference/use-event-listener.ko.mdx",
+      "bytes": 984,
+      "sha256": "ba010886458b972858955cf5b8dba7fdee70215eb5c2b69e0a22839a8206a1f9"
+    },
+    {
+      "path": "revision/docs/reference/use-event-listener.mdx",
+      "bytes": 879,
+      "sha256": "56d07a3c0be70ccf9240a561be7ef0db426905a36af75589b5219397cc388e56"
+    },
+    {
+      "path": "revision/docs/reference/use-hover.ko.mdx",
+      "bytes": 528,
+      "sha256": "a441a7bab70c75aee9110a1ad5a973b2f75f45dc142033b24f92d63e047fa272"
+    },
+    {
+      "path": "revision/docs/reference/use-hover.mdx",
+      "bytes": 508,
+      "sha256": "25fdbf35bb388ff0ee9bcfd69ad07a8f811f6497dd70f6828a0677a09f6b36e0"
+    },
+    {
+      "path": "revision/docs/reference/use-intersection-observer.ko.mdx",
+      "bytes": 1496,
+      "sha256": "83317a03004332e41e42a17f567890f75405d77bb8d31a5a4298178bade7f656"
+    },
+    {
+      "path": "revision/docs/reference/use-intersection-observer.mdx",
+      "bytes": 1363,
+      "sha256": "c923c0f2fcec0779bf5e826ab05417ae768e190c52e5de13b111cfdef1b07396"
+    },
+    {
+      "path": "revision/docs/reference/use-isomorphic-layout-effect.ko.mdx",
+      "bytes": 542,
+      "sha256": "1b16a6e23ea97704e0e541cd75a0c2e18894b1d60311e190719eea8796b49643"
+    },
+    {
+      "path": "revision/docs/reference/use-isomorphic-layout-effect.mdx",
+      "bytes": 499,
+      "sha256": "9d454dd1c65fde2938060bcc0de7572a190d02332bf9a902f1f204a517b07f53"
+    },
+    {
+      "path": "revision/docs/reference/use-key.ko.mdx",
+      "bytes": 756,
+      "sha256": "f2d4db6dd43a1775399f8cc574e5325cf44702e4813f444fc64a493a9c69b5a2"
+    },
+    {
+      "path": "revision/docs/reference/use-key.mdx",
+      "bytes": 671,
+      "sha256": "19dd37956dd07bb07a207045dfe85d90c1cabf3749a2936b344313d3ad0a6f5c"
+    },
+    {
+      "path": "revision/docs/reference/use-media-query.ko.mdx",
+      "bytes": 601,
+      "sha256": "83a0da6a67a700d507af8f363bdf478b98f65ca97f582820e583f1dc5c8cd0b2"
+    },
+    {
+      "path": "revision/docs/reference/use-media-query.mdx",
+      "bytes": 554,
+      "sha256": "e7d87402faec0ef581cd2f315dc89cbc77635feeafe0717e4d5d5f794968a189"
+    },
+    {
+      "path": "revision/docs/reference/use-resize-observer.ko.mdx",
+      "bytes": 917,
+      "sha256": "5d7977deda41ab0e0308019a99d515d9d5fff497c5ce1ec3669a729b836ab2a7"
+    },
+    {
+      "path": "revision/docs/reference/use-resize-observer.mdx",
+      "bytes": 860,
+      "sha256": "9b6fb794e995ba49bd03711654d5c054770b113f7f9fd64b37b724b741c6950c"
+    },
+    {
+      "path": "revision/docs/reference/use-throttle.ko.mdx",
+      "bytes": 566,
+      "sha256": "4340368613087915e6663cd1c857396e36eb744dee9c6c4407a328db80413728"
+    },
+    {
+      "path": "revision/docs/reference/use-throttle.mdx",
+      "bytes": 553,
+      "sha256": "7f4d98a3d9d3e60253bf95fbdac1039b9e11b0b452bc3303f34ace0708b4cbb0"
+    },
+    {
+      "path": "revision/docs/troubleshooting.ko.mdx",
+      "bytes": 1191,
+      "sha256": "4d2e0d8151b1e13b646663f9acf4d6f27839c8f4976635cc6eddcbbd3337ce57"
+    },
+    {
+      "path": "revision/docs/troubleshooting.mdx",
+      "bytes": 1012,
+      "sha256": "c7a496e38ad852c606b9c7d39f75af49ac52222003ce0e2587213c60b01449b8"
+    }
+  ]
+}

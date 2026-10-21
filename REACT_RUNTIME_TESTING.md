@@ -1,15 +1,14 @@
 # React runtime development checks
 
-Run from the repository root with the repository's pnpm 10.17.1 and Node.js
-22.13+ on the 22.x line, or Node.js 24+ (CI uses Node.js 22):
+Run from this standalone repository with Node.js 22 and pnpm 10.17.1:
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm --filter @ilokesto/utilinent test
-pnpm --filter @ilokesto/utilinent test:react18
-pnpm --filter @ilokesto/utilinent typecheck
-pnpm --filter @ilokesto/utilinent build
-pnpm test:monorepo
+pnpm test
+pnpm test:react18
+pnpm typecheck
+pnpm build
+pnpm test:browser
 ```
 
 `test` keeps the normal React/ReactDOM 19.2.8 workspace runtime.
@@ -43,7 +42,7 @@ versions. A renamed script or an alias that leaves a React 19 renderer behind
 cannot satisfy these checks.
 
 To deliberately update fixture dependencies, edit `test/react18/package.json`,
-then run `pnpm --dir packages/utilinent/test/react18 install --lockfile-only`
+then run `pnpm --dir test/react18 install --lockfile-only`
 and inspect the private lockfile diff. Normal runs never regenerate a lockfile.
 
 ## Supported-version differences
@@ -85,9 +84,9 @@ diagnostics are not suppressed; any failing compatibility test exits nonzero.
 
 ## Exact suite inventory
 
-Verified baseline: React 18.3.1 runs 23 files / 205 tests, all passing with no
+Verified baseline: React 18.3.1 runs 23 files / 222 tests, all passing with no
 skips (185 tests in the 22 reused files plus 20 focused compatibility tests).
-React 19.2.8 runs 25 files / 211 tests, all passing with no skips. These totals
+React 19.2.8 runs 25 files / 233 tests, all passing with no skips. These totals
 describe this revision; the projects intentionally have different inventories.
 
 Paths below are relative to `test/`. React 19 discovers `**/*.test.tsx`; React 18
@@ -128,5 +127,5 @@ a shared suite, add it to that list deliberately.
 Both `full` and selected `packages` verification run `test:react18` after normal
 unit tests. The selected step runs only for `@ilokesto/utilinent`, has no soft-fail
 setting, and remains covered by the existing required `verify` aggregation.
-`tests/monorepo/ci-utilinent-react18.test.mjs` parses the workflow and private
+`the standalone `.github/workflows/ci.yml`` parses the workflow and private
 fixture metadata to protect this wiring without modifying the shared CI tests.

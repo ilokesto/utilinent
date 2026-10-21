@@ -39,3 +39,6 @@ next-env.d.ts
 
 .dist
 /dist
+/docs-publication/.generated
+/docs-publication/runtime/.generated
+/docs-publication/.publication.lock

@@ -1,11 +1,11 @@
 # Native browser regressions
 
-From a clean checkout, with the root package-manager version and Node.js 22:
+From a clean standalone checkout with Node.js 22 and pnpm 10.17.1:
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm --filter @ilokesto/utilinent exec playwright install --with-deps chromium
-pnpm --filter @ilokesto/utilinent test:browser
+pnpm exec playwright install chromium
+pnpm test:browser
 ```
 
 `test:browser` first typechecks the isolated harness, then runs Playwright once
@@ -57,10 +57,10 @@ failures feed the existing required `verify` aggregation.
 Related checks:
 
 ```sh
-pnpm --filter @ilokesto/utilinent test
-pnpm --filter @ilokesto/utilinent typecheck
-pnpm --filter @ilokesto/utilinent build
-node --test tests/monorepo/ci-*.test.mjs
+pnpm test
+pnpm typecheck
+pnpm build
+pnpm test:react18
 ```
 
 The harness stays outside the unit-test and distribution source globs. No

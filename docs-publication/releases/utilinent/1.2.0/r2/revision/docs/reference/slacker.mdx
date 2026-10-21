@@ -1,0 +1,44 @@
+---
+title: "Slacker"
+description: "Lazy-load data when content becomes visible."
+---
+
+# Slacker
+
+`Slacker` combines `Observer` with a `loader`. It waits until the element enters the viewport, runs the loader, and renders `children(loadedData)` when data is available.
+
+```tsx lineNumbers
+import { Slacker } from '@ilokesto/utilinent';
+
+<Slacker
+  loader={() => fetch('/api/recommendations').then((res) => res.json())}
+  loadingFallback={<p>Loading recommendations...</p>}
+  errorFallback={({ error, retry }) => (
+    <button onClick={retry}>Retry: {error?.message}</button>
+  )}
+>
+  {(items) => <RecommendationList items={items} />}
+</Slacker>
+```
+
+## Props
+
+| Prop | Description |
+| --- | --- |
+| `loader` | Required function returning data or a promise. |
+| `children` | Function that receives loaded data. |
+| `loadingFallback` | UI while the loader is running. |
+| `errorFallback` | Node or function receiving `{ isLoading, error, retry }`. |
+| `threshold`, `rootMargin` | Passed to `Observer`. Defaults are `0.1` and `"50px"`. |
+| `maxRetries`, `retryDelay` | Optional automatic retry behavior. |
+| `onError` | Called with loader errors. |
+
+## Retry lifecycle
+
+The load triggered by the first intersection is attempt one. `maxRetries` is the number of additional attempts available after that initial attempt, and `retryDelay` is applied before each automatic retry. The `retry` function from `errorFallback` uses the same retry budget as automatic retries, starts immediately, and cancels any automatic retry that is waiting.
+
+Only one attempt can run at a time, so repeated retry clicks while a request is in flight are coalesced. Each failed active attempt calls `onError` once. A successful load, a new `loader` reference, or unmounting cancels scheduled retries and ignores stale loader results.
+
+## Guidance
+
+Keep `loader` stable with `useCallback` when it is declared inside a component. A changing loader can cause work to restart. Use `Slacker` for below-the-fold panels, expensive recommendations, or optional UI that should not load until visible.
