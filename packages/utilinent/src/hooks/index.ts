@@ -1,6 +1,7 @@
 export * from "./useClickAway";
 export * from "./useDebounce";
 export * from "./useEventListener";
+export * from "./useFocusWithin";
 export * from "./useHover";
 export * from "./useIntersectionObserver";
 export * from "./useInfiniteSentinel";
