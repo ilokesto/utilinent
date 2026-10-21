@@ -11,7 +11,7 @@ description: "제어형 busy 상태와 중복 호출 방지 기능을 제공하�
 import { useInfiniteSentinel } from '@ilokesto/utilinent/hooks';
 
 function PageSentinel({ fetchNextPage, hasNextPage, isFetchingNextPage }) {
-  const { ref, isLoading, error, retry } = useInfiniteSentinel({
+  const { ref, isLoading, isError, retry } = useInfiniteSentinel({
     onLoadMore: fetchNextPage,
     hasMore: hasNextPage,
     busy: isFetchingNextPage,
@@ -21,7 +21,7 @@ function PageSentinel({ fetchNextPage, hasNextPage, isFetchingNextPage }) {
   return (
     <div ref={ref} style={{ minHeight: 1 }}>
       {isLoading ? '불러오는 중...' : null}
-      {error ? <button type="button" onClick={retry}>다시 시도</button> : null}
+      {isError ? <button type="button" onClick={retry}>다시 시도</button> : null}
     </div>
   );
 }
@@ -47,7 +47,8 @@ function PageSentinel({ fetchNextPage, hasNextPage, isFetchingNextPage }) {
 | `ref` | `HTMLElement \| null`을 받는 안정적인 콜백 ref입니다. |
 | `isIntersecting` | 현재 대상이 교차 및 threshold 조건을 만족하는지 나타냅니다. 초기값은 `false`입니다. |
 | `isLoading` | 제어형 `busy` 또는 내부 콜백 결과의 처리 중 상태입니다. |
-| `error` | 마지막 로딩 실패 값 또는 `undefined`입니다. 새 시도를 시작할 때 초기화합니다. |
+| `isError` | 오류 값과 독립적인 boolean 실패 상태입니다. 초기값은 `false`이며 실패하면 `true`, 조건을 만족하는 새 시도가 시작되면 `false`가 됩니다. |
+| `error` | `undefined`를 포함한 원래 `unknown` 실패 값입니다. 조건을 만족하는 새 시도가 시작되면 `undefined`로 초기화합니다. 실패 여부는 이 값의 참/거짓 변환이 아닌 `isError`로 판별하세요. |
 | `retry()` | 뷰포트 밖이나 IntersectionObserver 미지원 환경에서도 사용할 수 있는 안정적인 수동 시도 함수입니다. `busy`, `disabled`, `hasMore`, 마운트된 대상 및 내부 잠금은 여전히 적용합니다. |
 
 ## 소유권과 반복 로딩
@@ -62,7 +63,9 @@ Promise 이행만으로는 **다음 페이지를 요청하지 않습니다**. �
 
 ## 실패와 정리
 
-동기 예외나 반환된 promise 거부는 `error`를 설정하고 `onError`를 호출하며 자동 요청을 중단합니다. 같은 교차 상태의 레코드나 `busy` 전환만으로는 재시도하지 않습니다. `retry()`를 호출하거나 sentinel이 이탈 후 다시 진입하면 재시도합니다. 대상 또는 observer 옵션 변경으로 새 관찰이 시작되어도 새 진입을 허용합니다. 비동기 실패를 감지하려면 promise를 반환해야 합니다. 오류를 자체 처리하는 콜백은 재시도 정책도 직접 관리해야 합니다.
+동기 예외나 반환된 promise 거부는 `isError`를 `true`로 설정하고 원래 값을 `error`에 보존하며, 같은 값으로 `onError`를 호출하고 자동 요청을 중단합니다. `undefined`, `null`, `""`, `false`, `0`도 포함하므로 `error`만으로는 실패 여부를 판별할 수 없습니다.
+
+같은 교차 상태의 레코드나 `busy` 전환만으로는 재시도하지 않습니다. `retry()`를 호출하거나 sentinel이 이탈 후 다시 진입하면 재시도합니다. 대상 또는 observer 옵션 변경으로 새 관찰이 시작되어도 새 진입을 허용합니다. 조건을 만족하는 새 시도가 시작될 때만 `isError`는 `false`, `error`는 `undefined`로 초기화됩니다. 뷰포트 이탈, 관찰 옵션 변경, 차단된 재시도만으로는 초기화하지 않으며 성공 후에도 초기화된 상태를 유지합니다. 비동기 실패를 감지하려면 promise를 반환해야 합니다. 오류를 자체 처리하는 콜백은 재시도 정책도 직접 관리해야 합니다.
 
 Unmount 시 관찰을 해제하며 늦게 끝난 작업은 `onError`나 다음 로딩을 실행하지 않습니다. StrictMode의 effect 재실행만으로 로딩을 시작하지 않습니다. 서버와 IntersectionObserver 미지원 브라우저에서는 자동 로딩하지 않습니다. 계속 로딩할 수 있어야 한다면 수동 재시도 버튼을 제공하세요.
 

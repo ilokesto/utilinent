@@ -23,6 +23,156 @@ function mountSentinel(options: UseInfiniteSentinelOptions) {
   return { ...hook, target };
 }
 
+it.each([undefined, null, "", false, 0])(
+  "useInfiniteSentinel: rejects with %s -> exposes failure independently and resets on retry",
+  async (reason) => {
+    const first = deferred();
+    const second = deferred();
+    const onError = vi.fn();
+    const onLoadMore = vi.fn<UseInfiniteSentinelOptions["onLoadMore"]>()
+      .mockReturnValueOnce(first.promise)
+      .mockReturnValueOnce(second.promise);
+    const { target, result } = mountSentinel({ onLoadMore, onError, hasMore: true });
+    await emitIntersectionForTarget(target, true);
+
+    await act(async () => { first.reject(reason); await first.promise.catch(() => {}); });
+
+    expect(result.current.error).toBe(reason);
+    expect(onError).toHaveBeenCalledExactlyOnceWith(reason);
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.isError).toBe(true);
+    await emitIntersectionForTarget(target, true);
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+
+    act(() => result.current.retry());
+    expect(onLoadMore).toHaveBeenCalledTimes(2);
+    expect(result.current.isError).toBe(false);
+    expect(result.current.error).toBeUndefined();
+    expect(result.current.isLoading).toBe(true);
+    act(() => result.current.retry());
+    expect(onLoadMore).toHaveBeenCalledTimes(2);
+
+    await act(async () => { second.resolve(); await second.promise; });
+    expect(result.current.isError).toBe(false);
+    expect(result.current.error).toBeUndefined();
+    expect(result.current.isLoading).toBe(false);
+    expect(onLoadMore).toHaveBeenCalledTimes(2);
+  },
+);
+
+it("useInfiniteSentinel: initial state and successful load -> never reports failure", async () => {
+  const request = deferred();
+  const { target, result } = mountSentinel({ onLoadMore: () => request.promise, hasMore: true });
+  expect(result.current.isError).toBe(false);
+  expect(result.current.error).toBeUndefined();
+
+  await emitIntersectionForTarget(target, true);
+  expect(result.current.isError).toBe(false);
+  expect(result.current.isLoading).toBe(true);
+  await act(async () => { request.resolve(); await request.promise; });
+
+  expect(result.current.isError).toBe(false);
+  expect(result.current.error).toBeUndefined();
+  expect(result.current.isLoading).toBe(false);
+});
+
+it.each([undefined, null, "", false, 0])(
+  "useInfiniteSentinel: throws %s -> preserves the reason until re-entry starts a new attempt",
+  async (reason) => {
+    const next = deferred();
+    const onError = vi.fn();
+    const onLoadMore = vi.fn<UseInfiniteSentinelOptions["onLoadMore"]>()
+      .mockImplementationOnce(() => { throw reason; })
+      .mockReturnValueOnce(next.promise);
+    const { target, result } = mountSentinel({ onLoadMore, onError, hasMore: true });
+
+    await emitIntersectionForTarget(target, true);
+
+    expect(result.current.isError).toBe(true);
+    expect(result.current.error).toBe(reason);
+    expect(onError).toHaveBeenCalledExactlyOnceWith(reason);
+    await emitIntersectionForTarget(target, false);
+    expect(result.current.isError).toBe(true);
+    expect(result.current.error).toBe(reason);
+    await emitIntersectionForTarget(target, true);
+    expect(result.current.isError).toBe(false);
+    expect(result.current.error).toBeUndefined();
+    expect(result.current.isLoading).toBe(true);
+    await act(async () => { next.resolve(); await next.promise; });
+    expect(result.current.isError).toBe(false);
+    expect(onLoadMore).toHaveBeenCalledTimes(2);
+  },
+);
+
+it.each(["busy", "disabled", "hasMore"] as const)(
+  "useInfiniteSentinel: failed load with %s blocking retry -> retains failure until an allowed attempt",
+  async (gate) => {
+    const onLoadMore = vi.fn<UseInfiniteSentinelOptions["onLoadMore"]>()
+      .mockRejectedValueOnce(undefined);
+    const options = { onLoadMore, hasMore: true, busy: false, disabled: false };
+    const { target, result, rerender } = mountSentinel(options);
+    await emitIntersectionForTarget(target, true);
+    rerender({ ...options, [gate]: gate !== "hasMore" });
+
+    act(() => result.current.retry());
+
+    expect(result.current.isError).toBe(true);
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+    rerender(options);
+    expect(result.current.isError).toBe(true);
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+    await act(async () => result.current.retry());
+    expect(result.current.isError).toBe(false);
+    expect(onLoadMore).toHaveBeenCalledTimes(2);
+  },
+);
+
+it("useInfiniteSentinel: function rejection reason -> stores and notifies without invoking it", async () => {
+  const reason = vi.fn();
+  const onError = vi.fn();
+  const { target, result } = mountSentinel({
+    onLoadMore: () => Promise.reject(reason), onError, hasMore: true,
+  });
+
+  await emitIntersectionForTarget(target, true);
+
+  expect(result.current.isError).toBe(true);
+  expect(result.current.error).toBe(reason);
+  expect(onError).toHaveBeenCalledExactlyOnceWith(reason);
+  expect(reason).not.toHaveBeenCalled();
+});
+
+it.each(["target", "options"] as const)(
+  "useInfiniteSentinel: %s resets observation after failure -> retains error until a fresh entry",
+  async (reset) => {
+    const next = deferred();
+    const onLoadMore = vi.fn<UseInfiniteSentinelOptions["onLoadMore"]>()
+      .mockRejectedValueOnce(undefined)
+      .mockReturnValueOnce(next.promise);
+    const options = { onLoadMore, hasMore: true, rootMargin: "0px" };
+    const { target, result, rerender } = mountSentinel(options);
+    await emitIntersectionForTarget(target, true);
+    const replacement = reset === "target" ? document.createElement("div") : target;
+
+    if (reset === "target") {
+      act(() => result.current.ref(replacement));
+    } else {
+      rerender({ ...options, rootMargin: "100px" });
+    }
+
+    expect(result.current.isIntersecting).toBe(false);
+    expect(result.current.isError).toBe(true);
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+    await emitIntersectionForTarget(replacement, true);
+    expect(result.current.isError).toBe(false);
+    expect(result.current.error).toBeUndefined();
+    expect(result.current.isLoading).toBe(true);
+    await act(async () => { next.resolve(); await next.promise; });
+    expect(result.current.isError).toBe(false);
+    expect(onLoadMore).toHaveBeenCalledTimes(2);
+  },
+);
+
 it("useInfiniteSentinel: repeated records and re-entry -> one load per entry", async () => {
   const onLoadMore = vi.fn();
   const { target, result } = mountSentinel({ onLoadMore, hasMore: true });
@@ -132,11 +282,13 @@ it("useInfiniteSentinel: rejected request and busy release -> latches until expl
   expect(onLoadMore).toHaveBeenCalledTimes(1);
   expect(onError).toHaveBeenCalledExactlyOnceWith(error);
   expect(result.current.error).toBe(error);
+  expect(result.current.isError).toBe(true);
 
   await act(async () => result.current.retry());
 
   expect(onLoadMore).toHaveBeenCalledTimes(2);
   expect(result.current.error).toBeUndefined();
+  expect(result.current.isError).toBe(false);
 });
 
 it("useInfiniteSentinel: synchronous throw -> retries only after leaving and entering", async () => {
@@ -185,6 +337,8 @@ it("useInfiniteSentinel: promise rejects after unmount -> releases observer with
   expect(onError).not.toHaveBeenCalled();
   expect(onLoadMore).toHaveBeenCalledTimes(1);
   expect(intersectionObserverMetrics().observing).toBe(0);
+  expect(result.current.isError).toBe(false);
+  expect(result.current.error).toBeUndefined();
 });
 
 it("useInfiniteSentinel: target swap -> old visibility never loads the replacement", async () => {
@@ -245,6 +399,8 @@ it("useInfiniteSentinel: pending target detaches -> settlement clears loading wi
 
   expect(result.current.isLoading).toBe(false);
   expect(onError).not.toHaveBeenCalled();
+  expect(result.current.isError).toBe(false);
+  expect(result.current.error).toBeUndefined();
 });
 
 it("useInfiniteSentinel: error callback changes during pending work -> notifies the latest callback", async () => {

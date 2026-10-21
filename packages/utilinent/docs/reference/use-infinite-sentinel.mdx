@@ -11,7 +11,7 @@ Attach the callback `ref` to a measurable HTML element at the end of a list. Unl
 import { useInfiniteSentinel } from '@ilokesto/utilinent/hooks';
 
 function PageSentinel({ fetchNextPage, hasNextPage, isFetchingNextPage }) {
-  const { ref, isLoading, error, retry } = useInfiniteSentinel({
+  const { ref, isLoading, isError, retry } = useInfiniteSentinel({
     onLoadMore: fetchNextPage,
     hasMore: hasNextPage,
     busy: isFetchingNextPage,
@@ -21,7 +21,7 @@ function PageSentinel({ fetchNextPage, hasNextPage, isFetchingNextPage }) {
   return (
     <div ref={ref} style={{ minHeight: 1 }}>
       {isLoading ? 'Loading...' : null}
-      {error ? <button type="button" onClick={retry}>Retry</button> : null}
+      {isError ? <button type="button" onClick={retry}>Retry</button> : null}
     </div>
   );
 }
@@ -47,7 +47,8 @@ function PageSentinel({ fetchNextPage, hasNextPage, isFetchingNextPage }) {
 | `ref` | Stable callback ref accepting `HTMLElement \| null`. |
 | `isIntersecting` | Whether the current target satisfies intersection and threshold conditions. Initially `false`. |
 | `isLoading` | Controlled `busy` or an internally pending callback result. |
-| `error` | Last load failure, or `undefined`; cleared when another attempt starts. |
+| `isError` | Boolean failure flag, independent of the reason. Initially `false`; set to `true` on failure and reset to `false` when another eligible attempt starts. |
+| `error` | Original `unknown` failure reason, including `undefined`; cleared to `undefined` when another eligible attempt starts. Use `isError`, not this value's truthiness, to detect failure. |
 | `retry()` | Stable manual attempt, including when outside the viewport or IntersectionObserver is unavailable. Still obeys `busy`, `disabled`, `hasMore`, the mounted target, and the in-flight lock. |
 
 ## Ownership and repeated loading
@@ -62,7 +63,9 @@ Changing callback identity alone neither re-arms nor restarts observation. The n
 
 ## Failure and cleanup
 
-A synchronous throw or returned promise rejection sets `error`, invokes `onError`, and pauses automatic requests. Neither repeated visible records nor a `busy` cycle retries a failure. Call `retry()`, or let the sentinel leave and re-enter, to try again. A fresh observation after target or observer-option changes also permits a new entry. Returning a promise is necessary for the hook to see an asynchronous failure; callbacks that catch their own errors must manage retry policy themselves.
+A synchronous throw or returned promise rejection sets `isError` to `true`, preserves the original reason in `error`, invokes `onError` with that same reason, and pauses automatic requests. This includes `undefined`, `null`, `""`, `false`, and `0`: `error` alone cannot identify failure.
+
+Neither repeated visible records nor a `busy` cycle retries a failure. Call `retry()`, or let the sentinel leave and re-enter, to try again. A fresh observation after target or observer-option changes also permits a new entry. Only an eligible new attempt resets `isError` to `false` and `error` to `undefined`; leaving the viewport, changing observation options, or a blocked retry does not clear them. They remain reset after success. Returning a promise is necessary for the hook to see an asynchronous failure; callbacks that catch their own errors must manage retry policy themselves.
 
 On unmount, observation is released and late settlements cannot invoke `onError` or launch another load. StrictMode effect replay does not start a load by itself. On the server and in browsers without IntersectionObserver, no automatic load starts; provide a manual retry button if loading must remain available.
 

@@ -17,6 +17,7 @@ export interface UseInfiniteSentinelResult {
   ref: (node: HTMLElement | null) => void;
   isIntersecting: boolean;
   isLoading: boolean;
+  isError: boolean;
   error: unknown;
   retry: () => void;
 }
@@ -32,6 +33,7 @@ export function useInfiniteSentinel({
   const [element, setElement] = useState<HTMLElement | null>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [pending, setPending] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [error, setError] = useState<unknown>();
   const latest = useRef({ onLoadMore, hasMore, busy, disabled, onError });
   const target = useRef<HTMLElement | null>(null);
@@ -69,6 +71,7 @@ export function useInfiniteSentinel({
     inFlight.current = true;
     failed.current = false;
     setPending(true);
+    setIsError(false);
     setError(undefined);
 
     const finish = (didFail: boolean, reason?: unknown) => {
@@ -84,6 +87,7 @@ export function useInfiniteSentinel({
       if (didFail) {
         failed.current = true;
         observation.current.armed = false;
+        setIsError(true);
         setError(() => reason);
         latest.current.onError?.(reason);
       } else {
@@ -145,5 +149,5 @@ export function useInfiniteSentinel({
     request();
   }, [busy, disabled, hasMore, request]);
 
-  return { ref, isIntersecting, isLoading: busy || pending, error, retry };
+  return { ref, isIntersecting, isLoading: busy || pending, isError, error, retry };
 }
