@@ -1,0 +1,56 @@
+---
+title: "usePendingDelay"
+description: "Avoid brief loading flashes with a reveal delay and minimum visible duration."
+---
+
+# usePendingDelay
+
+`usePendingDelay` returns whether pending UI should be visible. Requests that finish before the delay never reveal it; once revealed, it stays visible for at least the minimum duration.
+
+This API is unreleased and is not included in `@ilokesto/utilinent` 1.2.1.
+
+```tsx lineNumbers
+import { usePendingDelay } from '@ilokesto/utilinent/hooks';
+
+function SearchResults({ pending, results }: { pending: boolean; results: string[] }) {
+  const isVisible = usePendingDelay(pending, { delay: 200, minDuration: 300 });
+
+  return (
+    <section aria-busy={pending} aria-label="Search results">
+      <div role="status">{isVisible ? 'Updating results…' : null}</div>
+      <ul>{results.map((result) => <li key={result}>{result}</li>)}</ul>
+    </section>
+  );
+}
+```
+
+With `pending` true for less than 200 ms, the status stays empty. With a longer request, it remains visible for at least 300 ms from its reveal. This composition keeps results mounted and exposes real work through `aria-busy={pending}`. The visible indicator may outlive the work.
+
+## Signature
+
+```ts
+usePendingDelay(pending: boolean, options?: UsePendingDelayOptions): boolean
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `delay` | `number` | `200` | Milliseconds of continuous pending before reveal. |
+| `minDuration` | `number` | `300` | Minimum visible milliseconds measured from reveal, not request start or completion. |
+
+Durations of zero skip that phase's wait. Negative and non-finite values become zero; finite values above 2,147,483,647 ms are capped at that timer limit.
+
+## Timing and updates
+
+- Initially pending work receives the same delay as later requests.
+- Finishing before reveal cancels the timer. A subsequent request gets a fresh delay.
+- Finishing after reveal holds the indicator only for the remainder of `minDuration`. Long requests hide immediately on completion.
+- Restarting pending during a hold cancels hiding. Visibility remains continuous and keeps the original reveal timestamp, rather than starting another minimum duration.
+- Changing `delay` while waiting recalculates the deadline from the original pending start. Shortening it past elapsed time reveals immediately; increasing it extends the wait. Changing it after reveal does not hide the indicator.
+- Changing `minDuration` uses the original reveal time. During a hold, increasing it extends the deadline and shortening it past elapsed time hides immediately. While pending, the latest value applies when work finishes.
+- Only a reveal or hide deadline owns a timer. Idle state and visible, still-pending work own none. Unmount and Strict Mode effect cleanup cancel scheduled work.
+
+Timers follow committed React updates. Server rendering and the first hydration render return `false`, even with zero delay. Timing starts at client mount; zero delay synchronizes in the client layout effect.
+
+Use the actual `pending` state for disabling actions or reporting busy work. The returned boolean is only a presentation policy; it does not start, cancel, await, or suspend requests.
+
+For replacing a content branch instead of keeping it mounted, use [DelayedFallback](./delayed-fallback).

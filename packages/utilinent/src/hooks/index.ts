@@ -7,5 +7,6 @@ export * from "./useInfiniteSentinel";
 export * from "./useIsomorphicLayoutEffect";
 export * from "./useKey";
 export * from "./useMediaQuery";
+export * from "./usePendingDelay";
 export * from "./useResizeObserver";
 export * from "./useThrottle";

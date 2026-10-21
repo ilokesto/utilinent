@@ -1,6 +1,7 @@
 // export components
 export * from './components/ClickAway';
 export * from './components/ClientOnly';
+export * from './components/DelayedFallback';
 export * from './components/ErrorBoundary';
 export * from './components/For';
 export * from './components/Hoverable';
