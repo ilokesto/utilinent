@@ -153,6 +153,9 @@ jobs:
       - name: Test workspace packages and documentation
         run: pnpm test
 
+      - name: Test utilinent React 18 runtime
+        run: pnpm --filter @ilokesto/utilinent test:react18
+
       - name: Verify form distribution
         run: pnpm --filter @ilokesto/form test:pack
 
@@ -219,6 +222,10 @@ jobs:
 
       - name: Test package
         run: pnpm --filter "$PACKAGE" --if-present run test
+
+      - name: Test utilinent React 18 runtime
+        if: matrix.package == '@ilokesto/utilinent'
+        run: pnpm --filter @ilokesto/utilinent test:react18
 
       - name: Verify form distribution
         if: matrix.package == '@ilokesto/form'

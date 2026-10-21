@@ -5,6 +5,7 @@
     "bench": "node bench/run.mjs",
     "build": "rm -rf dist && tsc",
     "test": "vitest run",
+    "test:react18": "node scripts/test-react18.mjs",
     "typecheck": "tsc --noEmit -p test/tsconfig.json && pnpm typecheck:react19",
     "typecheck:react19": "pnpm build && tsc --noEmit -p test/react19/tsconfig.json"
   },
