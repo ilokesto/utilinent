@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "checkJs": false,
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "types": ["node", "react"]
+  },
+  "include": ["./**/*.ts", "./**/*.tsx", "../playwright.config.ts"]
+}
