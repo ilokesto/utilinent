@@ -122,6 +122,18 @@ test('release verification: real pack and exact downloaded artifact -> read-only
   assert.equal(fixture.state.mainReads, 2);
 });
 
+test('packRelease: gzip OS byte normalized to 3 and persisted file matches returned bytes', async t => {
+  const fixture = await releaseFixture(t);
+  const temporary = await mkdtemp(path.join(os.tmpdir(), 'utilinent-gzip-normalization-'));
+  t.after(() => rm(temporary, { recursive: true, force: true }));
+  const packed = await packRelease(fixture.root, temporary);
+  assert.deepEqual([...packed.bytes.subarray(0, 3)], [0x1f, 0x8b, 8], 'GZIP_HEADER');
+  assert.equal(packed.bytes[9], 3, 'GZIP_OS_BYTE_UNIX');
+  const saved = await readFile(path.join(temporary, packed.file));
+  assert.ok(saved.equals(packed.bytes), 'PACK_FILE_BYTES_MISMATCH');
+  assert.equal(hash(saved), packed.packSha256, 'PACK_SHA256_MISMATCH');
+});
+
 test('release verification: dirty checkout -> rejects before remote reads', async t => {
   const fixture = await releaseFixture(t);
   await writeFile(path.join(fixture.root, 'untracked.txt'), 'dirty release checkout\n');
