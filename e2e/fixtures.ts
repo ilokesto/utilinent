@@ -183,31 +183,37 @@ export const test = base.extend<{ app: BrowserHarness }, { origin: string }>({
       expect(app.errors).toEqual([]);
       expect(app.signals.filter(signal => signal.kind === "hydration-error")).toHaveLength(app.expectedHydrationErrors);
     } finally {
+      // Arm process cleanup before diagnostics or CDP close, which can stall
+      // when Chromium cannot finish navigation.
+      const deadline = setTimeout(() => process.kill("SIGKILL"), 5_000);
       try {
-        if (app) {
-          await testInfo.attach("browser-events", {
-            body: JSON.stringify({ signals: app.signals, errors: app.errors }, null, 2),
-            contentType: "application/json",
-          });
-          if (!app.page.isClosed() && testInfo.status !== testInfo.expectedStatus) {
-            const screenshot = testInfo.outputPath("failure.png");
-            await app.page.screenshot({ path: screenshot });
-            await testInfo.attach("browser", { path: screenshot, contentType: "image/png" });
+        try {
+          if (app) {
+            await testInfo.attach("browser-events", {
+              body: JSON.stringify({ signals: app.signals, errors: app.errors }, null, 2),
+              contentType: "application/json",
+            });
+            if (!app.page.isClosed() && testInfo.status !== testInfo.expectedStatus) {
+              const screenshot = testInfo.outputPath("failure.png");
+              await app.page.screenshot({ path: screenshot, timeout: 2_000 });
+              await testInfo.attach("browser", { path: screenshot, contentType: "image/png" });
+            }
+          }
+        } finally {
+          try {
+            await browser?.close();
+          } finally {
+            if (process.exitCode === null && process.signalCode === null) { process.kill("SIGTERM"); }
+            await exited;
+            await rm(profile, { recursive: true, force: true });
+            expect(browser?.isConnected() ?? false).toBe(false);
+            expect(await stat(profile).catch(() => null)).toBeNull();
+            globalThis.process.stdout.write(`CLEANUP browser pid=${process.pid} exited; profile=${profile} removed\n`);
           }
         }
       } finally {
-        try {
-          await browser?.close();
-        } finally {
-          if (process.exitCode === null && process.signalCode === null) { process.kill("SIGTERM"); }
-          const deadline = setTimeout(() => process.kill("SIGKILL"), 5_000);
-          try { await exited; } finally { clearTimeout(deadline); }
-          await rm(profile, { recursive: true, force: true });
-        }
+        clearTimeout(deadline);
       }
-      expect(browser?.isConnected() ?? false).toBe(false);
-      expect(await stat(profile).catch(() => null)).toBeNull();
-      globalThis.process.stdout.write(`CLEANUP browser pid=${process.pid} exited; profile=${profile} removed\n`);
     }
   },
 });
