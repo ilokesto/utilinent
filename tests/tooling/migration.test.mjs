@@ -51,10 +51,11 @@ test('archive history: missing mapped branch -> rejected before accepting object
   const parent = await mkdtemp(path.join(os.tmpdir(), 'utilinent-missing-archive-ref-'));
   t.after(() => rm(parent, { recursive: true, force: true }));
   const root = path.join(parent, 'clone');
-  git(repository, ['clone', '--no-local', '--quiet', repository, root]);
+  git(repository, ['clone', '--local', '--no-hardlinks', '--quiet', repository, root]);
   git(root, ['fetch', '--no-tags', repository,
     '+refs/remotes/origin/legacy/*:refs/remotes/origin/legacy/*',
     '+refs/tags/*:refs/tags/*']);
+  await verifyHistory(root, manifest);
   const main = manifest.archives.find(source => source.id === 'ilokesto')
     .refs.find(ref => ref.ref === 'refs/heads/main');
   const alternate = main.destination.replace('refs/heads/', 'refs/remotes/origin/');
@@ -121,7 +122,7 @@ test('checkpoint: future development commit and new version -> immutable history
   const parent = await mkdtemp(path.join(os.tmpdir(), 'utilinent-future-'));
   t.after(() => rm(parent, { recursive: true, force: true }));
   const root = path.join(parent, 'clone');
-  git(repository, ['clone', '--no-local', '--quiet', repository, root]);
+  git(repository, ['clone', '--local', '--no-hardlinks', '--quiet', repository, root]);
   const current = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
   current.version = '9.0.0';
   await put(root, 'package.json', current);
