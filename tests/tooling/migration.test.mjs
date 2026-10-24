@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { lstat, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { readObjects, verifyCheckpoint, verifyDeletionGate, verifyHistory, verifyStandalone } from '../../scripts/verify-migration.mjs';
+import { git as verifierGit, readObjects, verifyCheckpoint, verifyDeletionGate, verifyHistory, verifyStandalone } from '../../scripts/verify-migration.mjs';
 
 const repository = path.resolve(import.meta.dirname, '../..');
 const manifest = JSON.parse(await readFile(path.join(repository, '.migration/source-manifest.json'), 'utf8'));
@@ -18,6 +18,44 @@ const put = async (root, file, value) => {
   await mkdir(path.dirname(path.join(root, file)), { recursive: true });
   await writeFile(path.join(root, file), JSON.stringify(value));
 };
+
+async function fixtureState(t, root, phase) {
+  const state = async directory => {
+    const common = git(directory, ['rev-parse', '--path-format=absolute', '--git-common-dir']).toString().trim();
+    const stat = await lstat(path.join(common, 'shallow')).catch(error => {
+      if (error.code !== 'ENOENT') throw error;
+      return null;
+    });
+    const boundary = stat?.isFile() && stat.size <= 4096 ? await readFile(path.join(common, 'shallow'), 'utf8').catch(error => {
+      if (error.code !== 'ENOENT') throw error;
+      return null;
+    }) : null;
+    return { directory, common, boundary,
+      marker: stat && { file: stat.isFile(), symlink: stat.isSymbolicLink(),
+        size: stat.size, dev: stat.dev, ino: stat.ino, nlink: stat.nlink, mtimeMs: stat.mtimeMs },
+      head: git(directory, ['rev-parse', 'HEAD']).toString().trim(),
+      shallow: spawnSync('git', ['--no-pager', '-C', directory, 'rev-parse', '--is-shallow-repository'],
+        { env: { ...process.env, GIT_MASTER: '1' }, encoding: 'utf8' }).output,
+      isolatedCommon: (await verifierGit(directory, ['rev-parse', '--path-format=absolute', '--git-common-dir'])).toString().trim(),
+      isolatedShallow: await verifierGit(directory, ['rev-parse', '--is-shallow-repository'])
+        .then(bytes => ({ value: bytes.toString().trim() }), error => ({ error: error.message })) };
+  };
+  const keys = ['GIT_DIR', 'GIT_COMMON_DIR', 'GIT_WORK_TREE', 'GIT_OBJECT_DIRECTORY',
+    'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_SHALLOW_FILE', 'GIT_CONFIG_COUNT',
+    'GIT_CONFIG_GLOBAL', 'GIT_CONFIG_NOSYSTEM', 'GIT_CONFIG_SYSTEM', 'GIT_TEMPLATE_DIR', 'GIT_EXEC_PATH'];
+  t.diagnostic(JSON.stringify({ schema: 'fixture-state-v1', phase, at: new Date().toISOString(),
+    run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+    job: process.env.GITHUB_JOB, module: import.meta.url, cwd: process.cwd(),
+    source: await state(repository), fixture: phase === 'before-clone' ? null : await state(root),
+    testBlob: git(repository, ['hash-object', 'tests/tooling/migration.test.mjs']).toString().trim(),
+    expectedTestBlob: git(repository, ['rev-parse', 'HEAD:tests/tooling/migration.test.mjs']).toString().trim(),
+    verifierBlob: git(repository, ['hash-object', 'scripts/verify-migration.mjs']).toString().trim(),
+    gitVersion: git(repository, ['--version']).toString().trim(),
+    gitExecutable: execFileSync('which', ['git'], { encoding: 'utf8' }).trim(),
+    gitExecPath: git(repository, ['--exec-path']).toString().trim(),
+    environment: Object.fromEntries(keys.filter(key => process.env[key] !== undefined)
+      .map(key => [key, process.env[key]])) }));
+}
 
 test('standalone workspace: own library and private runtime -> permitted without sibling links', async t => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'utilinent-workspace-'));
@@ -51,10 +89,13 @@ test('archive history: missing mapped branch -> rejected before accepting object
   const parent = await mkdtemp(path.join(os.tmpdir(), 'utilinent-missing-archive-ref-'));
   t.after(() => rm(parent, { recursive: true, force: true }));
   const root = path.join(parent, 'clone');
+  await fixtureState(t, root, 'before-clone');
   git(repository, ['clone', '--local', '--no-hardlinks', '--quiet', repository, root]);
+  await fixtureState(t, root, 'after-clone');
   git(root, ['fetch', '--no-tags', repository,
     '+refs/remotes/origin/legacy/*:refs/remotes/origin/legacy/*',
     '+refs/tags/*:refs/tags/*']);
+  await fixtureState(t, root, 'before-history');
   await verifyHistory(root, manifest);
   const main = manifest.archives.find(source => source.id === 'ilokesto')
     .refs.find(ref => ref.ref === 'refs/heads/main');
@@ -122,7 +163,9 @@ test('checkpoint: future development commit and new version -> immutable history
   const parent = await mkdtemp(path.join(os.tmpdir(), 'utilinent-future-'));
   t.after(() => rm(parent, { recursive: true, force: true }));
   const root = path.join(parent, 'clone');
+  await fixtureState(t, root, 'before-clone');
   git(repository, ['clone', '--local', '--no-hardlinks', '--quiet', repository, root]);
+  await fixtureState(t, root, 'after-clone');
   const current = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
   current.version = '9.0.0';
   await put(root, 'package.json', current);
@@ -130,6 +173,7 @@ test('checkpoint: future development commit and new version -> immutable history
   git(root, ['add', 'package.json', 'future-development.txt']);
   git(root, ['commit', '--quiet', '-m', 'Future development fixture']);
 
+  await fixtureState(t, root, 'before-checkpoint');
   const result = await verifyCheckpoint(root, manifest);
 
   assert.equal(result.checkpoint, manifest.checkpoint.commit);
