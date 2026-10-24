@@ -52,7 +52,8 @@ test('archive history: missing mapped branch -> rejected before accepting object
   t.after(() => rm(parent, { recursive: true, force: true }));
   const root = path.join(parent, 'clone');
   git(repository, ['clone', '--no-local', '--quiet', repository, root]);
-  git(root, ['fetch', '--no-tags', repository,
+  // Detached maintenance must not outlive the fixture and race its cleanup.
+  git(root, ['fetch', '--no-auto-maintenance', '--no-tags', repository,
     '+refs/remotes/origin/legacy/*:refs/remotes/origin/legacy/*',
     '+refs/tags/*:refs/tags/*']);
   const main = manifest.archives.find(source => source.id === 'ilokesto')
