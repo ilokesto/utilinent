@@ -9,4 +9,4 @@ This standalone repository owns the public `@ilokesto/utilinent` package and its
 - Update repository and homepage links for this owner. Keep migration-only files out of the npm tarball.
 - Preserve `.migration/source-manifest.json`, every original archive ref and tag object, and all immutable publication receipts, snapshots, and tarballs.
 - Repository migration does not bump the package version or add a changeset; the published current version is 1.3.0.
-- `release:verify --sha <full-SHA>` is read-only. Publishing and deployment remain disabled during bootstrap. Never publish locally or deploy docs.
+- `release:verify --sha <full-SHA>` is read-only. Pull requests run Verify CI. Main merges create or update a Changesets release PR; merging that PR publishes only the exact successful Verify artifact through GitHub Actions. Enable `Allow GitHub Actions to create and approve pull requests` and configure `NPM_TOKEN` in the `Production` environment before rollout. Never publish locally or deploy documentation.

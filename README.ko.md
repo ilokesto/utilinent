@@ -75,7 +75,10 @@ pnpm docs:test
 ```
 
 [브라우저 테스트](./BROWSER_TESTING.md)와 [React 런타임 테스트](./REACT_RUNTIME_TESTING.md)를 참고하세요.
-초기 설정 기간에는 패키지 발행과 문서 배포를 비활성화한 상태로 유지합니다.
+PR은 Verify CI를 실행합니다. main 병합은 Changesets 릴리스 PR을 생성·갱신하며,
+릴리스 PR을 병합하면 GitHub Actions가 성공한 Verify의 정확한 아티팩트만 게시합니다.
+적용 전에 `Allow GitHub Actions to create and approve pull requests`를 켜고
+`Production` 환경에 `NPM_TOKEN`을 설정하세요. 로컬 게시나 문서 배포는 하지 않습니다.
 
 </details>
 
