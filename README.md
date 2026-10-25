@@ -1,120 +1,82 @@
 # @ilokesto/utilinent
 
-**English** | [한국어](./README.ko.md)
+Small React components for conditional rendering, lists, and asynchronous UI.
 
-This repository is the standalone source for `@ilokesto/utilinent`. The package is
-published independently; this repository contains its source, tests, and official
-English and Korean documentation.
+[![npm](https://img.shields.io/npm/v/@ilokesto/utilinent?style=flat&color=555)](https://www.npmjs.com/package/@ilokesto/utilinent)
+[![License: MIT](https://img.shields.io/badge/license-MIT-555?style=flat)](https://opensource.org/license/mit)
 
-[![Build Size](https://img.shields.io/bundlephobia/minzip/@ilokesto/utilinent?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=@ilokesto/utilinent)
-[![Version](https://img.shields.io/npm/v/@ilokesto/utilinent?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
-[![Downloads](https://img.shields.io/npm/dt/@ilokesto/utilinent.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
+[Docs](https://ilokesto.ayden94.com/en/utilinent) | [API](./docs/reference) | [한국어](./README.ko.md)
 
-## Documentation
-
-- Full docs: [English](https://ilokesto.ayden94.com/en/utilinent) · [한국어](https://ilokesto.ayden94.com/ko/utilinent)
-- Source: [utilinent repository](https://github.com/ilokesto/utilinent)
-- npm: [@ilokesto/utilinent](https://www.npmjs.com/package/@ilokesto/utilinent)
-
-As React apps grow, JSX often becomes cluttered with nested ternary operators and bloated map callbacks, which rapidly degrades readability. utilinent was created to solve these recurring UI patterns by providing small, declarative components.
-
-Inspired by the concise and expressive style of SolidJS, utilinent encapsulates common tasks — conditional rendering, list rendering, and lazy loading — into clear APIs. For example, replace complex ternaries with a `Show` component, or use `For` to render arrays along with a built-in fallback for empty data.
-
-By moving noisy logic out of views and into reusable components, utilinent improves readability, maintainability, and lets developers focus more on business logic while boosting team productivity.
-
-&nbsp;
+- **Readable JSX** with `Show`, `For`, and `Switch` / `Match`.
+- **Async rendering** with `Mount`, lazy loading, and explicit fallbacks.
+- **Components and hooks** for browser events, visibility, and layout.
 
 ## Installation
 
-utilinent can be installed using several methods listed below.
-
-```bash
-npm install @ilokesto/utilinent
+```sh
 pnpm add @ilokesto/utilinent
-yarn add @ilokesto/utilinent
-bun add @ilokesto/utilinent
 ```
 
-&nbsp;
+Requires React 18 or 19.
 
 ## Quick start
 
-When handling async data in React, it's common to render different UI for loading, empty, or populated states. The examples below show typical patterns and how utilinent components simplify them.
-
 ```tsx
-import React, { useState, useEffect } from 'react';
-  
-const UserList = () => {
-  const { data: users } = useQuery( ... )
+import { For, Show } from '@ilokesto/utilinent';
 
+type User = { id: string; name: string };
+
+export function UserList({
+  users,
+  loading,
+}: {
+  users: User[];
+  loading: boolean;
+}) {
   return (
-    <div>
-      <h2>User List</h2>
-      {loading ? (
-        <p>Loading users...</p>
-      ) : (
-        users.length > 0 ? (
-          <ul>
-            {users.map(user => (
-              <li key={user.id}>{user.name}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>No users found.</p>
-        )
-      )}
-    </div>
+    <Show when={!loading} fallback={<p>Loading users...</p>}>
+      <For.ul each={users} fallback={<li>No users found.</li>}>
+        {(user) => <li key={user.id}>{user.name}</li>}
+      </For.ul>
+    </Show>
   );
-};
-  
-export default UserList;
+}
 ```
 
-utilinent's `Show` and `For` components make conditional and list rendering more declarative and concise. They help express loading and list states clearly so your UI intent is easier to read and maintain.
+For async rendering, pass `Mount` a **factory**, not a Promise directly. See the
+[Mount contract](./docs/reference/mount.mdx) for cancellation and error handling.
 
-```tsx
-import React, { useState, useEffect } from 'react';
-import { Show, For } from '@ilokesto/utilinent';
+## Further reading
 
-const UserListAfter = () => {
-  const { data: users } = useQuery( ... )
+- [Getting started](./docs/quick-start.mdx)
+- [Lists and empty states](./docs/guides/list-and-empty-states.mdx)
+- [Custom proxy components](./docs/guides/custom-proxy-components.mdx)
+- [Hooks](./docs/reference/use-event-listener.mdx) — also available from `@ilokesto/utilinent/hooks`.
 
-  return (
-    <div>
-      <h2>User List</h2>
-      <Show when={!loading} fallback={<p>Loading users...</p>}>
-        <For.ul each={users} fallback={<p>No users found.</p>}>
-          {(user) => (
-            <li key={user.id}>{user.name}</li>
-          )}
-        </For.ul>
-      </Show>
-    </div>
-  );
-};
+<details>
+<summary>Development</summary>
 
-export default UserListAfter;
+Use Node 22 and pnpm 10.17.1 from this repository.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm build
+pnpm typecheck
+pnpm test
+pnpm test:react18
+pnpm test:browser
+pnpm typecheck:react19
+pnpm test:tooling
+pnpm migrate:verify
+pnpm docs:publication:verify
+pnpm docs:typecheck
+pnpm docs:build
+pnpm docs:test
 ```
 
-&nbsp;
+See [browser testing](./BROWSER_TESTING.md) and [React runtime testing](./REACT_RUNTIME_TESTING.md).
+Publishing and documentation deployment remain disabled during bootstrap.
 
-## Mount async contract
+</details>
 
-`Mount` accepts direct non-Promise React nodes. Asynchronous work must be passed as a factory, so the contract remains the same with React 18 and React 19 types.
-
-```tsx
-import { Mount } from '@ilokesto/utilinent';
-
-<Mount fallback={<p>Loading preview...</p>} onError={reportError}>
-  {() => loadPreview().then((preview) => <Preview data={preview} />)}
-</Mount>
-```
-
-Direct `Promise` and `PromiseLike` children are intentionally rejected. A factory may return either a node synchronously or a `Promise` of a node.
-
-&nbsp;
-
-## Custom proxy components
-
-If you want to build your own `Show`-style component (for example, `Clickable`),
-see the [custom proxy components guide](./docs/guides/custom-proxy-components.mdx).
+MIT licensed.
