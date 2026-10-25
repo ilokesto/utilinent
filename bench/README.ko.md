@@ -32,6 +32,10 @@ JSON 출력 전에 브라우저와 서버를 종료합니다. 영구 프로필�
 `--output` 파일에는 pnpm 배너 없는 JSON이 저장되고 stdout에도 JSON을 출력합니다.
 stdout에 JSON만 필요하면 패키지 디렉터리에서 `node bench/run.mjs`를 실행합니다.
 
+벤치마크 소스는 ES 모듈입니다. `run.mjs`가 `workload.mjs`를 번들링하고,
+`workload.mjs`는 `lazy.mjs`를 가져옵니다. `/workload.js`는 소스 파일이 아닌
+메모리 번들의 URL입니다.
+
 ## 측정 범위
 
 | 작업 | 관찰값 | 결정적 불변식 |

@@ -45,7 +45,7 @@ const [output] = await build({
     write: false,
     minify: false,
     lib: {
-      entry: resolve(packageDir, "bench/workload.js"),
+      entry: resolve(packageDir, "bench/workload.mjs"),
       name: "UtilinentMeasurements",
       formats: ["iife"],
     },
