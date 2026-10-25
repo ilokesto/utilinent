@@ -75,7 +75,10 @@ pnpm docs:test
 ```
 
 See [browser testing](./BROWSER_TESTING.md) and [React runtime testing](./REACT_RUNTIME_TESTING.md).
-Publishing and documentation deployment remain disabled during bootstrap.
+Pull requests run Verify CI. Main merges create or update a Changesets release PR; merging
+that PR publishes only the exact successful Verify artifact through GitHub Actions. Enable
+`Allow GitHub Actions to create and approve pull requests` and configure `NPM_TOKEN` in the
+`Production` environment before rollout. Never publish locally or deploy documentation.
 
 </details>
 
