@@ -35,6 +35,9 @@ inside measured loops. `--output` writes JSON without pnpm's console banners;
 the CLI also emits JSON on stdout. Use `node bench/run.mjs` from the package
 directory if stdout must contain only JSON.
 
+The benchmark sources are ES modules: `run.mjs` bundles `workload.mjs`, which
+imports `lazy.mjs`. `/workload.js` is the in-memory bundle URL, not a source file.
+
 ## What is measured
 
 | Workload | Observation | Deterministic invariant |

@@ -2,7 +2,7 @@ import { createElement } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { Show } from "../src/components/Show";
-import { lazySample } from "./lazy.js";
+import { lazySample } from "./lazy.mjs";
 import {
   getIntersectionObserverPoolStatsForTests,
   subscribeIntersection,
