@@ -1,112 +1,82 @@
 # @ilokesto/utilinent
 
-[English](./README.md) | **한국어**
+조건부 렌더링, 리스트, 비동기 UI를 간결하게 표현하는 작은 React 컴포넌트 모음입니다.
 
-이 저장소는 `@ilokesto/utilinent`의 독립 소스 저장소입니다. 패키지는 독립적으로
-배포되며, 소스 코드와 테스트, 한국어 및 영어 공식 문서를 포함합니다.
+[![npm](https://img.shields.io/npm/v/@ilokesto/utilinent?style=flat&color=555)](https://www.npmjs.com/package/@ilokesto/utilinent)
+[![License: MIT](https://img.shields.io/badge/license-MIT-555?style=flat)](https://opensource.org/license/mit)
 
-[![Build Size](https://img.shields.io/bundlephobia/minzip/@ilokesto/utilinent?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=@ilokesto/utilinent)
-[![Version](https://img.shields.io/npm/v/@ilokesto/utilinent?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
-[![Downloads](https://img.shields.io/npm/dt/@ilokesto/utilinent.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@ilokesto/utilinent)
+[문서](https://ilokesto.ayden94.com/ko/utilinent) | [API](./docs/reference) | [English](./README.md)
 
-## 문서
-
-- 전체 문서: [English](https://ilokesto.ayden94.com/en/utilinent) · [한국어](https://ilokesto.ayden94.com/ko/utilinent)
-- 소스: [Utilinent 저장소](https://github.com/ilokesto/utilinent)
-- npm: [@ilokesto/utilinent](https://www.npmjs.com/package/@ilokesto/utilinent)
-
-React 앱이 커질수록 JSX는 중첩 삼항 연산자와 비대해진 map 콜백으로 금방 어수선해지고, 가독성이 빠르게 떨어집니다. utilinent는 이런 반복적인 UI 패턴을 작고 선언적인 컴포넌트로 풀어내기 위해 만들어졌습니다.
-
-간결하고 표현력 있는 SolidJS 스타일에서 착안해, utilinent는 조건부 렌더링·리스트 렌더링·지연 로딩 같은 흔한 작업을 명확한 API로 캡슐화합니다. 복잡한 삼항 연산자는 `Show` 컴포넌트로 대체하고, 배열은 빈 데이터용 fallback이 내장된 `For`로 렌더링할 수 있습니다.
-
-시끄러운 로직을 뷰 밖으로 옮겨 재사용 가능한 컴포넌트로 만들면 가독성과 유지보수성이 좋아지고, 개발자가 비즈니스 로직에 더 집중할 수 있어 팀 생산성도 올라갑니다.
+- **읽기 쉬운 JSX** — `Show`, `For`, `Switch` / `Match`로 렌더링 의도를 표현합니다.
+- **비동기 렌더링** — `Mount`, 지연 로딩, 명시적인 fallback을 제공합니다.
+- **컴포넌트와 훅** — 브라우저 이벤트, 가시성, 레이아웃을 다룹니다.
 
 ## 설치
 
-utilinent는 아래 방법 중 하나로 설치할 수 있습니다.
-
-```bash
-npm install @ilokesto/utilinent
+```sh
 pnpm add @ilokesto/utilinent
-yarn add @ilokesto/utilinent
-bun add @ilokesto/utilinent
 ```
+
+React 18 또는 19가 필요합니다.
 
 ## 빠른 시작
 
-React에서 비동기 데이터를 다룰 때는 loading·empty·populated 상태에 따라 다른 UI를 렌더링하는 일이 흔합니다. 아래 예시는 일반적인 패턴과, utilinent 컴포넌트가 그 패턴을 어떻게 단순화하는지 보여줍니다.
-
 ```tsx
-import React, { useState, useEffect } from 'react';
+import { For, Show } from '@ilokesto/utilinent';
 
-const UserList = () => {
-  const { data: users } = useQuery( ... )
+type User = { id: string; name: string };
 
+export function UserList({
+  users,
+  loading,
+}: {
+  users: User[];
+  loading: boolean;
+}) {
   return (
-    <div>
-      <h2>User List</h2>
-      {loading ? (
-        <p>Loading users...</p>
-      ) : (
-        users.length > 0 ? (
-          <ul>
-            {users.map(user => (
-              <li key={user.id}>{user.name}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>No users found.</p>
-        )
-      )}
-    </div>
+    <Show when={!loading} fallback={<p>Loading users...</p>}>
+      <For.ul each={users} fallback={<li>No users found.</li>}>
+        {(user) => <li key={user.id}>{user.name}</li>}
+      </For.ul>
+    </Show>
   );
-};
-
-export default UserList;
+}
 ```
 
-utilinent의 `Show`와 `For` 컴포넌트는 조건부 렌더링과 리스트 렌더링을 더 선언적이고 간결하게 만듭니다. loading·리스트 상태를 명확하게 표현해 UI 의도를 읽고 유지하기 쉬워집니다.
+비동기 렌더링에서는 `Mount`에 Promise를 직접 넘기지 말고 **팩토리 함수**를 전달하세요.
+취소와 오류 처리는 [Mount 계약](./docs/reference/mount.ko.mdx)을 참고하세요.
 
-```tsx
-import React, { useState, useEffect } from 'react';
-import { Show, For } from '@ilokesto/utilinent';
+## 더 알아보기
 
-const UserListAfter = () => {
-  const { data: users } = useQuery( ... )
+- [시작하기](./docs/quick-start.ko.mdx)
+- [리스트와 빈 상태](./docs/guides/list-and-empty-states.ko.mdx)
+- [커스텀 프록시 컴포넌트](./docs/guides/custom-proxy-components.ko.mdx)
+- [훅](./docs/reference/use-event-listener.ko.mdx) — `@ilokesto/utilinent/hooks`에서도 가져올 수 있습니다.
 
-  return (
-    <div>
-      <h2>User List</h2>
-      <Show when={!loading} fallback={<p>Loading users...</p>}>
-        <For.ul each={users} fallback={<p>No users found.</p>}>
-          {(user) => (
-            <li key={user.id}>{user.name}</li>
-          )}
-        </For.ul>
-      </Show>
-    </div>
-  );
-};
+<details>
+<summary>개발</summary>
 
-export default UserListAfter;
+이 저장소에서 Node 22와 pnpm 10.17.1을 사용합니다.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm build
+pnpm typecheck
+pnpm test
+pnpm test:react18
+pnpm test:browser
+pnpm typecheck:react19
+pnpm test:tooling
+pnpm migrate:verify
+pnpm docs:publication:verify
+pnpm docs:typecheck
+pnpm docs:build
+pnpm docs:test
 ```
 
-## Mount 비동기 계약
+[브라우저 테스트](./BROWSER_TESTING.md)와 [React 런타임 테스트](./REACT_RUNTIME_TESTING.md)를 참고하세요.
+초기 설정 기간에는 패키지 발행과 문서 배포를 비활성화한 상태로 유지합니다.
 
-`Mount`는 Promise가 아닌 React 노드를 직접 받습니다. 비동기 작업은 팩토리로 전달해야 하며, 그래야 React 18과 React 19 타입에서 계약이 동일하게 유지됩니다.
+</details>
 
-```tsx
-import { Mount } from '@ilokesto/utilinent';
-
-<Mount fallback={<p>Loading preview...</p>} onError={reportError}>
-  {() => loadPreview().then((preview) => <Preview data={preview} />)}
-</Mount>
-```
-
-`Promise`와 `PromiseLike`를 자식으로 직접 전달하는 것은 의도적으로 거부됩니다. 팩토리는 노드를 동기로 반환하거나 노드의 `Promise`를 반환할 수 있습니다.
-
-## 커스텀 프록시 컴포넌트
-
-`Show` 스타일의 컴포넌트(예: `Clickable`)를 직접 만들고 싶다면, 저장소에 짧은 가이드가 있습니다:
-
-- [커스텀 프록시 컴포넌트 가이드](./docs/guides/custom-proxy-components.ko.mdx)
+MIT 라이선스입니다.
