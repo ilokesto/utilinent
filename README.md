@@ -56,7 +56,7 @@ For async rendering, pass `Mount` a **factory**, not a Promise directly. See the
 <details>
 <summary>Development</summary>
 
-Use Node 22 and pnpm 10.17.1 from this repository.
+Use Node 24.22.1 and pnpm 10.17.1 from this repository.
 
 ```sh
 pnpm install --frozen-lockfile

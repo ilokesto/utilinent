@@ -1,6 +1,6 @@
 # @ilokesto/utilinent
 
-This standalone repository owns the public `@ilokesto/utilinent` package and its bilingual local documentation site. Use Node.js 22 and pnpm 10.17.1.
+This standalone repository owns the public `@ilokesto/utilinent` package and its bilingual local documentation site. Use Node.js 24.22.1 and pnpm 10.17.1.
 
 - Preserve the published 1.3.0 version, `.` and `./hooks` exports, React peer range, source, tests, React 18 fixture, and React 19 declaration fixtures.
 - Canonical current documentation is `docs/`; the local renderer is `website/`. Released documentation and its exact npm artifact are immutable under `docs-publication/releases/utilinent/`.

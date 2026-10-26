@@ -1,6 +1,6 @@
 # Native browser regressions
 
-From a clean standalone checkout with Node.js 22 and pnpm 10.17.1:
+From a clean standalone checkout with Node.js 24.22.1 and pnpm 10.17.1:
 
 ```sh
 pnpm install --frozen-lockfile
