@@ -1,6 +1,6 @@
 # React runtime development checks
 
-Run from this standalone repository with Node.js 22 and pnpm 10.17.1:
+Run from this standalone repository with Node.js 24.22.1 and pnpm 10.17.1:
 
 ```sh
 pnpm install --frozen-lockfile
