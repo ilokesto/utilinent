@@ -86,13 +86,8 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - name: Library and standalone checks
         run: |
-          pnpm build
           pnpm typecheck
           pnpm test
-          pnpm test:react18
-          pnpm typecheck:react19
-          pnpm test:browser
-          pnpm test:tooling
       - name: Package exact verified head
         run: node .github/release/release-artifact.mjs "$VERIFIED_SHA"
         env:

@@ -53,14 +53,13 @@ export function UserList({
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm build
+pnpm exec playwright install chromium
 pnpm typecheck
 pnpm test
-pnpm test:react18
-pnpm test:browser
-pnpm typecheck:react19
-pnpm test:tooling
 ```
+
+`pnpm test` builds once and runs `test:unit`, `test:types` (including `test:types:react19`), `test:tooling`, `test:react18`, and `test:browser`. `pnpm typecheck` checks library source only. Standalone declaration checks require a prior build. Tests live under `tests/{unit,types,tooling,browser,fixtures}`.
+
 
 [브라우저 테스트](./BROWSER_TESTING.md)와 [React 런타임 테스트](./REACT_RUNTIME_TESTING.md)를 참고하세요.
 PR은 Verify CI를 실행합니다. main 병합은 Changesets 릴리스 PR을 생성·갱신하며,

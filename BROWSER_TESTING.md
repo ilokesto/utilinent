@@ -57,11 +57,13 @@ failures feed the existing required `verify` aggregation.
 Related checks:
 
 ```sh
-pnpm test
 pnpm typecheck
-pnpm build
-pnpm test:react18
+pnpm test
 ```
+
+`pnpm test` builds once and includes this browser suite, unit, declaration, tooling,
+and React 18 compatibility checks. Browser test sources are in `tests/browser`;
+the app, SSR server, client, and worker fixtures are in `tests/fixtures/browser`.
 
 The harness stays outside the unit-test and distribution source globs. No
 runtime API, private helper, or existing test is changed for these regressions.
