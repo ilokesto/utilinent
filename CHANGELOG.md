@@ -1,5 +1,11 @@
 # @ilokesto/utilinent
 
+## 1.3.1
+
+### Patch Changes
+
+- ddab29b: Require Node.js 24.22.1 or newer and use the security-patched 24.22.1 release for development and CI.
+
 ## 1.3.0
 
 ### Minor Changes
