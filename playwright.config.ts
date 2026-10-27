@@ -3,7 +3,7 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   // Keep browser reporting from modifying the migration history checkout.
   captureGitInfo: { diff: false },
-  testDir: "./e2e",
+  testDir: "./tests/browser",
   testMatch: "**/*.browser.ts",
   timeout: 30_000,
   retries: 0,

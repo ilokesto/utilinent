@@ -4,25 +4,26 @@ Run from this standalone repository with Node.js 24.22.1 and pnpm 10.17.1:
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm test
-pnpm test:react18
+pnpm exec playwright install chromium
 pnpm typecheck
-pnpm build
-pnpm test:browser
+pnpm test
 ```
 
-`test` keeps the normal React/ReactDOM 19.2.8 workspace runtime.
+`test:unit` keeps the normal React/ReactDOM 19.2.8 workspace runtime.
 `test:react18` runs an explicit compatibility project against React and ReactDOM
 18.3.1. It reuses suites whose contracts apply to both runtimes and adds a focused
 React 18 compatibility spec for the mixed-version ref/component suites. It does
 not claim to run the full React 19 suite. The existing React 18 and React 19
-declaration checks still run through `typecheck`.
+declaration checks run through `test:types`, including `test:types:react19`.
+`pnpm test` builds once and runs unit, declaration, tooling, React 18 compatibility,
+and browser checks. `pnpm typecheck` checks library source only. For standalone
+declaration checks, run `pnpm build` first.
 
 ## Isolation and reproducibility
 
-`scripts/test-react18.mjs` creates a unique temporary directory for each run,
-copies the current `src` and `test` trees into it, and installs the private
-`test/react18` manifest with its own `pnpm-lock.yaml` using
+`tests/tooling/test-react18.mjs` creates a unique temporary directory for each run,
+copies the current `src` and `tests` trees into it, and installs the private
+`tests/fixtures/react18` manifest with its own `pnpm-lock.yaml` using
 `pnpm install --frozen-lockfile`. The fixture pins React, ReactDOM, Testing
 Library, Vitest, Vite, and jsdom. Its own workspace boundary prevents accidental
 participation in the root workspace. It is not a published package.
@@ -34,15 +35,15 @@ Parallel runs use separate source snapshots and module trees; pnpm may reuse its
 ordinary content-addressed download store. Temporary files are removed after
 success or a failed install/test command.
 
-`test/Runtime.test.tsx` renders and updates a stateful component, asserts the
+`tests/unit/Runtime.test.tsx` renders and updates a stateful component, asserts the
 executing React and ReactDOM versions, and resolves dependencies from Testing
 Library's and the renderer's own module contexts. It checks that both contexts
 resolve the same React installation as the test and prints all four observed
 versions. A renamed script or an alias that leaves a React 19 renderer behind
 cannot satisfy these checks.
 
-To deliberately update fixture dependencies, edit `test/react18/package.json`,
-then run `pnpm --dir test/react18 install --lockfile-only`
+To deliberately update fixture dependencies, edit `tests/fixtures/react18/package.json`,
+then run `pnpm --dir tests/fixtures/react18 install --lockfile-only`
 and inspect the private lockfile diff. Normal runs never regenerate a lockfile.
 
 ## Supported-version differences
@@ -85,12 +86,12 @@ diagnostics are not suppressed; any failing compatibility test exits nonzero.
 ## Exact suite inventory
 
 Verified baseline: React 18.3.1 runs 23 files / 222 tests, all passing with no
-skips (185 tests in the 22 reused files plus 20 focused compatibility tests).
+skips (202 tests in the 22 reused files plus 20 focused compatibility tests).
 React 19.2.8 runs 25 files / 233 tests, all passing with no skips. These totals
 describe this revision; the projects intentionally have different inventories.
 
-Paths below are relative to `test/`. React 19 discovers `**/*.test.tsx`; React 18
-uses the explicit `include` list in `test/react18/vitest.config.ts`. When adding
+Paths below are relative to `tests/unit/`. React 19 discovers `**/*.test.tsx`; React 18
+uses the explicit `include` list in `tests/fixtures/react18/vitest.config.ts`. When adding
 a shared suite, add it to that list deliberately.
 
 | File | React 18 | React 19 |
@@ -124,8 +125,6 @@ a shared suite, add it to that list deliberately.
 
 ## CI
 
-Both `full` and selected `packages` verification run `test:react18` after normal
-unit tests. The selected step runs only for `@ilokesto/utilinent`, has no soft-fail
-setting, and remains covered by the existing required `verify` aggregation.
-`the standalone `.github/workflows/ci.yml`` parses the workflow and private
-fixture metadata to protect this wiring without modifying the shared CI tests.
+The standalone `.github/workflows/ci.yml` runs `pnpm typecheck` and `pnpm test`.
+The aggregate owns every suite and the single build, including mandatory React 18
+compatibility; failures feed the required `verify` aggregation.

@@ -52,14 +52,13 @@ Use Node 24.22.1 and pnpm 10.17.1 from this repository.
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm build
+pnpm exec playwright install chromium
 pnpm typecheck
 pnpm test
-pnpm test:react18
-pnpm test:browser
-pnpm typecheck:react19
-pnpm test:tooling
 ```
+
+`pnpm test` builds once and runs `test:unit`, `test:types` (including `test:types:react19`), `test:tooling`, `test:react18`, and `test:browser`. `pnpm typecheck` checks library source only. Standalone declaration checks require a prior build. Tests live under `tests/{unit,types,tooling,browser,fixtures}`.
+
 
 See [browser testing](./BROWSER_TESTING.md) and [React runtime testing](./REACT_RUNTIME_TESTING.md).
 Pull requests run Verify CI. Main merges create or update a Changesets release PR; merging

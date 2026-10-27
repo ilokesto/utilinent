@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "checkJs": false,
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "types": ["node", "react"]
+  },
+  "include": [
+    "../unit/**/*.ts",
+    "../unit/**/*.tsx",
+    "../fixtures/setup.ts",
+    "../fixtures/controlledIntersectionObserver.ts",
+    "./react18/**/*.ts",
+    "./react18/**/*.tsx"
+  ]
+}
