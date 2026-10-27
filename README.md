@@ -5,7 +5,7 @@ Small React components for conditional rendering, lists, and asynchronous UI.
 [![npm](https://img.shields.io/npm/v/@ilokesto/utilinent?style=flat&color=555)](https://www.npmjs.com/package/@ilokesto/utilinent)
 [![License: MIT](https://img.shields.io/badge/license-MIT-555?style=flat)](https://opensource.org/license/mit)
 
-[Docs](https://ilokesto.ayden94.com/en/utilinent) | [API](./docs/reference) | [한국어](./README.ko.md)
+[한국어](./README.ko.md)
 
 - **Readable JSX** with `Show`, `For`, and `Switch` / `Match`.
 - **Async rendering** with `Mount`, lazy loading, and explicit fallbacks.
@@ -43,15 +43,7 @@ export function UserList({
 }
 ```
 
-For async rendering, pass `Mount` a **factory**, not a Promise directly. See the
-[Mount contract](./docs/reference/mount.mdx) for cancellation and error handling.
-
-## Further reading
-
-- [Getting started](./docs/quick-start.mdx)
-- [Lists and empty states](./docs/guides/list-and-empty-states.mdx)
-- [Custom proxy components](./docs/guides/custom-proxy-components.mdx)
-- [Hooks](./docs/reference/use-event-listener.mdx) — also available from `@ilokesto/utilinent/hooks`.
+For async rendering, pass `Mount` a **factory**, not a Promise directly. Use cancellation and error handling for asynchronous work.
 
 <details>
 <summary>Development</summary>
@@ -67,17 +59,13 @@ pnpm test:react18
 pnpm test:browser
 pnpm typecheck:react19
 pnpm test:tooling
-pnpm docs:publication:verify
-pnpm docs:typecheck
-pnpm docs:build
-pnpm docs:test
 ```
 
 See [browser testing](./BROWSER_TESTING.md) and [React runtime testing](./REACT_RUNTIME_TESTING.md).
 Pull requests run Verify CI. Main merges create or update a Changesets release PR; merging
 that PR publishes only the exact successful Verify artifact through GitHub Actions. Enable
 `Allow GitHub Actions to create and approve pull requests` and configure `NPM_TOKEN` in the
-`Production` environment before rollout. Never publish locally or deploy documentation.
+`Production` environment before rollout. Never publish locally.
 
 </details>
 

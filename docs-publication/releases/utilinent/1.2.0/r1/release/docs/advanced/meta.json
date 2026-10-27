@@ -1,5 +1,0 @@
-{
-  "title": "Advanced",
-  "defaultOpen": true,
-  "pages": ["truthiness", "proxy-registry", "ssr"]
-}
