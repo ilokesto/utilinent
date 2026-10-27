@@ -67,7 +67,6 @@ pnpm test:react18
 pnpm test:browser
 pnpm typecheck:react19
 pnpm test:tooling
-pnpm migrate:verify
 pnpm docs:publication:verify
 pnpm docs:typecheck
 pnpm docs:build
