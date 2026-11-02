@@ -1,5 +1,13 @@
 /**
- * Type guard: narrows `value` to `PromiseLike<T>` when it has a `then` method.
+ * @description Narrows a nonnull object or function with a callable then property to PromiseLike.
+ * @param {unknown} value - The candidate value to inspect without invoking it.
+ * @returns {boolean} Whether the value is a thenable; a true result narrows it to PromiseLike<T>.
+ * @example
+ * ```ts
+ * if (isPromiseLike<string>(candidate)) {
+ *   candidate.then((text) => text.toUpperCase());
+ * }
+ * ```
  */
 export function isPromiseLike<T = unknown>(
   value: unknown,

@@ -11,6 +11,10 @@ This standalone repository owns the public `@ilokesto/utilinent` package. Use No
   The gate builds once, then runs `test:unit`, `test:types` (including
   `test:types:react19`), `test:tooling`, `test:react18`, and `test:browser`.
   Standalone declaration checks require `pnpm build` first.
+- Follow [JSDOC.md](./JSDOC.md) for English runtime API documentation. Every
+  exported callable, class, public constructor and own public method needs the
+  required description, example, typed parameters and value-return documentation.
+  Run `pnpm lint:jsdoc`; `pnpm test:tooling` includes this semantic check.
 - Update repository and homepage links for this owner.
 - Repository-only changes do not bump the package version or add a changeset; the published current version is 1.3.0.
 - `release:verify --sha <full-SHA>` is read-only. Pull requests run Verify CI. Main merges create or update a Changesets release PR; merging that PR publishes only the exact successful Verify artifact through GitHub Actions. Enable `Allow GitHub Actions to create and approve pull requests` and configure `NPM_TOKEN` in the `Production` environment before rollout. Never publish locally.

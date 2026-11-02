@@ -17,10 +17,15 @@ const renderForTag = createTagRenderer(
 );
 
 /**
- * Renders a list by mapping `children` over each item in `each`.
+ * @description Renders a list by mapping `children` over each item in `each`.
  *
  * Renders `fallback` when the array is empty or nullish.
  * Polymorphic: access typed HTML tag variants via `For.ul`, `For.div`, etc.
+ * @param {ForProps<T>} props - List rendering options.
+ * @param {T | null | undefined} props.each - Items to render.
+ * @param {(item: T[number], index: number) => React.ReactNode} props.children - Item renderer.
+ * @param {React.ReactNode} [props.fallback] - Empty-list content; defaults to null.
+ * @returns {React.ReactNode} Mapped children or fallback, optionally inside a tag variant.
  *
  * @example
  * ```tsx

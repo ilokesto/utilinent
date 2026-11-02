@@ -26,7 +26,7 @@ function describeChild(child: ReactNode): string {
 }
 
 /**
- * Merges its props onto a single child element — Radix-style `asChild` pattern.
+ * @description Merges its props onto a single child element — Radix-style `asChild` pattern.
  *
  * Event handlers are chained, `className` strings are concatenated, and `style`
  * objects are shallow-merged. Refs are composed via a memoized callback that
@@ -34,13 +34,19 @@ function describeChild(child: ReactNode): string {
  * their identity.
  *
  * Children contract:
- * - Plain `Slot` expects exactly one element child. With multiple children only
+ * -- Plain `Slot` expects exactly one element child. With multiple children only
  *   the first element receives the merged props and the remaining children are
  *   dropped; a non-element child renders `null`. Both cases warn in development.
- * - A {@link Slottable} child marks which descendant receives the merged props
+ * -- A {@link Slottable} child marks which descendant receives the merged props
  *   while its siblings render alongside it. An invalid slottable child renders
  *   nothing at its position, keeps its siblings rendered, and warns in
  *   development.
+ * @param {HTMLAttributes<HTMLElement>} props - Host props merged onto the selected child.
+ * @returns {ReactNode} The cloned child, slottable siblings, or null for an invalid plain child.
+ * @example
+ * ```tsx
+ * <Slot className="action"><button type="button">Save</button></Slot>
+ * ```
  */
 export const Slot = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>((props, ref) => {
   const { children, ...slotProps } = props;

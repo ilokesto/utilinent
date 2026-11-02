@@ -34,17 +34,37 @@ export interface UseIntersectionObserverResult {
 }
 
 /**
- * Shared implementation behind `useIntersectionObserver` and `Observer`.
+ * @description Shared implementation behind `useIntersectionObserver` and `Observer`.
  *
  * `trackEntry` selects the subscription mode:
- * - `true` (public hook): every delivered record updates `entry`, so entry
+ * -- `true` (public hook): every delivered record updates `entry`, so entry
  *   consumers keep receiving ratio/coordinate updates even when the boolean
  *   does not change.
- * - `false` (boolean-only): `entry` stays `undefined` and same-boolean
+ * -- `false` (boolean-only): `entry` stays `undefined` and same-boolean
  *   records never trigger a commit.
  *
  * Observation logic lives here once; the two public surfaces only pick a
  * mode.
+ * Equal observation settings share an observer. Cleanup releases the subscription;
+ * freezing is target-scoped. Without the native API the initial state is retained.
+ *
+ * @param {UseIntersectionObserverCoreOptions} [options] - Shared observation settings.
+ * @param {number | number[]} [options.threshold] - Visibility ratios; defaults to zero.
+ * @param {Element | null} [options.root] - Root element; defaults to the viewport.
+ * @param {string} [options.rootMargin] - Root margin; defaults to "0%".
+ * @param {boolean} [options.freezeOnceVisible] - Freeze the current target after visibility; defaults to false.
+ * @param {boolean} [options.initialIsIntersecting] - Initial and fallback state; defaults to false.
+ * @param {(isIntersecting: boolean, entry: IntersectionObserverEntry) => void} [options.onIntersect] - Latest callback for transitions into visibility.
+ * @param {boolean} trackEntry - Whether each native entry should update returned entry state.
+ * @returns {UseIntersectionObserverResult} Target attachment and observation state.
+ * - ref `(node: HTMLElement | null) => void` - Stable callback ref for the target.
+ * - isIntersecting `boolean` - Whether intersection meets a configured threshold.
+ * - entry `IntersectionObserverEntry | undefined` - Latest entry when tracked, otherwise undefined.
+ * @example
+ * ```tsx
+ * const { ref, isIntersecting } = useIntersectionObserverCore({ threshold: 0.5 }, false);
+ * return <section ref={ref} data-visible={isIntersecting} />;
+ * ```
  */
 export function useIntersectionObserverCore(
   options: UseIntersectionObserverCoreOptions = {},
