@@ -1,5 +1,22 @@
 # @ilokesto/utilinent
 
+## 1.4.0
+
+### Minor Changes
+
+- 1df0778: Add LongPress with typed tag variants, cancellable pointer gestures, keyboard click support, and forwarded refs.
+- 687b97d: Add Impression with typed element variants, continuous visibility timing, page visibility cancellation, and repeatable exposure callbacks.
+- 02f657e: Add useRefEffect for dependency-aware element setup and exactly-once cleanup with a stable callback ref on React 18 and React 19.
+- 8ed01f9: Add a renderless ScrollLock component with document-scoped nested ownership and exact body style and scroll position restoration.
+- 7e8e619: Add Separated with an array and render function, typed tag variants, and separators between rendered nodes.
+- 19c35d1: Add stable useDebouncedCallback and useThrottledCallback hooks with latest-callback execution, leading and trailing options, and cancel and flush controls.
+
+### Patch Changes
+
+- 096dbbf: Improve English JSDoc shipped with public declarations and enforce documented
+  runtime signatures with a compiler-backed repository check.
+- ddab29b: Require Node.js 24.22.1 or newer and use the security-patched 24.22.1 release for development and CI.
+
 ## 1.3.0
 
 ### Minor Changes
