@@ -1,6 +1,7 @@
 export * from "./useClickAway";
 export * from "./usePageVisibility";
 export * from "./useDebounce";
+export * from "./useDebouncedCallback";
 export * from "./useEventListener";
 export * from "./useFocusWithin";
 export * from "./useHover";
@@ -12,3 +13,4 @@ export * from "./useMediaQuery";
 export * from "./usePendingDelay";
 export * from "./useResizeObserver";
 export * from "./useThrottle";
+export * from "./useThrottledCallback";
