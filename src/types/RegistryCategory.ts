@@ -6,6 +6,7 @@ export const REGISTRY_CATEGORIES = [
   "show",
   "for",
   "repeat",
+  "separated",
   "mount",
   "switch",
   "base",
