@@ -6,6 +6,7 @@ export * from './components/ErrorBoundary';
 export * from './components/For';
 export * from './components/Hoverable';
 export * from './components/Hotkey';
+export * from './components/Impression';
 export * from './components/LoadMore';
 export * from './components/Measure';
 export * from './components/Media';
