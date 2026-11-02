@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
 
 /**
- * Subscribes to a CSS media query and returns whether it currently matches.
+ * @description Subscribes to a CSS media query and returns whether it currently matches.
  *
  * SSR-safe: the server render and the client's first hydration render share
  * the same initial snapshot (`false`), so hydrated markup never mismatches.
  * The actual match is applied synchronously before the first paint.
+ *
+ * @param {string} query - CSS media query passed to matchMedia.
+ * @returns {boolean} Current match, initially false; remains false without matchMedia.
  *
  * @example
  * ```tsx

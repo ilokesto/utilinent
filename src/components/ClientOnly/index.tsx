@@ -10,10 +10,14 @@ export interface ClientOnlyProps extends Fallback {
 }
 
 /**
- * Renders children only after mount on the client. Shows `fallback`
+ * @description Renders children only after mount on the client. Shows `fallback`
  * (default `null`) during SSR and the first client render.
  *
  * Avoids hydration mismatches for browser-only UI.
+ * @param {ClientOnlyProps} props - Client-only content options.
+ * @param {ReactNode} [props.children] - Content shown after mounting.
+ * @param {ReactNode} [props.fallback] - SSR and first-client-render content; defaults to null.
+ * @returns {ReactNode} Children after mount, otherwise the fallback.
  *
  * @example
  * ```tsx

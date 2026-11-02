@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Returns a throttled copy of `value` that updates at most once per `interval` ms.
+ * @description Returns a throttled copy of `value` that updates at most once per `interval` ms.
  *
  * The latest value is always emitted after the throttle window closes.
+ * Starts with the supplied value; changes reschedule pending work and unmount clears it.
+ *
+ * @param {T} value - Latest value to throttle.
+ * @param {number} interval - Minimum update interval in milliseconds.
+ * @returns {T} Initial value or the latest value emitted by the throttle.
  *
  * @example
  * ```tsx

@@ -18,10 +18,21 @@ function setRef<T>(ref: ComposableRef<T>, node: T | null): RefCleanup | void {
 }
 
 /**
- * Composes multiple refs (callback or object) into a single callback ref.
+ * @description Composes callback and object refs into a single callback ref.
  *
  * Supports React 19 ref cleanup: if any ref returns a cleanup function,
  * a composite cleanup is returned that resets all refs on unmount.
+ *
+ * @param {ComposableRef<T>[]} refs - Callback or object refs to attach to the same target.
+ * @returns {(node: T | null) => RefCleanup | void} A callback that attaches every ref and returns combined cleanup when any callback supplies one.
+ * @example
+ * ```tsx
+ * const mergedRef = React.useMemo(
+ *   () => composeRefs(localRef, forwardedRef),
+ *   [localRef, forwardedRef],
+ * );
+ * return <div ref={mergedRef} />;
+ * ```
  */
 export function composeRefs<T>(...refs: ComposableRef<T>[]) {
   return (node: T | null) => {

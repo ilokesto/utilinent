@@ -3,7 +3,7 @@ import type { RegistryCategory } from "../types";
 import { PluginManager } from "./PluginManager";
 
 /**
- * Creates a polymorphic proxy component with typed HTML tag variants.
+ * @description Creates a polymorphic proxy component with typed HTML tag variants.
  *
  * The returned proxy resolves every tag in {@link htmlTags} (e.g.
  * `Show.div`, `Show.span`) on first access and caches the wrapper on the
@@ -16,9 +16,25 @@ import { PluginManager } from "./PluginManager";
  * `Object.getOwnPropertyDescriptor` materializes the wrapper on demand so
  * the reported value always matches property access.
  *
- * @param base - the base render function or component
- * @param renderForTag - factory that wraps the base in a `forwardRef` element for a given tag
- * @param category - plugin registry category for this component
+ * @param {TBase} base - The base render function or component.
+ * @param {(tag: React.ElementType) => React.ForwardRefExoticComponent<any>} renderForTag - Creates a ref-forwarding wrapper for an HTML tag or registered component.
+ * @param {RegistryCategory} category - The plugin category checked before the shared base category.
+ * @returns {TProxy} The callable base component with lazily resolved, cached tag and plugin variants.
+ * @example
+ * ```tsx
+ * import * as React from "react";
+ * import { createProxy } from "@ilokesto/utilinent";
+ *
+ * const Base = ({ children }: { children?: React.ReactNode }) => children;
+ * const Content = createProxy<typeof Base>(
+ *   Base,
+ *   (tag) => React.forwardRef<HTMLElement, { children?: React.ReactNode }>(
+ *     (props, ref) => React.createElement(tag, { ...props, ref }),
+ *   ),
+ *   "base",
+ * );
+ * const content = <Content>Details</Content>;
+ * ```
  */
 export function createProxy<TProxy extends object, TBase extends object = TProxy>(
   base: TBase,

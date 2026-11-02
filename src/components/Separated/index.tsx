@@ -24,11 +24,16 @@ const renderSeparatedTag = createTagRenderer(
 );
 
 /**
- * Renders items with `by` between their rendered nodes, without a wrapper.
+ * @description Renders items with `by` between their rendered nodes, without a wrapper.
  *
  * Nullish and boolean results are omitted. Arrays are flattened; fragments and
  * components remain opaque. Keyed elements retain their identity across updates.
  * Polymorphic: access typed HTML tag variants via `Separated.div`, etc.
+ * @param {SeparatedProps<T>} props - Item and separator options.
+ * @param {T} props.each - Mutable or readonly item array.
+ * @param {ReactNode} props.by - Separator inserted between retained nodes.
+ * @param {(item: T[number], index: number) => ReactNode} props.children - Item renderer receiving the original index.
+ * @returns {ReactNode} Separated nodes, optionally inside a tag variant.
  *
  * @example
  * ```tsx
