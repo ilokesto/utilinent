@@ -10,6 +10,7 @@ export default defineConfig({
       "tests/unit/DelayedFallback.test.tsx",
       "tests/unit/intersectionObserverPool.test.tsx",
       "tests/unit/Mount.test.tsx",
+      "tests/unit/LongPress.test.tsx",
       "tests/unit/new-components.test.tsx",
       "tests/unit/new-hooks.test.tsx",
       "tests/unit/observerGeneration.test.tsx",
