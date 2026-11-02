@@ -29,6 +29,7 @@ export default defineConfig({
       "tests/unit/useMediaQuery.test.tsx",
       "tests/unit/usePageVisibility.test.tsx",
       "tests/unit/usePendingDelay.test.tsx",
+      "tests/unit/useRefEffect.test.tsx",
       "tests/unit/react18-compatibility.spec.tsx",
     ],
     setupFiles: ["./tests/fixtures/setup.ts"],

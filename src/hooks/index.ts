@@ -11,4 +11,5 @@ export * from "./useKey";
 export * from "./useMediaQuery";
 export * from "./usePendingDelay";
 export * from "./useResizeObserver";
+export * from "./useRefEffect";
 export * from "./useThrottle";
