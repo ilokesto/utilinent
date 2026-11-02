@@ -13,6 +13,7 @@ export * from './components/Mount';
 export * from './components/Observer';
 export * from './components/OptionalWrapper';
 export * from './components/Repeat';
+export * from './components/ScrollLock';
 export * from './components/Separated';
 export * from './components/Show';
 export * from './components/Slacker';
