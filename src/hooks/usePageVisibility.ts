@@ -17,9 +17,16 @@ function getServerSnapshot(): boolean {
 }
 
 /**
- * Returns whether the document is visible, updating on `visibilitychange`.
+ * @description Returns whether the document is visible, updating on `visibilitychange`.
  * SSR and the first hydration snapshot return `false`.
  * Only reports state; consumers own any work and its cleanup.
+ *
+ * @returns {boolean} True only when document.visibilityState is "visible".
+ * @example
+ * ```tsx
+ * const visible = usePageVisibility();
+ * return <span>{visible ? 'Page active' : 'Page hidden'}</span>;
+ * ```
  */
 export function usePageVisibility(): boolean {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);

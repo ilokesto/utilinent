@@ -25,8 +25,17 @@ function isEditableTarget(target: EventTarget | null): boolean {
 }
 
 /**
- * Invokes `handler` when a key matching `key` (a `KeyboardEvent.code` value or
+ * @description Invokes the latest handler when a key matching `key` (a `KeyboardEvent.code` value or
  * `*` for any key) is pressed.
+ * Effects are server-safe and remove the window listener on cleanup.
+ *
+ * @param {string} key - KeyboardEvent.code value or wildcard "*".
+ * @param {(event: KeyboardEvent) => void} handler - Receives matching keyboard events.
+ * @param {UseKeyOptions} [options] - Keyboard listener settings.
+ * @param {boolean} [options.enabled] - Enable listening; defaults to true.
+ * @param {"keydown" | "keyup"} [options.event] - Event phase; defaults to keydown.
+ * @param {boolean} [options.ignoreEditable] - Skip editable targets; defaults to false.
+ * @returns {void} Registers an effect-managed keyboard listener.
  *
  * @example
  * ```tsx
