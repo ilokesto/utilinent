@@ -7,6 +7,7 @@ export default defineConfig({
     // Their React 18 contracts live in the dedicated compatibility spec.
     include: [
       "tests/unit/core-fixes.test.tsx",
+      "tests/unit/callbackTiming.test.tsx",
       "tests/unit/DelayedFallback.test.tsx",
       "tests/unit/intersectionObserverPool.test.tsx",
       "tests/unit/Mount.test.tsx",
