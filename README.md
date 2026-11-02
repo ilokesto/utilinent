@@ -45,6 +45,26 @@ export function UserList({
 
 For async rendering, pass `Mount` a **factory**, not a Promise directly. Use cancellation and error handling for asynchronous work.
 
+## Lists with separators
+
+Pass an array to `Separated` via `each`, a separator via `by`, and an item renderer as children:
+
+```tsx
+import { Separated } from '@ilokesto/utilinent';
+
+<Separated each={['hello', 'react', 'world']} by={<hr />}>
+  {(item) => <div key={item}>{item}</div>}
+</Separated>
+```
+
+This renders `hello`, a separator, `react`, a separator, then `world`, without adding a wrapper. `each` follows the existing `For` API and accepts mutable or readonly arrays. The renderer receives `(item, index)`, with the original array index and an inferred item type.
+
+- Empty arrays render nothing; a single rendered node has no separator.
+- `null`, `undefined`, and boolean results are omitted before separators are inserted. Strings (including empty strings) and numbers are kept.
+- Returned arrays are flattened into nodes. Fragments and components remain single, opaque nodes, even if they render nothing. Filter the input or return `null` directly to exclude an item.
+- Give rendered elements stable keys when items can move, appear, or disappear. Unkeyed nodes use positional identity. Separators share the identity of the following node.
+- Use a tag variant such as `<Separated.div each={items} by={<hr />}>` when you need a wrapper, DOM props, or a forwarded ref. Custom variants use the `separated` plugin category.
+
 <details>
 <summary>Development</summary>
 
