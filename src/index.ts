@@ -8,6 +8,7 @@ export * from './components/Hoverable';
 export * from './components/Hotkey';
 export * from './components/Impression';
 export * from './components/LoadMore';
+export * from './components/LongPress';
 export * from './components/Measure';
 export * from './components/Media';
 export * from './components/Mount';

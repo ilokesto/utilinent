@@ -12,6 +12,7 @@ export default defineConfig({
       "tests/unit/intersectionObserverPool.test.tsx",
       "tests/unit/Impression.test.tsx",
       "tests/unit/Mount.test.tsx",
+      "tests/unit/LongPress.test.tsx",
       "tests/unit/new-components.test.tsx",
       "tests/unit/new-hooks.test.tsx",
       "tests/unit/observerGeneration.test.tsx",
