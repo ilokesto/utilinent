@@ -19,7 +19,7 @@ interface UseIntersectionObserverOptions extends UseIntersectionObserverCoreOpti
 }
 
 /**
- * Tracks whether an element is intersecting the viewport via `IntersectionObserver`.
+ * @description Tracks whether an element intersects the configured root via `IntersectionObserver`.
  *
  * Returns a `ref` callback to attach to the target element and the current
  * `isIntersecting` state. When `freezeOnceVisible` is `true`, observation stops
@@ -37,6 +37,19 @@ interface UseIntersectionObserverOptions extends UseIntersectionObserverCoreOpti
  * `freezeOnceVisible` freezes the observation of the current target only: when
  * the target element is removed, swapped or reattached, the new target is
  * observed again from scratch.
+ *
+ * @param {UseIntersectionObserverOptions} [options] - Shared observation settings.
+ * @param {number | number[]} [options.threshold] - Visibility ratios; defaults to zero.
+ * @param {Element | null} [options.root] - Root element; defaults to the viewport.
+ * @param {string} [options.rootMargin] - Root margin; defaults to "0%".
+ * @param {boolean} [options.freezeOnceVisible] - Stop this target after first visibility; defaults to false.
+ * @param {boolean} [options.initialIsIntersecting] - Initial and unavailable-API fallback state; defaults to false.
+ * @param {(isIntersecting: boolean, entry: IntersectionObserverEntry) => void} [options.onIntersect] - Called on transitions into visibility using the latest callback.
+ * @param {(isIntersecting: boolean, entry: IntersectionObserverEntry) => void} [options.onChange] - Deprecated fallback alias when onIntersect is absent.
+ * @returns {UseIntersectionObserverResult} Target attachment and current observation.
+ * - ref `(node: HTMLElement | null) => void` - Stable callback ref for the observed target.
+ * - isIntersecting `boolean` - Whether the target intersects and meets a threshold.
+ * - entry `IntersectionObserverEntry | undefined` - Latest delivered native entry, absent before delivery.
  *
  * @example
  * ```tsx

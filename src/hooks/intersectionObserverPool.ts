@@ -18,11 +18,18 @@ export interface IntersectionSubscriptionInit {
 }
 
 /**
- * Normalizes a scalar or array threshold into ascending unique values.
+ * @description Normalizes a scalar or array threshold into ascending unique values.
  *
  * Value-based normalization treats `[0.5]` like `0.5`, and `[0.5, 0]`
  * like `[0, 0.5, 0.5]`. Subscriptions only change when the value set
  * changes. An empty array falls back to the default `[0]`.
+ *
+ * @param {number | readonly number[]} [threshold] - Scalar or array of threshold values.
+ * @returns {number[]} Sorted unique thresholds, or [0] for empty or omitted input.
+ * @example
+ * ```ts
+ * const thresholds = normalizeThreshold([0.5, 0, 0.5]); // [0, 0.5]
+ * ```
  */
 export function normalizeThreshold(
   threshold?: number | readonly number[],
@@ -106,8 +113,25 @@ function releaseSubscription(
 }
 
 /**
- * Subscribes `handler` to intersection records of `target` on a native
+ * @description Subscribes `handler` to intersection records of `target` on a native
  * observer shared by equal options. Returns an idempotent release function.
+ * Without IntersectionObserver, returns a no-op release. Final release
+ * disconnects the native observer and removes its registry entry.
+ *
+ * @param {Element} target - Element to observe.
+ * @param {IntersectionSubscriptionInit} init - Settings used to share a native observer.
+ * @param {Element | null} [init.root] - Root element; defaults to the viewport.
+ * @param {string} [init.rootMargin] - Root margin; defaults to "0px".
+ * @param {number | readonly number[]} [init.threshold] - Threshold values; defaults to [0].
+ * @param {IntersectionRecordHandler} handler - Receives native records for this target.
+ * @returns {() => void} Idempotent function releasing this subscription.
+ * @example
+ * ```ts
+ * const release = subscribeIntersection(element, { threshold: 0.5 }, entry => {
+ *   element.toggleAttribute('data-visible', entry.isIntersecting);
+ * });
+ * release();
+ * ```
  */
 export function subscribeIntersection(
   target: Element,
@@ -181,8 +205,18 @@ export function subscribeIntersection(
 }
 
 /**
- * Test-only introspection of the shared registry: live shared observers and
+ * @description Test-only introspection of the shared registry: live shared observers and
  * active subscriptions. Both return to zero once every subscriber released.
+ *
+ * @returns {{ sharedObservers: number; subscriptions: number }} Current pool counts.
+ * - sharedObservers `number` - Number of live shared native observers.
+ * - subscriptions `number` - Number of unreleased subscriptions.
+ * @example
+ * ```ts
+ * const { sharedObservers, subscriptions } = getIntersectionObserverPoolStatsForTests();
+ * expect(sharedObservers).toBe(0);
+ * expect(subscriptions).toBe(0);
+ * ```
  */
 export function getIntersectionObserverPoolStatsForTests(): {
   sharedObservers: number;

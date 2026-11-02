@@ -6,11 +6,20 @@ interface UseFocusWithinResult {
 }
 
 /**
- * Tracks focus on an element or any of its DOM descendants.
+ * @description Tracks focus on an element or any of its DOM descendants.
  *
  * The initial server and client value is `false`. After attachment, the hook
  * also checks for an already-focused descendant. Use CSS `:focus-within` when
  * only styling needs to change.
+ *
+ * @returns {UseFocusWithinResult} Focus state and target attachment.
+ * - ref `(node: HTMLElement | null) => void` - Stable callback ref for the container.
+ * - isFocusWithin `boolean` - Whether the container or a descendant has focus.
+ * @example
+ * ```tsx
+ * const { ref, isFocusWithin } = useFocusWithin();
+ * return <div ref={ref} data-focused={isFocusWithin}><input /></div>;
+ * ```
  */
 export function useFocusWithin(): UseFocusWithinResult {
   const [element, setElement] = useState<HTMLElement | null>(null);

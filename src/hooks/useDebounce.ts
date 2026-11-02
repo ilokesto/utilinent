@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 
 /**
- * Returns a debounced copy of `value` that only updates after `delay` ms
- * have elapsed without further changes.
+ * @description Returns a debounced value after the delay elapses without changes.
+ * Starts with the supplied value; changes and unmount cancel the pending timer.
+ *
+ * @param {T} value - Latest value to debounce.
+ * @param {number} delay - Quiet period in milliseconds.
+ * @returns {T} Initial value or the most recently settled value.
  *
  * @example
  * ```tsx
