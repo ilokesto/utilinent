@@ -4,8 +4,13 @@ import { composeRefs } from "../../utils/composeRefs";
 import type { MeasureProps } from "./types";
 
 /**
- * Measures its container via `ResizeObserver` and passes `{ width, height }`
+ * @description Measures its container via `ResizeObserver` and passes `{ width, height }`
  * to a render-prop. Forwards `ref` to the underlying `div`.
+ * @param {MeasureProps} props - Measurement container props.
+ * @param {React.ReactNode | ((size: { width: number; height: number }) => React.ReactNode)} [props.children] - Content or measured-size renderer.
+ * @param {ResizeObserverBoxOptions} [props.box] - Observed box; defaults to content-box.
+ * @param {DOMRectReadOnly} [props.initialSize] - Size before the first observation.
+ * @returns {React.ReactNode} The measured div.
  *
  * @example
  * ```tsx

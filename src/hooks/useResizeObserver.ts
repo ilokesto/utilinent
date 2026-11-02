@@ -21,11 +21,20 @@ interface UseResizeObserverResult {
 }
 
 /**
- * Tracks an element's size via `ResizeObserver`.
+ * @description Tracks an element's content rectangle via `ResizeObserver`.
  *
  * Returns a `ref` callback to attach to the target and the current
- * `width` / `height`. SSR-safe: returns zeros when `ResizeObserver` is
- * unavailable.
+ * `width` / `height`. Without ResizeObserver, retains initialSize (or zeros).
+ * Disconnects the observer on target/box changes and unmount.
+ *
+ * @param {UseResizeObserverOptions} [options] - Observation settings.
+ * @param {ResizeObserverBoxOptions} [options.box] - Observed box; defaults to content-box.
+ * @param {DOMRectReadOnly} [options.initialSize] - Size used until an observation arrives.
+ * @returns {UseResizeObserverResult} Target attachment and latest measured size.
+ * - ref `(node: HTMLElement | null) => void` - Stable callback ref for the element.
+ * - width `number` - Content rectangle width, initial width, or zero.
+ * - height `number` - Content rectangle height, initial height, or zero.
+ * - entry `ResizeObserverEntry | undefined` - Latest native entry, absent before delivery.
  *
  * @example
  * ```tsx

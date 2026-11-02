@@ -24,11 +24,17 @@ const renderForTag = createTagRenderer(
 );
 
 /**
- * Conditionally renders children when `when` is truthy.
+ * @description Conditionally renders children when `when` is truthy.
  *
  * Supports a render-prop callback that receives the narrowed `NonNullable` value.
  * Polymorphic: access typed HTML tag variants via `Show.div`, `Show.span`, etc.,
  * and plugin-registered components via `Show.Link`, `Show.motionDiv`, etc.
+ * Arrays must be nonempty with every element truthy.
+ * @param {ShowProps<T> | ShowPropsArray<T[]>} props - Conditional rendering options.
+ * @param {T | T[]} props.when - Scalar or array condition.
+ * @param {React.ReactNode | Function} props.children - Content or renderer receiving the narrowed condition.
+ * @param {React.ReactNode} [props.fallback] - Falsy-condition content; defaults to null.
+ * @returns {React.ReactNode} Selected content, optionally inside a tag variant.
  *
  * @example
  * ```tsx
