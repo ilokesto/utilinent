@@ -20,6 +20,8 @@ export default defineConfig({
       "tests/unit/proxy-lazy-tags.test.tsx",
       "tests/unit/proxy-plugins.test.tsx",
       "tests/unit/Runtime.test.tsx",
+      "tests/unit/ScrollLock.test.tsx",
+      "tests/unit/ScrollLock.ssr.test.tsx",
       "tests/unit/Separated.test.tsx",
       "tests/unit/Show.test.tsx",
       "tests/unit/Slacker.test.tsx",
