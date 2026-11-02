@@ -13,11 +13,24 @@ function normalizeDuration(duration: number): number {
 }
 
 /**
- * Delays pending UI and keeps it visible for a minimum duration.
+ * @description Delays pending UI and keeps it visible for a minimum duration.
  *
  * Option changes use the original pending/reveal timestamps. A new pending
  * period during the minimum hold keeps the existing reveal timestamp.
  * SSR and the first hydration render return false; timing starts on mount.
+ * Timers are cleared on changes and unmount. Durations are clamped to timer
+ * bounds; nonfinite durations become zero.
+ *
+ * @param {boolean} pending - Whether work is currently pending.
+ * @param {UsePendingDelayOptions} [options] - Pending UI timing.
+ * @param {number} [options.delay] - Reveal delay in milliseconds; defaults to 200.
+ * @param {number} [options.minDuration] - Minimum visible milliseconds; defaults to 300.
+ * @returns {boolean} Whether pending UI should currently be visible.
+ * @example
+ * ```tsx
+ * const showSpinner = usePendingDelay(isFetching, { delay: 200, minDuration: 300 });
+ * return showSpinner ? <span>Loading...</span> : null;
+ * ```
  */
 export function usePendingDelay(
   pending: boolean,

@@ -8,7 +8,7 @@ interface UseEventListenerOptions<E extends Event = Event> {
   capture?: boolean;
   /** Passive listener. */
   passive?: boolean;
-  /** When `true`, the listener is attached but never invoked. */
+  /** When `true`, the listener is not attached. */
   disabled?: boolean;
   /** Optional event filter / transform invoked before the handler. */
   predicate?: (event: E) => boolean;
@@ -17,7 +17,7 @@ interface UseEventListenerOptions<E extends Event = Event> {
 type EventTargetLike = EventTarget | React.RefObject<EventTarget | null> | null;
 
 /**
- * Attaches an event listener to a window/document/element target, or a ref.
+ * @description Attaches an event listener to an EventTarget or a ref.
  *
  * The handler is kept in a ref so listeners update without re-binding. When
  * the target is a `RefObject`, the hook tracks the DOM node it references:
@@ -25,11 +25,21 @@ type EventTargetLike = EventTarget | React.RefObject<EventTarget | null> | null;
  * node and detach it from the previous one.
  * SSR-safe: effects do not run on the server.
  *
+ * @param {EventTargetLike} target - Target or ref; null attaches nothing.
+ * @param {string} eventName - Native event name.
+ * @param {(event: E) => void} handler - Latest handler for accepted events.
+ * @param {UseEventListenerOptions<E>} [options] - Listener settings.
+ * @param {boolean} [options.capture] - Listen during capture.
+ * @param {boolean} [options.passive] - Declare that the listener will not prevent default.
+ * @param {boolean} [options.disabled] - Skip attaching the listener while true.
+ * @param {(event: E) => boolean} [options.predicate] - Accept an event before invoking the handler.
+ * @returns {void} Removes the listener on target/settings changes or unmount.
+ *
  * @example
  * ```tsx
- * useEventListener(window, 'resize', () => console.log('resized'));
  * const ref = useRef<HTMLDivElement>(null);
- * useEventListener(ref, 'click', (e) => console.log(e.currentTarget));
+ * useEventListener<MouseEvent>(ref, 'click', () => setOpen(true));
+ * return <div ref={ref}>Open details</div>;
  * ```
  */
 export function useEventListener<E extends Event = Event>(

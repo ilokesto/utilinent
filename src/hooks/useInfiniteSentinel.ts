@@ -23,8 +23,38 @@ export interface UseInfiniteSentinelResult {
 }
 
 /**
- * Loads once per entry or controlled busy-to-idle cycle. Promise settlement
+ * @description Loads once per entry or controlled busy-to-idle cycle. Promise settlement
  * releases the in-flight lock but does not itself request another page.
+ * Uses committed callbacks and suppresses completion callbacks after unmount;
+ * consumer-owned promises are not canceled. Errors stop automatic requests
+ * until a new entry or retry. Without IntersectionObserver no automatic load starts.
+ *
+ * @param {UseInfiniteSentinelOptions} options - Loading and observation settings.
+ * @param {() => void | Promise<unknown>} options.onLoadMore - Starts loading the next page.
+ * @param {boolean} options.hasMore - Whether more pages may be requested.
+ * @param {boolean} [options.busy] - External loading lock; defaults to false.
+ * @param {boolean} [options.disabled] - Pause requests; defaults to false.
+ * @param {(error: unknown) => void} [options.onError] - Receives a load failure while mounted with a target.
+ * @param {Element | null} [options.root] - Intersection root; defaults to the viewport.
+ * @param {string} [options.rootMargin] - Root margin; defaults to "0%".
+ * @param {number | number[]} [options.threshold] - Visibility ratios; defaults to zero.
+ * @returns {UseInfiniteSentinelResult} Sentinel attachment, load state, and retry control.
+ * - ref `(node: HTMLElement | null) => void` - Stable callback ref for the sentinel.
+ * - isIntersecting `boolean` - Whether the target meets a configured visibility threshold.
+ * - isLoading `boolean` - External busy state or an unsettled load.
+ * - isError `boolean` - Whether the most recent request failed.
+ * - error `unknown` - Failure reason, cleared when another request begins.
+ * - retry `() => void` - Request manually even outside visibility; still respects target, busy, disabled, hasMore, and in-flight guards.
+ * @example
+ * ```tsx
+ * const { ref, isLoading, isError, retry } = useInfiniteSentinel({
+ *   onLoadMore: fetchNextPage,
+ *   hasMore: hasNextPage,
+ * });
+ * return <div ref={ref}>{isError
+ *   ? <button onClick={retry}>Retry</button>
+ *   : isLoading ? 'Loading...' : 'More results'}</div>;
+ * ```
  */
 export function useInfiniteSentinel({
   onLoadMore, hasMore, busy = false, disabled = false, onError,

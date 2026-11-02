@@ -85,13 +85,18 @@ const renderForTag = createTagRenderer(
 );
 
 /**
- * Resolves and renders children that may be synchronous or asynchronous.
+ * @description Resolves and renders children that may be synchronous or asynchronous.
  *
  * Accepts a factory function returning `ReactNode | Promise<ReactNode>`.
  * The factory may consume its `AbortSignal` argument to cancel in-flight work;
  * zero-argument factories remain fully supported.
  * Shows `fallback` while the factory is pending or on error.
  * Polymorphic: access typed HTML tag variants via `Mount.div`, etc.
+ * @param {MountProps} props - Factory and content options.
+ * @param {React.ReactNode | ((signal: AbortSignal) => React.ReactNode | Promise<React.ReactNode>)} props.children - Content or factory; direct promise children are not supported.
+ * @param {React.ReactNode} [props.fallback] - Pending or failed content; defaults to null.
+ * @param {(error: unknown) => void} [props.onError] - Factory failure callback.
+ * @returns {React.ReactNode} Resolved children or fallback.
  *
  * @example
  * ```tsx

@@ -10,10 +10,14 @@ interface UseHoverResult {
 }
 
 /**
- * Tracks whether an element is being hovered.
+ * @description Tracks mouse enter/leave events on an attached element.
  *
  * Returns a `ref` callback to attach to the target and the current
  * `isHovering` state.
+ *
+ * @returns {UseHoverResult} Initially false hover state and target attachment.
+ * - ref `(node: HTMLElement | null) => void` - Stable callback ref for the target.
+ * - isHovering `boolean` - State updated by mouse enter/leave events.
  *
  * @example
  * ```tsx
@@ -36,7 +40,11 @@ export function useHover(): UseHoverResult {
 }
 
 /**
- * Tracks hover state on a stable ref.
+ * @description Tracks mouse enter/leave events on a ref, following its current
+ * target after commits and removing old listeners on cleanup.
+ *
+ * @param {RefObject<HTMLElement | null>} ref - Ref containing the hover target.
+ * @returns {boolean} Initially false; updated by mouse enter/leave events.
  *
  * @example
  * ```tsx

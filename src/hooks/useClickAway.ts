@@ -13,9 +13,17 @@ interface UseClickAwayOptions {
 }
 
 /**
- * Invokes `handler` when a pointer/touch event occurs outside `ref`.
+ * @description Invokes the latest handler for pointer/touch events outside the
+ * target and ignored refs. Listeners are removed on cleanup.
  *
  * SSR-safe: effects do not run on the server.
+ *
+ * @param {RefObject<HTMLElement | null>} ref - Target considered inside.
+ * @param {(event: AnyEvent) => void} handler - Receives outside events.
+ * @param {UseClickAwayOptions} [options] - Detection settings.
+ * @param {React.RefObject<HTMLElement | null>[]} [options.ignore] - Additional inside targets.
+ * @param {boolean} [options.pointerEvents] - Use pointerdown instead of mousedown/touchstart.
+ * @returns {void} Registers effect-managed document listeners.
  *
  * @example
  * ```tsx
