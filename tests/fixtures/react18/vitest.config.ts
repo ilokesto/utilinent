@@ -9,6 +9,7 @@ export default defineConfig({
       "tests/unit/core-fixes.test.tsx",
       "tests/unit/DelayedFallback.test.tsx",
       "tests/unit/intersectionObserverPool.test.tsx",
+      "tests/unit/Impression.test.tsx",
       "tests/unit/Mount.test.tsx",
       "tests/unit/new-components.test.tsx",
       "tests/unit/new-hooks.test.tsx",
