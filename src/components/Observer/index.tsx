@@ -6,7 +6,7 @@ import { composeRefs } from "../../utils/composeRefs";
 import type { ObserverProps } from "./types";
 
 /**
- * Wraps children in an IntersectionObserver-driven container.
+ * @description Wraps children in an IntersectionObserver-driven container.
  *
  * Renders `fallback` until the element intersects the viewport, then renders children.
  * Supports a render-prop callback that receives the current `isIntersecting` boolean.
@@ -15,6 +15,15 @@ import type { ObserverProps } from "./types";
  * Subscribes to the intersection boolean only: records that keep the boolean
  * unchanged do not re-render Observer, while `useIntersectionObserver`
  * remains the escape hatch for per-entry detail.
+ * @param {ObserverProps} props - Intersection container options.
+ * @param {React.ReactNode | ((isIntersecting: boolean) => React.ReactNode)} [props.children] - Visible content or intersection-state renderer.
+ * @param {React.ReactNode} [props.fallback] - Nonintersecting content; defaults to null.
+ * @param {number | number[]} [props.threshold] - Observer thresholds; defaults to zero.
+ * @param {string} [props.rootMargin] - Viewport margin; defaults to "0%".
+ * @param {boolean} [props.triggerOnce] - Freeze observation once visible.
+ * @param {(isIntersecting: boolean, entry: IntersectionObserverEntry) => void} [props.onIntersect] - Intersection callback.
+ * @param {boolean} [props.keepMeasurable] - Supply minimum 1px dimensions and block display unless explicitly styled.
+ * @returns {React.ReactNode} The observed div with selected content.
  *
  * @example
  * ```tsx

@@ -31,10 +31,15 @@ const renderForTag = createTagRenderer(
 );
 
 /**
- * Renders the first {@link Match} child whose `when` condition is truthy.
+ * @description Renders the first {@link Match} child whose `when` condition is truthy.
  *
  * Falls back to `fallback` when no Match satisfies its condition.
  * Polymorphic: access typed HTML tag variants via `Switch.div`, etc.
+ * Fragments are traversed recursively; non-Match children are ignored.
+ * @param {SwitchProps} props - Case selection options.
+ * @param {React.ReactNode} props.children - Match cases, optionally nested in fragments.
+ * @param {React.ReactNode} [props.fallback] - Content when no case matches; defaults to null.
+ * @returns {React.ReactNode} The first matching case or fallback.
  *
  * @example
  * ```tsx

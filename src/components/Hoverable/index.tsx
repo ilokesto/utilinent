@@ -4,9 +4,13 @@ import { composeRefs } from "../../utils/composeRefs";
 import type { HoverableProps } from "./types";
 
 /**
- * Tracks hover state and passes `isHovering` to a render-prop.
+ * @description Tracks hover state and passes `isHovering` to a render-prop.
  *
  * Forwards `ref` to the underlying `div`.
+ * @param {HoverableProps} props - Hover container props.
+ * @param {React.ReactNode | ((isHovering: boolean) => React.ReactNode)} [props.children] - Content or hover-state renderer.
+ * @param {React.ReactNode} [props.fallback] - Accepted inherited fallback; not used for rendering.
+ * @returns {React.ReactNode} The hover-tracking div.
  *
  * @example
  * ```tsx

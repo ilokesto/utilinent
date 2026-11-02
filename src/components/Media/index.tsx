@@ -2,10 +2,15 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import type { MediaProps } from "./types";
 
 /**
- * Renders children based on a CSS media query match.
+ * @description Renders children based on a CSS media query match.
  *
  * With a render-prop, receives the current `matches` boolean. Otherwise renders
  * `children` when the query matches and `fallback` when it does not.
+ * @param {MediaProps} props - Responsive content options.
+ * @param {string} props.query - CSS media query.
+ * @param {React.ReactNode | ((matches: boolean) => React.ReactNode)} [props.children] - Content or match-state renderer.
+ * @param {React.ReactNode} [props.fallback] - Nonmatching content; defaults to null.
+ * @returns {React.ReactNode} The renderer result or selected content.
  *
  * @example
  * ```tsx
