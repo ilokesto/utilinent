@@ -1,5 +1,15 @@
 # @ilokesto/utilinent
 
+## 1.4.1
+
+### Patch Changes
+
+- 25f6bc5: Compare ErrorBoundary reset keys by length and Object.is values instead of array identity. Treat absent keys as an empty array and avoid immediately retrying a newly caught error when keys change.
+- 28ef470: Preserve function values in useDebounce and useThrottle without invoking them as state initializers or updaters. Keep existing timing, latest-value delivery and timer cleanup behavior.
+- 2bba86a: Reset useHover and useHoverRef state when the target detaches or changes. Preserve the stable callback, same-target hover state and native listener cleanup.
+- 70f77b8: Reset intersection snapshots and transition detection when the observed target changes, so replacement elements receive their own initial state and first visibility callback.
+- 53bdfff: Invoke only the selected OptionalWrapper branch while preserving scalar and array conditions, elseWrapper precedence over fallback, and unwrapped children.
+
 ## 1.4.0
 
 ### Minor Changes
