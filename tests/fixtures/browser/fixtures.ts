@@ -15,6 +15,7 @@ export class BrowserHarness {
   readonly errors: string[] = [];
   readonly events = new EventEmitter();
   expectedHydrationErrors = 0;
+  expectedCaughtErrors: string[] = [];
 
   constructor(readonly page: Page, readonly origin: string, readonly testInfo: TestInfo) {}
 
@@ -93,7 +94,7 @@ export const test = base.extend<{ app: BrowserHarness }, { origin: string }>({
           response.writeHead(204).end();
           return;
         }
-        if (["/focus", "/visibility", "/infinite", "/pending", "/intersection"].includes(route)) {
+        if (["/focus", "/visibility", "/infinite", "/pending", "/intersection", "/boundary"].includes(route)) {
           void active.ssrLoadModule("/tests/fixtures/browser/server-entry.tsx").then(({ render }) => {
             const markup = render(route);
             response.writeHead(200, { "content-type": "text/html" }).end(
@@ -182,6 +183,8 @@ export const test = base.extend<{ app: BrowserHarness }, { origin: string }>({
       await use(app);
       expect(app.errors).toEqual([]);
       expect(app.signals.filter(signal => signal.kind === "hydration-error")).toHaveLength(app.expectedHydrationErrors);
+      expect(app.signals.filter(signal => signal.kind === "caught-error").map(signal => signal.value))
+        .toEqual(app.expectedCaughtErrors);
     } finally {
       // Arm process cleanup before diagnostics or CDP close, which can stall
       // when Chromium cannot finish navigation.

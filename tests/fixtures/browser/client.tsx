@@ -77,9 +77,11 @@ window.harness = {
   hydrate() {
     const container = document.getElementById("root");
     if (!container) { throw new Error("Missing SSR root"); }
-    root = hydrateRoot(container, <HarnessApp route={location.pathname} />, {
-      onRecoverableError: error => report("hydration-error", String(error)),
-    });
+    const options = {
+      onRecoverableError: (error: unknown) => report("hydration-error", String(error)),
+      onCaughtError: (error: unknown) => report("caught-error", String(error)),
+    };
+    root = hydrateRoot(container, <HarnessApp route={location.pathname} />, options);
   },
   unmount() {
     flushSync(() => root?.unmount());
