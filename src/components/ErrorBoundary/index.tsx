@@ -5,7 +5,8 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
  *
  * `fallback` — ReactNode or a render-prop receiving `{ error, reset }`.
  * `onError` — called when a descendant throws during render.
- * `resetKeys` — when these values change, the boundary resets its error state.
+ * `resetKeys` — an active error resets when the length or an `Object.is` key value changes.
+ *   Omitted keys and an empty array are equivalent.
  */
 export interface ErrorBoundaryProps {
   children?: ReactNode;
@@ -27,7 +28,7 @@ interface ErrorBoundaryState {
  * @param {ReactNode} [props.children] - Descendants protected by the boundary.
  * @param {ReactNode | ((state: { error: Error; reset: () => void }) => ReactNode)} [props.fallback] - Error content or renderer.
  * @param {(error: Error, info: ErrorInfo) => void} [props.onError] - Caught-error callback.
- * @param {readonly unknown[]} [props.resetKeys] - Replacing this array clears an active error.
+ * @param {readonly unknown[]} [props.resetKeys] - Keys compared by length and Object.is; omitted keys act as an empty array.
  *
  * @example
  * ```tsx
@@ -71,12 +72,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   /**
-   * @description Clears an active error when the resetKeys array identity changes.
+   * @description Retries a previously active error when reset key lengths or Object.is values change.
    * @param {ErrorBoundaryProps} prevProps - Props from the previous committed render.
    * @param {ReactNode} [prevProps.children] - Previously protected content.
    * @param {ReactNode | ((state: { error: Error; reset: () => void }) => ReactNode)} [prevProps.fallback] - Previous error content.
    * @param {(error: Error, info: ErrorInfo) => void} [prevProps.onError] - Previous error callback.
    * @param {readonly unknown[]} [prevProps.resetKeys] - Previous reset key array.
+   * @param {ErrorBoundaryState} prevState - State from the previous committed render.
+   * @param {Error | undefined} prevState.error - Previously active error; a newly caught failure does not immediately retry.
    * @returns {void} No return value.
    * @example
    * ```tsx
@@ -84,8 +87,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
    * // React invokes componentDidUpdate after new routeKeys are committed.
    * ```
    */
-  componentDidUpdate(prevProps: ErrorBoundaryProps): void {
-    if (this.state.error && prevProps.resetKeys !== this.props.resetKeys) {
+  componentDidUpdate(prevProps: ErrorBoundaryProps, prevState: ErrorBoundaryState): void {
+    if (!this.state.error || !prevState.error) {
+      return;
+    }
+
+    const previousKeys = prevProps.resetKeys ?? [];
+    const currentKeys = this.props.resetKeys ?? [];
+    if (
+      previousKeys.length !== currentKeys.length ||
+      previousKeys.some((key, index) => !Object.is(key, currentKeys[index]))
+    ) {
       this.setState({ error: undefined });
     }
   }

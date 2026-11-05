@@ -4,6 +4,31 @@ function loadState(calls: number, loading: boolean, intersecting = true, error: 
   return (value: unknown) => JSON.stringify(value) === JSON.stringify({ calls, loading, intersecting, error });
 }
 
+test("ErrorBoundary: equal and changed reset keys -> retries only on value changes and recovers manually", async ({ app }) => {
+  app.expectedCaughtErrors = Array(3).fill("Error: expected boundary failure");
+  await app.open("/boundary");
+  await app.hydrate("boundary-ready", value => value === true);
+  await app.click("boundary-fail", "boundary-parent", value =>
+    JSON.stringify(value) === JSON.stringify({ key: 1, extra: false, fails: true, ticks: 0 }));
+  expect(await app.page.locator("#boundary-fallback").count()).toBe(1);
+
+  await app.click("boundary-same", "boundary-parent", value =>
+    JSON.stringify(value) === JSON.stringify({ key: 1, extra: false, fails: true, ticks: 1 }));
+
+  expect(app.signals.filter(signal => signal.kind === "boundary-error")).toHaveLength(1);
+  await app.click("boundary-value", "boundary-error", value => value === "expected boundary failure");
+  expect(app.signals.filter(signal => signal.kind === "boundary-error")).toHaveLength(2);
+  await app.click("boundary-length", "boundary-error", value => value === "expected boundary failure");
+  expect(app.signals.filter(signal => signal.kind === "boundary-error")).toHaveLength(3);
+  await app.click("boundary-repair", "boundary-parent", value =>
+    JSON.stringify(value) === JSON.stringify({ key: 2, extra: true, fails: false, ticks: 1 }));
+  expect(await app.page.locator("#boundary-fallback").count()).toBe(1);
+  await app.click("boundary-retry", "boundary-ready", value => value === true);
+  expect(await app.page.locator("#boundary-content").textContent()).toBe("Boundary content ready");
+  expect(app.signals.filter(signal => signal.kind === "boundary-error")).toHaveLength(3);
+  await app.unmount();
+});
+
 test("useIntersectionObserver: native visible target replacement -> resets snapshot and reports each first entry", async ({ app }) => {
   await app.open("/intersection");
   expect(await app.page.locator("#intersection-visible").textContent()).toBe("false");

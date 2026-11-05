@@ -2,6 +2,7 @@ import { StrictMode, useEffect, useRef, useState } from "react";
 import { LoadMore } from "../../../src/components/LoadMore";
 import type { LoadMoreState } from "../../../src/components/LoadMore";
 import { DelayedFallback } from "../../../src/components/DelayedFallback";
+import { ErrorBoundary } from "../../../src/components/ErrorBoundary";
 import { useFocusWithin } from "../../../src/hooks/useFocusWithin";
 import { usePageVisibility } from "../../../src/hooks/usePageVisibility";
 import { useIntersectionObserver } from "../../../src/hooks/useIntersectionObserver";
@@ -33,6 +34,38 @@ function VisibilityExample() {
   const isVisible = usePageVisibility();
   useEffect(() => report("visibility", isVisible), [isVisible]);
   return <output id="visibility">{String(isVisible)}</output>;
+}
+
+function BoundaryContent({ fails }: { fails: boolean }) {
+  useEffect(() => report("boundary-ready", true), []);
+  if (fails) {
+    throw new Error("expected boundary failure");
+  }
+  return <p id="boundary-content">Boundary content ready</p>;
+}
+
+function BoundaryExample() {
+  const [key, setKey] = useState(1);
+  const [extra, setExtra] = useState(false);
+  const [fails, setFails] = useState(false);
+  const [ticks, setTicks] = useState(0);
+  useEffect(() => report("boundary-parent", { key, extra, fails, ticks }), [key, extra, fails, ticks]);
+  return <section>
+    <button id="boundary-fail" onClick={() => setFails(true)}>Fail content</button>
+    <button id="boundary-same" onClick={() => setTicks(value => value + 1)}>Render equal keys</button>
+    <button id="boundary-value" onClick={() => setKey(value => value + 1)}>Change key value</button>
+    <button id="boundary-length" onClick={() => setExtra(true)}>Add reset key</button>
+    <button id="boundary-repair" onClick={() => setFails(false)}>Repair content</button>
+    <ErrorBoundary
+      resetKeys={extra ? [key, "extra"] : [key]}
+      onError={error => report("boundary-error", error.message)}
+      fallback={({ reset }) => <p id="boundary-fallback">
+        Content failed <button id="boundary-retry" onClick={reset}>Retry content</button>
+      </p>}
+    >
+      <BoundaryContent fails={fails} />
+    </ErrorBoundary>
+  </section>;
 }
 
 function IntersectionExample() {
@@ -135,7 +168,8 @@ export function HarnessApp({ route }: { route: string }) {
       {route === "/focus" ? <FocusExample /> :
         route === "/visibility" ? <VisibilityExample /> :
           route === "/intersection" ? <IntersectionExample /> :
-            route === "/pending" ? <PendingExample /> : <InfiniteExample />}
+            route === "/boundary" ? <BoundaryExample /> :
+              route === "/pending" ? <PendingExample /> : <InfiniteExample />}
     </main>
   </StrictMode>;
 }

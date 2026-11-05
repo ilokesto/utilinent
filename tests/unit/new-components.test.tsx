@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { useRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -55,6 +55,113 @@ describe("ErrorBoundary", () => {
       </ErrorBoundary>,
     );
     expect(screen.getByRole("button", { name: "retry: boom" })).toBeInTheDocument();
+  });
+
+  const stableKey = {};
+  it.each([
+    { name: "same values in a new array", before: [1, "route"], after: [1, "route"], resets: false },
+    { name: "same object key", before: [stableKey], after: [stableKey], resets: false },
+    { name: "same NaN key", before: [NaN], after: [NaN], resets: false },
+    { name: "empty arrays", before: [], after: [], resets: false },
+    { name: "absent keys", before: undefined, after: undefined, resets: false },
+    { name: "absent to empty keys", before: undefined, after: [], resets: false },
+    { name: "empty to absent keys", before: [], after: undefined, resets: false },
+    { name: "added key", before: [1], after: [1, 2], resets: true },
+    { name: "removed key", before: [1, 2], after: [1], resets: true },
+    { name: "changed value", before: [1], after: [2], resets: true },
+    { name: "changed object key", before: [{}], after: [{}], resets: true },
+    { name: "zero to negative zero", before: [0], after: [-0], resets: true },
+    { name: "negative zero to zero", before: [-0], after: [0], resets: true },
+    { name: "absent to a key", before: undefined, after: [1], resets: true },
+    { name: "a key to absent", before: [1], after: undefined, resets: true },
+  ])("ErrorBoundary: $name -> reset matches key values", ({ before, after, resets }) => {
+    const onError = vi.fn();
+    let shouldThrow = true;
+    function Content() {
+      if (shouldThrow) {
+        throw new Error("boom");
+      }
+      return <p>recovered</p>;
+    }
+    const rendered = render(
+      <ErrorBoundary resetKeys={before} fallback="failed" onError={onError}>
+        <Content />
+      </ErrorBoundary>,
+    );
+    expect(onError).toHaveBeenCalledTimes(1);
+    shouldThrow = false;
+
+    rendered.rerender(
+      <ErrorBoundary resetKeys={after} fallback="failed" onError={onError}>
+        <Content />
+      </ErrorBoundary>,
+    );
+
+    expect(screen.getByText(resets ? "recovered" : "failed")).toBeInTheDocument();
+    expect(onError).toHaveBeenCalledTimes(1);
+  });
+
+  it("ErrorBoundary: first error on changed keys -> does not immediately retry the new failure", () => {
+    const onError = vi.fn();
+    function Content({ fails }: { fails: boolean }) {
+      if (fails) {
+        throw new Error("boom");
+      }
+      return <p>ready</p>;
+    }
+    const rendered = render(
+      <ErrorBoundary resetKeys={[1]} fallback="failed" onError={onError}>
+        <Content fails={false} />
+      </ErrorBoundary>,
+    );
+
+    rendered.rerender(
+      <ErrorBoundary resetKeys={[2]} fallback="failed" onError={onError}>
+        <Content fails />
+      </ErrorBoundary>,
+    );
+
+    expect(screen.getByText("failed")).toBeInTheDocument();
+    expect(onError).toHaveBeenCalledTimes(1);
+  });
+
+  it("ErrorBoundary: changed key retries a persistent failure -> equal keys do not retry it again", () => {
+    const onError = vi.fn();
+    function Bomb(): React.ReactNode {
+      throw new Error("boom");
+    }
+    const view = (key: number) => (
+      <ErrorBoundary resetKeys={[key]} fallback="failed" onError={onError}>
+        <Bomb />
+      </ErrorBoundary>
+    );
+    const rendered = render(view(1));
+
+    rendered.rerender(view(2));
+    rendered.rerender(view(2));
+
+    expect(screen.getByText("failed")).toBeInTheDocument();
+    expect(onError).toHaveBeenCalledTimes(2);
+  });
+
+  it("ErrorBoundary: manual reset with unchanged keys -> renders recovered children", () => {
+    let shouldThrow = true;
+    function Content() {
+      if (shouldThrow) {
+        throw new Error("boom");
+      }
+      return <p>recovered</p>;
+    }
+    render(
+      <ErrorBoundary resetKeys={[1]} fallback={({ reset }) => <button onClick={reset}>Retry</button>}>
+        <Content />
+      </ErrorBoundary>,
+    );
+    shouldThrow = false;
+
+    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+
+    expect(screen.getByText("recovered")).toBeInTheDocument();
   });
 });
 
