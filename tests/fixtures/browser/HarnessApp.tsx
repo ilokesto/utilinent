@@ -1,8 +1,9 @@
-import { StrictMode, useEffect, useRef, useState } from "react";
+import { StrictMode, useEffect, useRef, useState, type ReactNode } from "react";
 import { LoadMore } from "../../../src/components/LoadMore";
 import type { LoadMoreState } from "../../../src/components/LoadMore";
 import { DelayedFallback } from "../../../src/components/DelayedFallback";
 import { ErrorBoundary } from "../../../src/components/ErrorBoundary";
+import { OptionalWrapper } from "../../../src/components/OptionalWrapper";
 import { useFocusWithin } from "../../../src/hooks/useFocusWithin";
 import { usePageVisibility } from "../../../src/hooks/usePageVisibility";
 import { useIntersectionObserver } from "../../../src/hooks/useIntersectionObserver";
@@ -34,6 +35,43 @@ function VisibilityExample() {
   const isVisible = usePageVisibility();
   useEffect(() => report("visibility", isVisible), [isVisible]);
   return <output id="visibility">{String(isVisible)}</output>;
+}
+
+function OptionalWrapperExample() {
+  const [condition, setCondition] = useState<"empty" | "truthy" | "mixed">("empty");
+  const [branch, setBranch] = useState<"else" | "fallback" | "plain">("else");
+  const [clicks, setClicks] = useState(0);
+  const childRef = useRef<HTMLButtonElement>(null);
+  const enabled = condition === "truthy";
+  const when = enabled ? [true, "ready"] : condition === "mixed" ? [true, 0] : [];
+  useEffect(() => report("optional-state", {
+    condition, branch, clicks, ref: childRef.current?.id ?? null,
+  }), [condition, branch, clicks]);
+  const wrapper = (children: ReactNode) => {
+    if (!enabled) { throw new Error("Inactive wrapper executed"); }
+    return <div id="optional-wrapper">{children}</div>;
+  };
+  const elseWrapper = (children: ReactNode) => {
+    if (enabled || branch !== "else") { throw new Error("Inactive elseWrapper executed"); }
+    return <div id="optional-else">{children}</div>;
+  };
+  const fallback = (children: ReactNode) => {
+    if (enabled || branch !== "fallback") { throw new Error("Inactive fallback executed"); }
+    return <article id="optional-fallback">{children}</article>;
+  };
+  return <section id="optional-host">
+    <button id="optional-true" onClick={() => setCondition("truthy")}>Use truthy array</button>
+    <button id="optional-mixed" onClick={() => setCondition("mixed")}>Use mixed array</button>
+    <button id="optional-use-fallback" onClick={() => setBranch("fallback")}>Use fallback alias</button>
+    <button id="optional-plain" onClick={() => setBranch("plain")}>Use plain children</button>
+    <OptionalWrapper when={when} wrapper={wrapper}
+      elseWrapper={branch === "else" ? elseWrapper : undefined}
+      fallback={branch === "plain" ? undefined : fallback}>
+      <button id="optional-child" ref={childRef} onClick={() => setClicks(value => value + 1)}>
+        Child clicks: {clicks}
+      </button>
+    </OptionalWrapper>
+  </section>;
 }
 
 function BoundaryContent({ fails }: { fails: boolean }) {
@@ -169,7 +207,8 @@ export function HarnessApp({ route }: { route: string }) {
         route === "/visibility" ? <VisibilityExample /> :
           route === "/intersection" ? <IntersectionExample /> :
             route === "/boundary" ? <BoundaryExample /> :
-              route === "/pending" ? <PendingExample /> : <InfiniteExample />}
+              route === "/optional" ? <OptionalWrapperExample /> :
+                route === "/pending" ? <PendingExample /> : <InfiniteExample />}
     </main>
   </StrictMode>;
 }

@@ -94,7 +94,7 @@ export const test = base.extend<{ app: BrowserHarness }, { origin: string }>({
           response.writeHead(204).end();
           return;
         }
-        if (["/focus", "/visibility", "/infinite", "/pending", "/intersection", "/boundary"].includes(route)) {
+        if (["/focus", "/visibility", "/infinite", "/pending", "/intersection", "/boundary", "/optional"].includes(route)) {
           void active.ssrLoadModule("/tests/fixtures/browser/server-entry.tsx").then(({ render }) => {
             const markup = render(route);
             response.writeHead(200, { "content-type": "text/html" }).end(

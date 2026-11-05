@@ -4,6 +4,28 @@ function loadState(calls: number, loading: boolean, intersecting = true, error: 
   return (value: unknown) => JSON.stringify(value) === JSON.stringify({ calls, loading, intersecting, error });
 }
 
+test("OptionalWrapper: selected branches with throwing inactive wrappers -> preserves children, refs and native clicks", async ({ app }) => {
+  const state = (condition: string, branch: string, clicks: number) =>
+    (value: unknown) => JSON.stringify(value) === JSON.stringify({ condition, branch, clicks, ref: "optional-child" });
+  await app.open("/optional");
+  await app.hydrate("optional-state", state("empty", "else", 0));
+  expect(await app.page.locator("#optional-else > #optional-child").count()).toBe(1);
+
+  await app.click("optional-true", "optional-state", state("truthy", "else", 0));
+
+  expect(await app.page.locator("#optional-wrapper > #optional-child").count()).toBe(1);
+  await app.click("optional-child", "optional-state", state("truthy", "else", 1));
+  await app.click("optional-mixed", "optional-state", state("mixed", "else", 1));
+  expect(await app.page.locator("#optional-else > #optional-child").count()).toBe(1);
+  await app.click("optional-use-fallback", "optional-state", state("mixed", "fallback", 1));
+  expect(await app.page.locator("#optional-fallback > #optional-child").count()).toBe(1);
+  await app.click("optional-plain", "optional-state", state("mixed", "plain", 1));
+  expect(await app.page.locator("#optional-host > #optional-child").count()).toBe(1);
+  await app.click("optional-child", "optional-state", state("mixed", "plain", 2));
+  expect(await app.page.locator("#optional-child").textContent()).toContain("Child clicks: 2");
+  await app.unmount();
+});
+
 test("ErrorBoundary: equal and changed reset keys -> retries only on value changes and recovers manually", async ({ app }) => {
   app.expectedCaughtErrors = Array(3).fill("Error: expected boundary failure");
   await app.open("/boundary");
