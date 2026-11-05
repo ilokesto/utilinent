@@ -1,4 +1,4 @@
-import { Show } from "../Show";
+import { resolveWhen } from "../../utils/resolveWhen";
 import type { OptionalWrapperProps } from "./types";
 
 /**
@@ -6,10 +6,10 @@ import type { OptionalWrapperProps } from "./types";
  *
  * When `when` is falsy, renders children directly — or through `elseWrapper`
  * when provided. `fallback` is accepted as a deprecated alias for `elseWrapper`.
- * Both wrapper expressions are evaluated during rendering; wrapper functions
- * should be pure even when their result is not selected.
+ * Only the selected wrapper is invoked. Wrapper functions should remain pure
+ * because React may render the selected branch more than once.
  * @param {OptionalWrapperProps<T>} props - Conditional wrapping options.
- * @param {T} props.when - Condition evaluated by Show; arrays require nonempty, all-truthy elements.
+ * @param {T} props.when - Scalar truthiness or a nonempty array of all-truthy elements.
  * @param {React.ReactNode} props.children - Content to wrap.
  * @param {(children: React.ReactNode) => React.ReactNode} props.wrapper - Truthy-branch wrapper.
  * @param {(children: React.ReactNode) => React.ReactNode} [props.elseWrapper] - Falsy-branch wrapper.
@@ -30,10 +30,10 @@ export function OptionalWrapper<T>({
   elseWrapper,
   fallback,
 }: OptionalWrapperProps<T>): React.ReactNode {
+  if (resolveWhen(when)) {
+    return wrapper(children);
+  }
+
   const elseFn = elseWrapper ?? fallback;
-  return (
-    <Show when={when} fallback={elseFn ? elseFn(children) : children}>
-      {wrapper(children)}
-    </Show>
-  );
+  return elseFn ? elseFn(children) : children;
 }
