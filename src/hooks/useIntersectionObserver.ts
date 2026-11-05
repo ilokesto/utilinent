@@ -36,7 +36,8 @@ interface UseIntersectionObserverOptions extends UseIntersectionObserverCoreOpti
  *
  * `freezeOnceVisible` freezes the observation of the current target only: when
  * the target element is removed, swapped or reattached, the new target is
- * observed again from scratch.
+ * observed again from scratch. Every target change restores
+ * `initialIsIntersecting`, clears `entry`, and resets transition detection.
  *
  * @param {UseIntersectionObserverOptions} [options] - Shared observation settings.
  * @param {number | number[]} [options.threshold] - Visibility ratios; defaults to zero.
