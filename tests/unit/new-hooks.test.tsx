@@ -6,6 +6,7 @@ import {
   useDebounce,
   useEventListener,
   useHover,
+  useHoverRef,
   useKey,
   useMediaQuery,
   useResizeObserver,
@@ -222,6 +223,80 @@ describe("useClickAway", () => {
 });
 
 describe("useHover", () => {
+  it("detach while hovering -> resets state and ignores detached events", () => {
+    const node = document.createElement("div");
+    const hook = renderHook(() => useHover(), { wrapper: StrictMode });
+    act(() => hook.result.current.ref(node));
+    act(() => node.dispatchEvent(new MouseEvent("mouseenter")));
+    expect(hook.result.current.isHovering).toBe(true);
+
+    act(() => hook.result.current.ref(null));
+
+    expect(hook.result.current.isHovering).toBe(false);
+    act(() => node.dispatchEvent(new MouseEvent("mouseenter")));
+    expect(hook.result.current.isHovering).toBe(false);
+    act(() => hook.result.current.ref(node));
+    expect(hook.result.current.isHovering).toBe(false);
+    act(() => node.dispatchEvent(new MouseEvent("mouseenter")));
+    expect(hook.result.current.isHovering).toBe(true);
+    act(() => node.dispatchEvent(new MouseEvent("mouseleave")));
+    expect(hook.result.current.isHovering).toBe(false);
+  });
+
+  it("replace a hovered target -> resets state and transfers both listeners", () => {
+    const first = document.createElement("div");
+    const next = document.createElement("div");
+    const firstAdd = vi.spyOn(first, "addEventListener");
+    const firstRemove = vi.spyOn(first, "removeEventListener");
+    const nextAdd = vi.spyOn(next, "addEventListener");
+    const nextRemove = vi.spyOn(next, "removeEventListener");
+    const hook = renderHook(() => useHover(), { wrapper: StrictMode });
+    act(() => hook.result.current.ref(first));
+    act(() => first.dispatchEvent(new MouseEvent("mouseenter")));
+
+    act(() => hook.result.current.ref(next));
+
+    expect(hook.result.current.isHovering).toBe(false);
+    act(() => first.dispatchEvent(new MouseEvent("mouseenter")));
+    expect(hook.result.current.isHovering).toBe(false);
+    act(() => next.dispatchEvent(new MouseEvent("mouseenter")));
+    expect(hook.result.current.isHovering).toBe(true);
+    act(() => first.dispatchEvent(new MouseEvent("mouseleave")));
+    expect(hook.result.current.isHovering).toBe(true);
+    act(() => next.dispatchEvent(new MouseEvent("mouseleave")));
+    expect(hook.result.current.isHovering).toBe(false);
+    hook.unmount();
+    for (const type of ["mouseenter", "mouseleave"]) {
+      const firstCall = firstAdd.mock.calls.find(([event]) => event === type)!;
+      const nextCall = nextAdd.mock.calls.find(([event]) => event === type)!;
+      expect(firstRemove).toHaveBeenCalledWith(type, firstCall[1], { capture: undefined });
+      expect(nextRemove).toHaveBeenCalledWith(type, nextCall[1], { capture: undefined });
+    }
+  });
+
+  it("same target callbacks and rerenders -> preserve hover, callback and listeners", () => {
+    const node = document.createElement("div");
+    const add = vi.spyOn(node, "addEventListener");
+    const remove = vi.spyOn(node, "removeEventListener");
+    const hook = renderHook(() => useHover(), { wrapper: StrictMode });
+    const ref = hook.result.current.ref;
+    act(() => ref(node));
+    act(() => node.dispatchEvent(new MouseEvent("mouseenter")));
+
+    act(() => ref(node));
+    hook.rerender();
+
+    expect(hook.result.current.ref).toBe(ref);
+    expect(hook.result.current.isHovering).toBe(true);
+    expect(add).toHaveBeenCalledTimes(2);
+    expect(remove).not.toHaveBeenCalled();
+    act(() => node.dispatchEvent(new MouseEvent("mouseleave")));
+    expect(hook.result.current.isHovering).toBe(false);
+    expect(hook.result.current.ref).toBe(ref);
+    hook.unmount();
+    expect(remove).toHaveBeenCalledTimes(2);
+  });
+
   it("tracks mouseenter and mouseleave", () => {
     let hovering = false;
     function Probe() {
@@ -242,6 +317,40 @@ describe("useHover", () => {
       target.dispatchEvent(new MouseEvent("mouseleave", { bubbles: true }));
     });
     expect(hovering).toBe(false);
+  });
+});
+
+describe("useHoverRef", () => {
+  function Probe({ target }: { target: "a" | "b" | null }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const hovering = useHoverRef(ref);
+    return <>
+      <output data-testid="hovering">{String(hovering)}</output>
+      {target !== null && <div key={target} ref={ref} data-testid={target} />}
+    </>;
+  }
+
+  it.each(["b", null] as const)("hovered target changes to %s -> resets state and ignores the old node", target => {
+    const view = render(<StrictMode><Probe target="a" /></StrictMode>);
+    const oldNode = view.getByTestId("a");
+    act(() => oldNode.dispatchEvent(new MouseEvent("mouseenter")));
+    expect(view.getByTestId("hovering").textContent).toBe("true");
+
+    view.rerender(<StrictMode><Probe target={target} /></StrictMode>);
+
+    expect(view.getByTestId("hovering").textContent).toBe("false");
+    act(() => oldNode.dispatchEvent(new MouseEvent("mouseenter")));
+    expect(view.getByTestId("hovering").textContent).toBe("false");
+    view.rerender(<StrictMode><Probe target="b" /></StrictMode>);
+    const nextNode = view.getByTestId("b");
+    act(() => nextNode.dispatchEvent(new MouseEvent("mouseenter")));
+    expect(view.getByTestId("hovering").textContent).toBe("true");
+    act(() => oldNode.dispatchEvent(new MouseEvent("mouseleave")));
+    expect(view.getByTestId("hovering").textContent).toBe("true");
+    view.rerender(<StrictMode><Probe target="b" /></StrictMode>);
+    expect(view.getByTestId("hovering").textContent).toBe("true");
+    act(() => nextNode.dispatchEvent(new MouseEvent("mouseleave")));
+    expect(view.getByTestId("hovering").textContent).toBe("false");
   });
 });
 

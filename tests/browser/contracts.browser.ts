@@ -4,6 +4,37 @@ function loadState(calls: number, loading: boolean, intersecting = true, error: 
   return (value: unknown) => JSON.stringify(value) === JSON.stringify({ calls, loading, intersecting, error });
 }
 
+test("useHover/useHoverRef: native mouse with target replacement and detach -> resets state and releases listeners", async ({ app }) => {
+  const state = (target: string | null, hovering: boolean, revision = 0) =>
+    (value: unknown) => JSON.stringify(value) === JSON.stringify({ target, hovering, refHovering: hovering, stable: true, revision });
+  await app.open("/hover");
+  await app.hydrate("hover-state", state("a", false));
+  await app.page.locator("#hover-replace").focus();
+  await app.until("hover-state", state("a", true), () => app.page.locator("#hover-a").hover());
+
+  await app.until("hover-state", state("b", false), () => app.page.keyboard.press("Enter"));
+
+  expect(await app.page.evaluate(() => window.harness.resources().listeners)).toBe(4);
+  await app.page.locator("#hover-same").focus();
+  await app.until("hover-state", state("b", true), () => app.page.locator("#hover-b").hover());
+  await app.until("hover-state", state("b", true, 1), () => app.page.keyboard.press("Enter"));
+  expect(await app.page.evaluate(() => window.harness.resources().listeners)).toBe(4);
+  await app.until("hover-state", state("b", false, 1), () => app.page.mouse.move(0, 0));
+  await app.until("hover-state", state("b", true, 1), () => app.page.locator("#hover-b").hover());
+  await app.page.locator("#hover-toggle").focus();
+
+  await app.until("hover-listeners", value => value === 0,
+    () => app.until("hover-state", state(null, false, 1), () => app.page.keyboard.press("Enter")));
+
+  expect(await app.page.evaluate(() => window.harness.resources().listeners)).toBe(0);
+  await app.page.mouse.move(0, 0);
+  await app.until("hover-listeners", value => value === 4,
+    () => app.until("hover-state", state("b", false, 1), () => app.page.keyboard.press("Enter")));
+  expect(await app.page.evaluate(() => window.harness.resources().listeners)).toBe(4);
+  await app.until("hover-state", state("b", true, 1), () => app.page.locator("#hover-b").hover());
+  await app.unmount();
+});
+
 test("useDebounce/useThrottle: callable value updates -> preserve identity, time boundaries and unmount cleanup", async ({ app }) => {
   const state = (input: string, debounced: string, throttled: string) =>
     (value: unknown) => JSON.stringify(value) === JSON.stringify({ input, debounced, throttled });

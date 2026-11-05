@@ -25,7 +25,9 @@ const nativeRemove = EventTarget.prototype.removeEventListener;
 function tracked(target: EventTarget, type: string) {
   return (target === document && type === "visibilitychange") ||
     (target instanceof HTMLElement && target.id === "focus-group" &&
-      (type === "focusin" || type === "focusout"));
+      (type === "focusin" || type === "focusout")) ||
+    (target instanceof HTMLElement && (target.id === "hover-a" || target.id === "hover-b") &&
+      (type === "mouseenter" || type === "mouseleave"));
 }
 EventTarget.prototype.addEventListener = function(type, callback, options) {
   if (callback && tracked(this, type)) {
@@ -34,12 +36,18 @@ EventTarget.prototype.addEventListener = function(type, callback, options) {
     listeners.set(this, callbacks);
   }
   nativeAdd.call(this, type, callback, options);
+  if (tracked(this, type) && location.pathname === "/hover") {
+    report("hover-listeners", [...listeners.values()].reduce((sum, callbacks) => sum + callbacks.size, 0));
+  }
 };
 EventTarget.prototype.removeEventListener = function(type, callback, options) {
   if (callback && tracked(this, type)) {
     listeners.get(this)?.delete(callback);
   }
   nativeRemove.call(this, type, callback, options);
+  if (tracked(this, type) && location.pathname === "/hover") {
+    report("hover-listeners", [...listeners.values()].reduce((sum, callbacks) => sum + callbacks.size, 0));
+  }
 };
 const observations = new Map<IntersectionObserver, Set<Element>>();
 const NativeObserver = window.IntersectionObserver;

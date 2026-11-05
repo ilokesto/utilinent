@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, useRef, useState, type ReactNode } from "react";
+import { StrictMode, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { LoadMore } from "../../../src/components/LoadMore";
 import type { LoadMoreState } from "../../../src/components/LoadMore";
 import { DelayedFallback } from "../../../src/components/DelayedFallback";
@@ -9,6 +9,7 @@ import { usePageVisibility } from "../../../src/hooks/usePageVisibility";
 import { useIntersectionObserver } from "../../../src/hooks/useIntersectionObserver";
 import { useDebounce } from "../../../src/hooks/useDebounce";
 import { useThrottle } from "../../../src/hooks/useThrottle";
+import { useHover, useHoverRef } from "../../../src/hooks/useHover";
 
 export type Signal = { kind: string; value: unknown };
 
@@ -30,6 +31,36 @@ function FocusExample() {
     </div>
     <button id="after">After group</button>
     <output id="focus">{String(isFocusWithin)}</output>
+  </section>;
+}
+
+function HoverExample() {
+  const [target, setTarget] = useState<"a" | "b" | null>("a");
+  const [revision, setRevision] = useState(0);
+  const { ref, isHovering } = useHover();
+  const targetRef = useRef<HTMLElement | null>(null);
+  const refHovering = useHoverRef(targetRef);
+  const attach = useCallback((node: HTMLElement | null) => {
+    targetRef.current = node;
+    ref(node);
+  }, [ref]);
+  const initialRef = useRef(ref);
+  useEffect(() => report("hover-state", {
+    target, hovering: isHovering, refHovering, stable: initialRef.current === ref, revision,
+  }), [target, isHovering, refHovering, ref, revision]);
+  return <section>
+    <button id="hover-replace" onClick={() => setTarget("b")}>Replace target</button>
+    <button id="hover-toggle" onClick={() => setTarget(target === null ? "b" : null)}>Toggle target</button>
+    <button id="hover-same" onClick={() => {
+      ref(document.getElementById(`hover-${target}`));
+      setRevision(value => value + 1);
+    }}>Same target</button>
+    <p>Hovering: <output id="hover-state">{String(isHovering)}</output></p>
+    <p>Ref hovering: <output id="hover-ref-state">{String(refHovering)}</output></p>
+    {target !== null && <div key={target} id={`hover-${target}`} ref={attach}
+      style={{ marginTop: target === "a" ? 20 : 150, width: 200, height: 80, border: "1px solid" }}>
+      Target {target.toUpperCase()}
+    </div>}
   </section>;
 }
 
@@ -228,6 +259,7 @@ export function HarnessApp({ route }: { route: string }) {
     <main>
       <h1>utilinent browser contracts</h1>
       {route === "/focus" ? <FocusExample /> :
+        route === "/hover" ? <HoverExample /> :
         route === "/visibility" ? <VisibilityExample /> :
           route === "/intersection" ? <IntersectionExample /> :
             route === "/boundary" ? <BoundaryExample /> :
