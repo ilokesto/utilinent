@@ -86,10 +86,10 @@ export function useIntersectionObserverCore(
   const onIntersectRef = useRef(onIntersect);
   const isFrozen = useRef(false);
   /**
-   * Freeze is scoped to the observation of one target element: a frozen
-   * state must never leak to a different or reattached target (#145).
+   * Snapshot and freeze state belong to one target observation, including when
+   * React replaces a node without committing an intermediate null target.
    */
-  const frozenTarget = useRef<HTMLElement | null>(null);
+  const observedTarget = useRef<HTMLElement | null>(null);
   const prevIsIntersecting = useRef(initialIsIntersecting);
 
   // Keep callback ref updated without resubscribing.
@@ -104,15 +104,15 @@ export function useIntersectionObserverCore(
     setElement(node);
   }, []);
 
-  // Reset the frozen lifetime when the target ends or freezing is turned
-  // off. Declared before the subscription effect so it runs first when both
-  // re-run in the same commit.
+  // Start a fresh target lifetime before subscribing. Option changes on the
+  // same target preserve its snapshot and only disabling freeze releases it.
   useEffect(() => {
-    if (!element || !freezeOnceVisible) {
+    const targetChanged = observedTarget.current !== element;
+    observedTarget.current = element;
+    if (targetChanged || !element || !freezeOnceVisible) {
       isFrozen.current = false;
-      frozenTarget.current = null;
     }
-    if (!element) {
+    if (targetChanged || !element) {
       setIsIntersecting(initialIsIntersecting);
       setEntry(undefined);
       prevIsIntersecting.current = initialIsIntersecting;
@@ -127,12 +127,6 @@ export function useIntersectionObserverCore(
       return;
     }
 
-    if (isFrozen.current && frozenTarget.current !== element) {
-      // The frozen state belonged to a previous target observation; a new
-      // target starts a fresh observation lifetime.
-      isFrozen.current = false;
-      frozenTarget.current = null;
-    }
     if (isFrozen.current) {
       return;
     }
@@ -162,7 +156,6 @@ export function useIntersectionObserverCore(
 
         if (freezeOnceVisible && isCurrentlyIntersecting) {
           isFrozen.current = true;
-          frozenTarget.current = element;
           // Target-scoped stop: releases only this target from the shared
           // observer without disturbing other subscribers (#141).
           unsubscribe();

@@ -132,6 +132,74 @@ describe("useIntersectionObserver threshold stabilization", () => {
 describe("useIntersectionObserver target-scoped freeze", () => {
   beforeEach(installControlledIntersectionObserver);
 
+  it.each([false, true])(
+    "useIntersectionObserver: visible target replaced with freeze=%s -> clears snapshot and notifies the new target",
+    async (freezeOnceVisible) => {
+      const onIntersect = vi.fn<IntersectionChangeHandler>();
+      function Host({ which }: { readonly which: "a" | "b" }) {
+        const { ref, isIntersecting, entry } = useIntersectionObserver({
+          freezeOnceVisible,
+          onIntersect,
+        });
+        return (
+          <div key={which} id={which} ref={ref} data-entry={entry?.target.id ?? "none"}>
+            {isIntersecting ? "visible" : "hidden"}
+          </div>
+        );
+      }
+      const rendered = render(<Host which="a" />);
+      await emitIntersection(true);
+      expect(screen.getByText("visible")).toHaveAttribute("data-entry", "a");
+
+      rendered.rerender(<Host which="b" />);
+
+      expect(screen.getByText("hidden")).toHaveAttribute("data-entry", "none");
+      expect(hasActiveIntersectionObserver()).toBe(true);
+
+      await emitIntersection(true);
+
+      expect(onIntersect).toHaveBeenCalledTimes(2);
+      expect(onIntersect).toHaveBeenLastCalledWith(
+        true,
+        expect.objectContaining({ target: rendered.container.firstElementChild }),
+      );
+      expect(screen.getByText("visible")).toHaveAttribute("data-entry", "b");
+      expect(hasActiveIntersectionObserver()).toBe(!freezeOnceVisible);
+    },
+  );
+
+  it.each([false, true])(
+    "useIntersectionObserver: hidden target replaced with initial=true and freeze=%s -> restores the new target initial snapshot",
+    async (freezeOnceVisible) => {
+      const onIntersect = vi.fn<IntersectionChangeHandler>();
+      function Host({ which }: { readonly which: "a" | "b" }) {
+        const { ref, isIntersecting, entry } = useIntersectionObserver({
+          freezeOnceVisible,
+          initialIsIntersecting: true,
+          onIntersect,
+        });
+        return (
+          <div key={which} id={which} ref={ref} data-entry={entry?.target.id ?? "none"}>
+            {isIntersecting ? "visible" : "hidden"}
+          </div>
+        );
+      }
+      const rendered = render(<Host which="a" />);
+      await emitIntersection(false);
+      expect(screen.getByText("hidden")).toHaveAttribute("data-entry", "a");
+
+      rendered.rerender(<Host which="b" />);
+
+      expect(screen.getByText("visible")).toHaveAttribute("data-entry", "none");
+
+      await emitIntersection(true);
+
+      expect(onIntersect).not.toHaveBeenCalled();
+      expect(screen.getByText("visible")).toHaveAttribute("data-entry", "b");
+      expect(hasActiveIntersectionObserver()).toBe(!freezeOnceVisible);
+    },
+  );
+
   it("useIntersectionObserver: frozen target detached then reattached -> observation resumes", async () => {
     // Arrange
     const onIntersect = vi.fn<IntersectionChangeHandler>();

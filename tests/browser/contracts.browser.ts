@@ -4,6 +4,26 @@ function loadState(calls: number, loading: boolean, intersecting = true, error: 
   return (value: unknown) => JSON.stringify(value) === JSON.stringify({ calls, loading, intersecting, error });
 }
 
+test("useIntersectionObserver: native visible target replacement -> resets snapshot and reports each first entry", async ({ app }) => {
+  await app.open("/intersection");
+  expect(await app.page.locator("#intersection-visible").textContent()).toBe("false");
+  await app.hydrate("intersection-state", value =>
+    JSON.stringify(value) === JSON.stringify({ which: "a", visible: true, entry: "target-a" }));
+  expect(await app.page.evaluate(() => window.harness.resources().targets)).toBe(0);
+
+  await app.click("replace-target", "intersection-state", value =>
+    JSON.stringify(value) === JSON.stringify({ which: "b", visible: true, entry: "target-b" }));
+
+  expect(app.signals.filter(signal => signal.kind === "intersection-enter").map(signal => signal.value))
+    .toEqual(["target-a", "target-b"]);
+  expect(app.signals.filter(signal => signal.kind === "intersection-state").map(signal => signal.value))
+    .toContainEqual({ which: "b", visible: false, entry: null });
+  expect(await app.page.locator("#intersection-visible").textContent()).toBe("true");
+  expect(await app.page.locator("#intersection-entry").textContent()).toBe("target-b");
+  expect(await app.page.evaluate(() => window.harness.resources().targets)).toBe(0);
+  await app.unmount();
+});
+
 test("LoadMore: native scrolling and controlled busy cycles -> repeat, retry and stop at hasMore", async ({ app }) => {
   await app.open("/infinite");
   expect(await app.page.locator("#calls").textContent()).toBe("0");

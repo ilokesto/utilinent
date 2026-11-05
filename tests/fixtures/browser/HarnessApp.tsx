@@ -4,6 +4,7 @@ import type { LoadMoreState } from "../../../src/components/LoadMore";
 import { DelayedFallback } from "../../../src/components/DelayedFallback";
 import { useFocusWithin } from "../../../src/hooks/useFocusWithin";
 import { usePageVisibility } from "../../../src/hooks/usePageVisibility";
+import { useIntersectionObserver } from "../../../src/hooks/useIntersectionObserver";
 
 export type Signal = { kind: string; value: unknown };
 
@@ -32,6 +33,26 @@ function VisibilityExample() {
   const isVisible = usePageVisibility();
   useEffect(() => report("visibility", isVisible), [isVisible]);
   return <output id="visibility">{String(isVisible)}</output>;
+}
+
+function IntersectionExample() {
+  const [which, setWhich] = useState("a");
+  const { ref, isIntersecting, entry } = useIntersectionObserver({
+    threshold: 0.5,
+    freezeOnceVisible: true,
+    onIntersect: (_visible, record) => report("intersection-enter", record.target.id),
+  });
+  useEffect(() => report("intersection-state", {
+    which, visible: isIntersecting, entry: entry?.target.id ?? null,
+  }), [which, isIntersecting, entry]);
+  return <section>
+    <button id="replace-target" onClick={() => setWhich("b")}>Replace observed target</button>
+    <div key={which} id={`target-${which}`} ref={ref} style={{ minHeight: 80 }}>
+      Observed target {which}
+    </div>
+    <output id="intersection-visible">{String(isIntersecting)}</output>
+    <output id="intersection-entry">{entry?.target.id ?? "none"}</output>
+  </section>;
 }
 
 function LoadState({ state, calls }: { state: LoadMoreState; calls: number }) {
@@ -113,7 +134,8 @@ export function HarnessApp({ route }: { route: string }) {
       <h1>utilinent browser contracts</h1>
       {route === "/focus" ? <FocusExample /> :
         route === "/visibility" ? <VisibilityExample /> :
-          route === "/pending" ? <PendingExample /> : <InfiniteExample />}
+          route === "/intersection" ? <IntersectionExample /> :
+            route === "/pending" ? <PendingExample /> : <InfiniteExample />}
     </main>
   </StrictMode>;
 }
