@@ -1,5 +1,5 @@
-import { act, render } from "@testing-library/react";
-import { useRef } from "react";
+import { act, render, renderHook } from "@testing-library/react";
+import { StrictMode, useRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   useClickAway,
@@ -15,6 +15,82 @@ import {
 afterEach(() => {
   vi.restoreAllMocks();
   vi.useRealTimers();
+});
+
+describe.each([
+  { name: "useDebounce", useValue: useDebounce },
+  { name: "useThrottle", useValue: useThrottle },
+])("$name callable values", ({ name, useValue }) => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1_000);
+  });
+
+  it(`${name}: initial and unchanged StrictMode renders -> returns the function without invoking it`, () => {
+    const value = vi.fn(() => "initial");
+    const hook = renderHook(() => useValue(value, 100), { wrapper: StrictMode });
+
+    hook.rerender();
+
+    expect(hook.result.current).toBe(value);
+    expect(value).not.toHaveBeenCalled();
+  });
+
+  it(`${name}: rapid callable changes -> emits the latest function at the existing time boundary`, () => {
+    const first = vi.fn(() => "first");
+    const second = vi.fn(() => "second");
+    const latest = vi.fn(() => "latest");
+    const hook = renderHook(({ value }) => useValue(value, 100), { initialProps: { value: first } });
+    hook.rerender({ value: second });
+    act(() => vi.advanceTimersByTime(50));
+
+    hook.rerender({ value: latest });
+
+    act(() => vi.advanceTimersByTime(49));
+    expect(hook.result.current).toBe(first);
+    act(() => vi.advanceTimersByTime(1));
+    expect(hook.result.current).toBe(name === "useThrottle" ? latest : first);
+    act(() => vi.advanceTimersByTime(50));
+    expect(hook.result.current).toBe(latest);
+    expect(first).not.toHaveBeenCalled();
+    expect(second).not.toHaveBeenCalled();
+    expect(latest).not.toHaveBeenCalled();
+  });
+
+  it(`${name}: unmount during a callable update -> cancels pending work without invoking values`, () => {
+    const first = vi.fn(() => "first");
+    const next = vi.fn(() => "next");
+    const hook = renderHook(({ value }) => useValue(value, 100), { initialProps: { value: first } });
+    hook.rerender({ value: next });
+    expect(vi.getTimerCount()).toBe(1);
+
+    hook.unmount();
+
+    expect(vi.getTimerCount()).toBe(0);
+    act(() => vi.advanceTimersByTime(100));
+    expect(first).not.toHaveBeenCalled();
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it(`${name}: callable and noncallable replacements -> preserves each value's identity`, () => {
+    const first = vi.fn(() => "first");
+    const latest = vi.fn(() => "latest");
+    const initialProps: { value: string | (() => string) } = { value: first };
+    const hook = renderHook(
+      ({ value }: { value: string | (() => string) }) => useValue(value, 100),
+      { initialProps },
+    );
+
+    hook.rerender({ value: "plain" });
+    act(() => vi.advanceTimersByTime(100));
+    expect(hook.result.current).toBe("plain");
+    hook.rerender({ value: latest });
+    act(() => vi.advanceTimersByTime(100));
+
+    expect(hook.result.current).toBe(latest);
+    expect(first).not.toHaveBeenCalled();
+    expect(latest).not.toHaveBeenCalled();
+  });
 });
 
 describe("useDebounce", () => {

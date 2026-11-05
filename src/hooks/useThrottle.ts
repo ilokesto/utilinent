@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
  *
  * The latest value is always emitted after the throttle window closes.
  * Starts with the supplied value; changes reschedule pending work and unmount clears it.
+ * Function values are preserved by identity and never invoked by the hook.
  *
  * @param {T} value - Latest value to throttle.
  * @param {number} interval - Minimum update interval in milliseconds.
@@ -18,7 +19,7 @@ import { useEffect, useRef, useState } from "react";
  * ```
  */
 export function useThrottle<T>(value: T, interval: number): T {
-  const [throttled, setThrottled] = useState(value);
+  const [throttled, setThrottled] = useState(() => value);
   const lastRunRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -32,12 +33,12 @@ export function useThrottle<T>(value: T, interval: number): T {
         timerRef.current = null;
       }
       lastRunRef.current = now;
-      setThrottled(value);
+      setThrottled(() => value);
     } else if (timerRef.current === null) {
       timerRef.current = setTimeout(() => {
         lastRunRef.current = Date.now();
         timerRef.current = null;
-        setThrottled(value);
+        setThrottled(() => value);
       }, remaining);
     }
 

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 /**
  * @description Returns a debounced value after the delay elapses without changes.
  * Starts with the supplied value; changes and unmount cancel the pending timer.
+ * Function values are preserved by identity and never invoked by the hook.
  *
  * @param {T} value - Latest value to debounce.
  * @param {number} delay - Quiet period in milliseconds.
@@ -16,11 +17,11 @@ import { useEffect, useState } from "react";
  * ```
  */
 export function useDebounce<T>(value: T, delay: number): T {
-  const [debounced, setDebounced] = useState(value);
+  const [debounced, setDebounced] = useState(() => value);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebounced(value);
+      setDebounced(() => value);
     }, delay);
 
     return () => {

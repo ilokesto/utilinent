@@ -4,6 +4,35 @@ function loadState(calls: number, loading: boolean, intersecting = true, error: 
   return (value: unknown) => JSON.stringify(value) === JSON.stringify({ calls, loading, intersecting, error });
 }
 
+test("useDebounce/useThrottle: callable value updates -> preserve identity, time boundaries and unmount cleanup", async ({ app }) => {
+  const state = (input: string, debounced: string, throttled: string) =>
+    (value: unknown) => JSON.stringify(value) === JSON.stringify({ input, debounced, throttled });
+  await app.page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
+  await app.open("/callable-values");
+  expect(await app.page.locator("#debounced-value").textContent()).toBe("initialValue");
+  expect(await app.page.locator("#throttled-value").textContent()).toBe("initialValue");
+  await app.hydrate("value-state", state("initialValue", "initialValue", "initialValue"));
+  await app.page.clock.pauseAt(new Date("2026-01-01T01:00:00Z"));
+  await app.click("value-second", "value-state", state("secondValue", "initialValue", "secondValue"));
+  await app.page.clock.runFor(50);
+
+  await app.click("value-latest", "value-state", state("latestValue", "initialValue", "secondValue"));
+
+  await app.page.clock.runFor(49);
+  expect(await app.page.locator("#debounced-value").textContent()).toBe("initialValue");
+  expect(await app.page.locator("#throttled-value").textContent()).toBe("secondValue");
+  await app.until("value-state", state("latestValue", "initialValue", "latestValue"),
+    () => app.page.clock.runFor(1));
+  await app.until("value-state", state("latestValue", "latestValue", "latestValue"),
+    () => app.page.clock.runFor(50));
+  await app.click("value-second", "value-state", state("secondValue", "latestValue", "latestValue"));
+  expect(await app.page.evaluate(() => window.harness.resources().timers)).toBe(2);
+  await app.unmount();
+  const count = app.signals.filter(signal => signal.kind === "value-state").length;
+  await app.page.clock.runFor(200);
+  expect(app.signals.filter(signal => signal.kind === "value-state")).toHaveLength(count);
+});
+
 test("OptionalWrapper: selected branches with throwing inactive wrappers -> preserves children, refs and native clicks", async ({ app }) => {
   const state = (condition: string, branch: string, clicks: number) =>
     (value: unknown) => JSON.stringify(value) === JSON.stringify({ condition, branch, clicks, ref: "optional-child" });

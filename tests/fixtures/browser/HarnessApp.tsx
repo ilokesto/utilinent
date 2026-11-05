@@ -7,6 +7,8 @@ import { OptionalWrapper } from "../../../src/components/OptionalWrapper";
 import { useFocusWithin } from "../../../src/hooks/useFocusWithin";
 import { usePageVisibility } from "../../../src/hooks/usePageVisibility";
 import { useIntersectionObserver } from "../../../src/hooks/useIntersectionObserver";
+import { useDebounce } from "../../../src/hooks/useDebounce";
+import { useThrottle } from "../../../src/hooks/useThrottle";
 
 export type Signal = { kind: string; value: unknown };
 
@@ -35,6 +37,28 @@ function VisibilityExample() {
   const isVisible = usePageVisibility();
   useEffect(() => report("visibility", isVisible), [isVisible]);
   return <output id="visibility">{String(isVisible)}</output>;
+}
+
+const timingValues = [
+  function initialValue() { throw new Error("Initial function value executed"); },
+  function secondValue() { throw new Error("Second function value executed"); },
+  function latestValue() { throw new Error("Latest function value executed"); },
+];
+
+function CallableTimingExample() {
+  const [index, setIndex] = useState(0);
+  const value = timingValues[index];
+  const debounced = useDebounce(value, 100);
+  const throttled = useThrottle(value, 100);
+  useEffect(() => report("value-state", {
+    input: value.name, debounced: debounced.name, throttled: throttled.name,
+  }), [value, debounced, throttled]);
+  return <section>
+    <button id="value-second" onClick={() => setIndex(1)}>Use second function</button>
+    <button id="value-latest" onClick={() => setIndex(2)}>Use latest function</button>
+    <p>Debounced: <output id="debounced-value">{debounced.name}</output></p>
+    <p>Throttled: <output id="throttled-value">{throttled.name}</output></p>
+  </section>;
 }
 
 function OptionalWrapperExample() {
@@ -208,7 +232,8 @@ export function HarnessApp({ route }: { route: string }) {
           route === "/intersection" ? <IntersectionExample /> :
             route === "/boundary" ? <BoundaryExample /> :
               route === "/optional" ? <OptionalWrapperExample /> :
-                route === "/pending" ? <PendingExample /> : <InfiniteExample />}
+                route === "/callable-values" ? <CallableTimingExample /> :
+                  route === "/pending" ? <PendingExample /> : <InfiniteExample />}
     </main>
   </StrictMode>;
 }
